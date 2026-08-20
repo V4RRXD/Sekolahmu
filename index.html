@@ -661,6 +661,8 @@
             box-shadow: var(--shadow);
             transform: scale(0.92) translateY(12px);
             transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .spam-notification.show .box {
             transform: scale(1) translateY(0);
@@ -690,13 +692,78 @@
         }
         .spam-notification .box-actions {
             display: flex;
+            flex-direction: column;
             gap: 10px;
-            justify-content: center;
+            align-items: center;
             margin-top: 18px;
         }
         .spam-notification .box-actions .btn {
             min-width: 120px;
             justify-content: center;
+        }
+        .spam-notification .box-actions .guide-link {
+            font-size: 12px;
+            color: var(--text3);
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .spam-notification .box-actions .guide-link:hover {
+            color: var(--text);
+        }
+
+        /* ===== GUIDE PAGE ===== */
+        .guide-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+        .guide-content h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        .guide-content h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .guide-content p,
+        .guide-content li {
+            color: var(--text2);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .guide-content ul {
+            padding-left: 20px;
+            margin: 6px 0 10px;
+        }
+        .guide-content ul li {
+            margin-bottom: 4px;
+        }
+        .guide-content .note {
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin: 12px 0;
+        }
+        .guide-content .note strong {
+            color: var(--text);
+        }
+        .guide-content .back-btn {
+            margin-top: 18px;
+        }
+        .guide-content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 16px 0;
         }
 
         .toast {
@@ -833,6 +900,10 @@
             }
             .spam-notification .box {
                 padding: 24px 18px 20px;
+                max-height: 95vh;
+            }
+            .guide-content h1 {
+                font-size: 20px;
             }
         }
     </style>
@@ -987,7 +1058,7 @@
 
     <!-- ===== SPAM NOTIFICATION (BESAR) ===== -->
     <div class="spam-notification" id="spamNotification">
-        <div class="box">
+        <div class="box" id="spamBox">
             <div class="icon">📬</div>
             <h3>Cek Folder Spam!</h3>
             <p>
@@ -998,6 +1069,77 @@
             </p>
             <div class="box-actions">
                 <button class="btn btn-primary" id="spamUnderstandBtn">Saya Mengerti</button>
+                <button class="guide-link" id="spamGuideBtn">📖 Panduan Verifikasi Email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GUIDE PAGE (tersembunyi, muncul di dalam notif) ===== -->
+    <div class="spam-notification" id="guideNotification">
+        <div class="box" id="guideBox">
+            <div class="guide-content">
+                <h1>📖 Panduan Verifikasi Alamat Email</h1>
+                <p>
+                    Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan. Agar akun Anda dapat digunakan sepenuhnya (misalnya untuk login, reset kata sandi, atau mengakses fitur tertentu), Anda wajib melakukan verifikasi email terlebih dahulu.
+                </p>
+                <p>Ikuti langkah-langkah di bawah ini dengan saksama:</p>
+
+                <h2>Langkah 1: Periksa Kotak Masuk Email Anda</h2>
+                <p>Buka aplikasi atau situs penyedia email yang Anda gunakan (misalnya Gmail, Yahoo, Outlook, atau lainnya).</p>
+                <ul>
+                    <li>Cari email baru dari pengirim <strong>noreply@sekolahmu-status.firebaseapp.com</strong>.</li>
+                    <li>Subjek email biasanya bertuliskan: <strong>"Verify your email for sekolahmu-status"</strong>.</li>
+                </ul>
+
+                <h2>Langkah 2: Jika Email Tidak Ditemukan di Kotak Masuk</h2>
+                <p>Terkadang email verifikasi dapat tertahan atau masuk ke folder lain. Lakukan pengecekan tambahan:</p>
+                <ul>
+                    <li><strong>Folder Spam / Junk</strong> – Buka folder spam atau sampah di email Anda. Jika ada, tandai sebagai <em>Not Spam</em> agar email berikutnya tidak masuk ke folder tersebut.</li>
+                    <li><strong>Folder Promosi / Sosial (khusus Gmail)</strong> – Periksa tab <em>Promotions</em> atau <em>Social</em>, karena terkadang email otomatis dari sistem masuk ke sana.</li>
+                    <li><strong>Folder Archive / All Mail</strong> – Jika Anda menggunakan fitur arsip, cek seluruh surat masuk.</li>
+                    <li><strong>Filter atau Aturan Email</strong> – Pastikan tidak ada aturan penyaringan (filter) yang secara otomatis memindahkan atau menghapus email dari pengirim kami.</li>
+                </ul>
+
+                <h2>Langkah 3: Buka Tautan Verifikasi</h2>
+                <ul>
+                    <li>Setelah menemukan email verifikasi, klik tautan yang diawali <strong>"https://sekolahmu-status.firebaseapp.com/"</strong>.</li>
+                    <li>Tautan tersebut akan mengarahkan Anda ke halaman konfirmasi yang dikelola oleh sistem Firebase.</li>
+                    <li>Jika tautan tidak dapat diklik, salin (copy) seluruh alamat tautan tersebut dan tempelkan (paste) ke bilah alamat peramban (browser) Anda, lalu tekan Enter.</li>
+                </ul>
+
+                <h2>Langkah 4: Konfirmasi Keberhasilan</h2>
+                <p>Setelah Anda mengklik tautan, sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi. Anda kini dapat:</p>
+                <ul>
+                    <li>Login ke akun Anda dengan email dan kata sandi.</li>
+                    <li>Menggunakan seluruh fitur yang memerlukan status akun terverifikasi.</li>
+                    <li>Melakukan reset kata sandi jika diperlukan di kemudian hari.</li>
+                </ul>
+
+                <h2>Langkah 5: Jika Masih Mengalami Kendala</h2>
+                <p>Apabila Anda telah mengikuti semua langkah di atas tetapi belum menerima email verifikasi dalam waktu 5–10 menit, silakan:</p>
+                <ul>
+                    <li>Kembali ke halaman login atau profil, lalu pilih opsi <strong>"Kirim ulang email verifikasi"</strong>.</li>
+                    <li>Pastikan alamat email yang Anda masukkan sudah benar dan aktif.</li>
+                    <li>Periksa kembali seluruh folder di penyedia email Anda.</li>
+                    <li>Jika tetap tidak berhasil, hubungi dukungan teknis kami dengan menyertakan alamat email yang Anda daftarkan.</li>
+                </ul>
+
+                <div class="note">
+                    <strong>📌 Catatan Penting</strong>
+                    <ul>
+                        <li>Tautan verifikasi hanya berlaku selama <strong>3 hari</strong>. Jika sudah kedaluwarsa, Anda harus meminta kirim ulang.</li>
+                        <li>Jangan membagikan tautan verifikasi kepada siapa pun, karena tautan tersebut bersifat pribadi.</li>
+                        <li>Proses verifikasi ini wajib dilakukan <strong>satu kali</strong> untuk setiap akun.</li>
+                    </ul>
+                </div>
+
+                <p style="font-size:13px;color:var(--text3);">
+                    Kami memahami bahwa proses ini penting untuk keamanan akun Anda. Terima kasih atas kerja sama dan kesabarannya. Jika ada pertanyaan, jangan ragu untuk menghubungi tim kami.
+                </p>
+                <p style="font-size:13px;color:var(--text3);margin-top:4px;"><strong>Hormat kami,</strong> V4RRXD</p>
+
+                <hr />
+                <button class="btn btn-outline back-btn" id="guideBackBtn">← Kembali</button>
             </div>
         </div>
     </div>
@@ -1083,9 +1225,7 @@
         // ===== SPAM NOTIFICATION =====
         function showSpamNotification() {
             if (spamNotifShown) return;
-            // Cek apakah user sudah verifikasi
             if (currentUser && currentUser.emailVerified) return;
-            // Cek apakah admin (skip notif)
             if (isAdmin) return;
 
             const el = document.getElementById('spamNotification');
@@ -1095,9 +1235,41 @@
             }
         }
 
-        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
+        function hideSpamNotification() {
             const el = document.getElementById('spamNotification');
             if (el) el.classList.remove('show');
+        }
+
+        // ===== GUIDE NOTIFICATION =====
+        function showGuideNotification() {
+            // Sembunyikan spam notif dulu
+            document.getElementById('spamNotification')?.classList.remove('show');
+            const el = document.getElementById('guideNotification');
+            if (el) {
+                el.classList.add('show');
+            }
+        }
+
+        function hideGuideNotification() {
+            const el = document.getElementById('guideNotification');
+            if (el) el.classList.remove('show');
+            // Tampilkan spam notif kembali (jika belum di-close)
+            if (spamNotifShown && !currentUser?.emailVerified && !isAdmin) {
+                document.getElementById('spamNotification')?.classList.add('show');
+            }
+        }
+
+        // Event listeners untuk notifikasi
+        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
+            hideSpamNotification();
+        });
+
+        document.getElementById('spamGuideBtn')?.addEventListener('click', () => {
+            showGuideNotification();
+        });
+
+        document.getElementById('guideBackBtn')?.addEventListener('click', () => {
+            hideGuideNotification();
         });
 
         // ===== CONFIRM =====
@@ -2074,7 +2246,6 @@
                     });
                 }
 
-                // Jika user belum verifikasi dan notif belum muncul, tampilkan
                 if (!verified && !isAdmin && !spamNotifShown) {
                     setTimeout(() => showSpamNotification(), 1000);
                 }
@@ -2098,9 +2269,8 @@
                 updateAuthUI();
                 renderAdmin();
 
-                // Reset spam notif flag untuk user baru
                 if (user.emailVerified) {
-                    spamNotifShown = true; // tidak perlu munculkan notif
+                    spamNotifShown = true;
                 }
 
                 const activePage = document.querySelector('.page.active');
