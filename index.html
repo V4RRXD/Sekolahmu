@@ -627,30 +627,76 @@
             display: block;
         }
 
-        .spam-notice {
-            background: rgba(208, 188, 255, 0.08);
-            border: 1px solid rgba(208, 188, 255, 0.12);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-top: 10px;
-            display: none;
-            animation: fadeIn 0.4s ease;
+        /* ===== SPAM NOTIFICATION (BESAR) ===== */
+        .spam-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
         }
-        .spam-notice.show {
-            display: block;
+        .spam-notification.show {
+            opacity: 1;
+            pointer-events: auto;
         }
-        .spam-notice .title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #d0bcff;
+
+        .spam-notification .box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 32px 28px 28px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
         }
-        .spam-notice .desc {
-            font-size: 13px;
+        .spam-notification.show .box {
+            transform: scale(1) translateY(0);
+        }
+
+        .spam-notification .icon {
+            font-size: 52px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .spam-notification h3 {
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .spam-notification p {
             color: var(--text2);
-            margin-top: 2px;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 4px;
         }
-        .spam-notice .desc strong {
-            color: var(--text);
+        .spam-notification .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        .spam-notification .box-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 18px;
+        }
+        .spam-notification .box-actions .btn {
+            min-width: 120px;
+            justify-content: center;
         }
 
         .toast {
@@ -784,6 +830,9 @@
             }
             .review-item .actions {
                 flex-direction: column;
+            }
+            .spam-notification .box {
+                padding: 24px 18px 20px;
             }
         }
     </style>
@@ -936,6 +985,23 @@
 
     </div>
 
+    <!-- ===== SPAM NOTIFICATION (BESAR) ===== -->
+    <div class="spam-notification" id="spamNotification">
+        <div class="box">
+            <div class="icon">📬</div>
+            <h3>Cek Folder Spam!</h3>
+            <p>
+                Email verifikasi mungkin masuk ke folder <span class="highlight">Spam</span> atau <span class="highlight">Promosi</span>.
+            </p>
+            <p style="font-size:13px;color:var(--text3);">
+                Jika tidak menemukan email verifikasi, coba kirim ulang atau cek kembali.
+            </p>
+            <div class="box-actions">
+                <button class="btn btn-primary" id="spamUnderstandBtn">Saya Mengerti</button>
+            </div>
+        </div>
+    </div>
+
     <!-- CONFIRM DIALOG -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
@@ -999,6 +1065,7 @@
         let isDarkMode = true;
         let userHasReviewed = false;
         let userReviewId = null;
+        let spamNotifShown = false;
 
         // DOM HELPERS
         const $ = (s) => document.querySelector(s);
@@ -1012,6 +1079,26 @@
             clearTimeout(el._timer);
             el._timer = setTimeout(() => el.classList.remove('show'), 4000);
         }
+
+        // ===== SPAM NOTIFICATION =====
+        function showSpamNotification() {
+            if (spamNotifShown) return;
+            // Cek apakah user sudah verifikasi
+            if (currentUser && currentUser.emailVerified) return;
+            // Cek apakah admin (skip notif)
+            if (isAdmin) return;
+
+            const el = document.getElementById('spamNotification');
+            if (el) {
+                el.classList.add('show');
+                spamNotifShown = true;
+            }
+        }
+
+        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
+            const el = document.getElementById('spamNotification');
+            if (el) el.classList.remove('show');
+        });
 
         // ===== CONFIRM =====
         let confirmResolve = null;
@@ -1060,19 +1147,13 @@
             themeToggle.textContent = '☀️';
         }
 
-        // ===== NAVIGASI PAKAI TAG =====
+        // ===== NAVIGASI =====
         function goToHome() {
-            // Matikan semua active di navbar
             document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
-
-            // Aktifkan tombol Home
             const homeBtn = document.querySelector('[data-page="home"]');
             if (homeBtn) homeBtn.classList.add('active');
 
-            // Matikan semua page
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-            // Aktifkan page Home
             const homePage = document.getElementById('page-home');
             if (homePage) {
                 homePage.classList.remove('active');
@@ -1082,17 +1163,11 @@
         }
 
         function goToPage(page) {
-            // Matikan semua active
             document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
-
-            // Aktifkan tombol yang dipilih
             const btn = document.querySelector(`[data-page="${page}"]`);
             if (btn) btn.classList.add('active');
 
-            // Matikan semua page
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-            // Aktifkan page yang dipilih
             const target = document.getElementById(`page-${page}`);
             if (target) {
                 target.classList.remove('active');
@@ -1100,13 +1175,11 @@
                 target.classList.add('active');
             }
 
-            // Render konten sesuai page
             if (page === 'reviews') renderReviews();
             if (page === 'admin') renderAdmin();
             if (page === 'rating') checkRatingAuth();
         }
 
-        // Event listener untuk semua tombol navbar
         document.querySelectorAll('.nav-left button').forEach(btn => {
             btn.addEventListener('click', () => {
                 const page = btn.dataset.page;
@@ -1156,6 +1229,7 @@
                         try {
                             await sendEmailVerification(currentUser);
                             showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
+                            showSpamNotification();
                         } catch (e) {
                             showToast('Gagal kirim ulang', true);
                         }
@@ -1372,6 +1446,7 @@
                 }
                 if (!currentUser.emailVerified && !isAdmin) {
                     showToast('Verifikasi email dulu', true);
+                    showSpamNotification();
                     return;
                 }
                 if (userHasReviewed) {
@@ -1635,10 +1710,6 @@
                             </div>
                             <button id="loginBtn" class="btn btn-primary btn-block">Login</button>
                             <div id="loginStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
-                            <div class="spam-notice" id="loginSpamNotice">
-                                <div class="title">📬 Cek Folder Spam!</div>
-                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
-                            </div>
                         </div>
 
                         <div id="registerForm" class="auth-form">
@@ -1655,10 +1726,6 @@
                             </div>
                             <button id="registerBtn" class="btn btn-primary btn-block">Daftar</button>
                             <div id="registerStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
-                            <div class="spam-notice" id="registerSpamNotice">
-                                <div class="title">📬 Cek Folder Spam!</div>
-                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
-                            </div>
                         </div>
                     </div>
                 `;
@@ -1672,8 +1739,6 @@
                         const target = tab.dataset.tab === 'login' ? 'loginForm' : 'registerForm';
                         const el = document.getElementById(target);
                         if (el) el.classList.add('active');
-                        document.getElementById('loginSpamNotice')?.classList.remove('show');
-                        document.getElementById('registerSpamNotice')?.classList.remove('show');
                     });
                 });
 
@@ -1698,7 +1763,6 @@
                     const email = document.getElementById('loginEmail')?.value.trim();
                     const pass = document.getElementById('loginPassword')?.value.trim();
                     const status = document.getElementById('loginStatus');
-                    const spamNotice = document.getElementById('loginSpamNotice');
 
                     if (!email || !pass) {
                         if (status) {
@@ -1711,7 +1775,6 @@
                         status.textContent = 'Login...';
                         status.style.color = 'var(--text2)';
                     }
-                    if (spamNotice) spamNotice.classList.remove('show');
 
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
@@ -1733,9 +1796,9 @@
                                 status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
                                 status.style.color = '#f2b8b5';
                             }
-                            if (spamNotice) spamNotice.classList.add('show');
                             await signOut(auth);
                             showToast('Verifikasi email dulu', true);
+                            showSpamNotification();
                             return;
                         }
 
@@ -1760,7 +1823,6 @@
                     const email = document.getElementById('registerEmail')?.value.trim();
                     const pass = document.getElementById('registerPassword')?.value.trim();
                     const status = document.getElementById('registerStatus');
-                    const spamNotice = document.getElementById('registerSpamNotice');
 
                     if (!email || !pass) {
                         if (status) {
@@ -1780,7 +1842,6 @@
                         status.textContent = 'Mendaftar...';
                         status.style.color = 'var(--text2)';
                     }
-                    if (spamNotice) spamNotice.classList.remove('show');
 
                     try {
                         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
@@ -1789,13 +1850,10 @@
                             status.textContent = '✅ Verifikasi email dikirim! Cek inbox/spam';
                             status.style.color = '#a8e6cf';
                         }
-                        if (spamNotice) spamNotice.classList.add('show');
                         showToast('📧 Cek email untuk verifikasi');
+                        showSpamNotification();
 
-                        // Logout dulu (karena belum verified)
                         await signOut(auth);
-
-                        // Tetap di Home
                         goToHome();
 
                     } catch (err) {
@@ -2009,21 +2067,16 @@
                         try {
                             await sendEmailVerification(currentUser);
                             showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
-                            const spamNotice = document.createElement('div');
-                            spamNotice.className = 'spam-notice show';
-                            spamNotice.innerHTML = `
-                                <div class="title">📬 Cek Folder Spam!</div>
-                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
-                            `;
-                            const badge = document.querySelector('.user-badge');
-                            if (badge) {
-                                badge.parentNode.insertBefore(spamNotice, badge.nextSibling);
-                                setTimeout(() => spamNotice.remove(), 8000);
-                            }
+                            showSpamNotification();
                         } catch (e) {
                             showToast('Gagal kirim ulang', true);
                         }
                     });
+                }
+
+                // Jika user belum verifikasi dan notif belum muncul, tampilkan
+                if (!verified && !isAdmin && !spamNotifShown) {
+                    setTimeout(() => showSpamNotification(), 1000);
                 }
             } else {
                 section.innerHTML = `
@@ -2045,18 +2098,21 @@
                 updateAuthUI();
                 renderAdmin();
 
-                // Pastikan user selalu di Home setelah login/register
-                // Cek apakah page yang aktif bukan Home, maka pindah ke Home
+                // Reset spam notif flag untuk user baru
+                if (user.emailVerified) {
+                    spamNotifShown = true; // tidak perlu munculkan notif
+                }
+
                 const activePage = document.querySelector('.page.active');
                 if (activePage && activePage.id !== 'page-home') {
                     goToHome();
                 }
             } else {
                 isAdmin = false;
+                spamNotifShown = false;
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                // Kalau logout, balik ke Home
                 goToHome();
             }
         });
