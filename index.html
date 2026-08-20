@@ -161,13 +161,25 @@
         .user-badge .logout-btn:hover {
             background: rgba(242, 184, 181, 0.15);
         }
-        .user-badge .verified {
+        .user-badge .status-verified {
             color: #a8e6cf;
-            font-size: 12px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(168, 230, 207, 0.12);
+            border: 1px solid rgba(168, 230, 207, 0.15);
         }
-        .user-badge .unverified {
+        .user-badge .status-unverified {
             color: #f2b8b5;
-            font-size: 12px;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(242, 184, 181, 0.12);
+            border: 1px solid rgba(242, 184, 181, 0.15);
+            cursor: pointer;
+        }
+        .user-badge .status-unverified:hover {
+            background: rgba(242, 184, 181, 0.2);
         }
 
         .page {
@@ -568,6 +580,27 @@
             display: block;
         }
 
+        .verify-notice {
+            background: rgba(242, 184, 181, 0.1);
+            border: 1px solid rgba(242, 184, 181, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+        .verify-notice .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .verify-notice p {
+            color: var(--text2);
+            font-size: 14px;
+        }
+        .verify-notice .btn {
+            margin-top: 10px;
+        }
+
         .toast {
             position: fixed;
             bottom: 20px;
@@ -678,8 +711,8 @@
                     Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.
                 </p>
                 <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">📱 Android</span>
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">🖥 Windows (Soon)</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Android</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Windows (Soon)</span>
                 </div>
             </div>
         </div>
@@ -758,7 +791,7 @@
                 <div class="download-box">
                     <div class="row">
                         <div class="info">
-                            <strong style="font-size:16px;">📱 Android APK</strong>
+                            <strong style="font-size:16px;">Android APK</strong>
                             <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
                             <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
                         </div>
@@ -796,10 +829,7 @@
             onValue,
             remove,
             get,
-            set,
-            query,
-            orderByChild,
-            equalTo
+            set
         } from "firebase/database";
         import {
             getAuth,
@@ -807,7 +837,8 @@
             createUserWithEmailAndPassword,
             onAuthStateChanged,
             signOut,
-            sendEmailVerification
+            sendEmailVerification,
+            sendPasswordResetEmail
         } from "firebase/auth";
 
         const firebaseConfig = {
@@ -847,7 +878,7 @@
             el.style.borderColor = err ? 'rgba(242,184,181,0.2)' : 'rgba(255,255,255,0.06)';
             el.classList.add('show');
             clearTimeout(el._timer);
-            el._timer = setTimeout(() => el.classList.remove('show'), 3000);
+            el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
 
         // THEME
@@ -864,12 +895,15 @@
             themeToggle.textContent = '☀️';
         }
 
-        // NAVIGATION
+        // NAVIGATION - tetap di halaman yang sama setelah login
+        let currentPage = 'home';
+
         $$('.nav-left button').forEach(btn => {
             btn.addEventListener('click', () => {
                 $$('.nav-left button').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const page = btn.dataset.page;
+                currentPage = page;
                 $$('.page').forEach(p => p.classList.remove('active'));
                 const target = $(`#page-${page}`);
                 if (target) {
@@ -898,12 +932,44 @@
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
             if (currentUser) {
+                if (!currentUser.emailVerified) {
+                    form.style.display = 'none';
+                    req.style.display = 'block';
+                    req.innerHTML = `
+                        <div style="padding:20px 0;">
+                            <div style="font-size:40px;">📧</div>
+                            <p style="color:var(--text2);">Verifikasi email dulu untuk memberi penilaian</p>
+                            <p style="color:var(--text3);font-size:13px;margin-top:4px;">Cek inbox atau spam</p>
+                            <button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:10px;">Kirim Ulang Verifikasi</button>
+                        </div>
+                    `;
+                    document.getElementById('resendVerifyBtn')?.addEventListener('click', async () => {
+                        try {
+                            await sendEmailVerification(currentUser);
+                            showToast('Email verifikasi dikirim! Cek inbox');
+                        } catch (e) {
+                            showToast('Gagal kirim ulang', true);
+                        }
+                    });
+                    return;
+                }
                 form.style.display = 'block';
                 req.style.display = 'none';
                 checkUserReview();
             } else {
                 form.style.display = 'none';
                 req.style.display = 'block';
+                req.innerHTML = `
+                    <p style="color:var(--text2);">Login untuk memberi penilaian</p>
+                    <button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:10px;">Login</button>
+                `;
+                document.getElementById('gotoLoginBtn2')?.addEventListener('click', () => {
+                    $$('.nav-left button').forEach(b => b.classList.remove('active'));
+                    document.querySelector('[data-page="admin"]')?.classList.add('active');
+                    $$('.page').forEach(p => p.classList.remove('active'));
+                    $('#page-admin').classList.add('active');
+                    renderAdmin();
+                });
             }
         }
 
@@ -926,14 +992,6 @@
                 reviewForm.style.display = 'block';
             }
         }
-
-        $('#gotoLoginBtn2').addEventListener('click', () => {
-            $$('.nav-left button').forEach(b => b.classList.remove('active'));
-            document.querySelector('[data-page="admin"]').classList.add('active');
-            $$('.page').forEach(p => p.classList.remove('active'));
-            $('#page-admin').classList.add('active');
-            renderAdmin();
-        });
 
         // STARS
         const starEls = $$('#starSelector span');
@@ -1001,6 +1059,10 @@
         $('#submitReview').addEventListener('click', async () => {
             if (isSubmitting || !currentUser) {
                 if (!currentUser) showToast('Login dulu', true);
+                return;
+            }
+            if (!currentUser.emailVerified) {
+                showToast('Verifikasi email dulu', true);
                 return;
             }
             if (userHasReviewed) {
@@ -1085,7 +1147,6 @@
                 }
                 allReviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-                // Check if current user has reviewed
                 if (currentUser) {
                     const reviewed = allReviews.find(r => r.uid === currentUser.uid);
                     if (reviewed) {
@@ -1267,7 +1328,7 @@
                     this.textContent = input.type === 'password' ? '👁' : '🙈';
                 });
 
-                // Login
+                // Login - cek verifikasi
                 document.getElementById('loginBtn').addEventListener('click', async () => {
                     const email = document.getElementById('loginEmail').value.trim();
                     const pass = document.getElementById('loginPassword').value.trim();
@@ -1280,10 +1341,23 @@
                     status.textContent = 'Login...';
                     status.style.color = 'var(--text2)';
                     try {
-                        await signInWithEmailAndPassword(auth, email, pass);
+                        const userCred = await signInWithEmailAndPassword(auth, email, pass);
+                        if (!userCred.user.emailVerified) {
+                            status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
+                            status.style.color = '#f2b8b5';
+                            await signOut(auth);
+                            showToast('Verifikasi email dulu', true);
+                            return;
+                        }
                         status.textContent = 'Login berhasil!';
                         status.style.color = '#a8e6cf';
                         showToast('Login berhasil');
+                        // Kembali ke home
+                        $$('.nav-left button').forEach(b => b.classList.remove('active'));
+                        document.querySelector('[data-page="home"]')?.classList.add('active');
+                        $$('.page').forEach(p => p.classList.remove('active'));
+                        $('#page-home').classList.add('active');
+                        currentPage = 'home';
                     } catch (err) {
                         status.textContent = err.message;
                         status.style.color = '#f2b8b5';
@@ -1291,7 +1365,7 @@
                     }
                 });
 
-                // Register
+                // Register - kirim verifikasi
                 document.getElementById('registerBtn').addEventListener('click', async () => {
                     const email = document.getElementById('registerEmail').value.trim();
                     const pass = document.getElementById('registerPassword').value.trim();
@@ -1311,9 +1385,10 @@
                     try {
                         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                         await sendEmailVerification(userCred.user);
-                        status.textContent = 'Verifikasi email dikirim! Cek inbox.';
+                        status.textContent = '✅ Verifikasi email dikirim! Cek inbox/spam';
                         status.style.color = '#a8e6cf';
                         showToast('Cek email untuk verifikasi');
+                        await signOut(auth);
                     } catch (err) {
                         status.textContent = err.message;
                         status.style.color = '#f2b8b5';
@@ -1374,16 +1449,15 @@
                     <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">APK Version</div></div>
                 </div>
 
-                <!-- BULK ACTIONS -->
                 <div class="admin-bulk-actions">
                     <span style="font-weight:600;font-size:13px;">Hapus Berdasarkan:</span>
                     <select id="bulkStarSelect">
                         <option value="all">Semua Review</option>
-                        <option value="5">⭐ 5 Bintang</option>
-                        <option value="4">⭐⭐⭐⭐ 4 Bintang</option>
-                        <option value="3">⭐⭐⭐ 3 Bintang</option>
-                        <option value="2">⭐⭐ 2 Bintang</option>
-                        <option value="1">⭐ 1 Bintang</option>
+                        <option value="5">5 Bintang</option>
+                        <option value="4">4 Bintang</option>
+                        <option value="3">3 Bintang</option>
+                        <option value="2">2 Bintang</option>
+                        <option value="1">1 Bintang</option>
                     </select>
                     <button id="bulkDeleteBtn" class="btn btn-danger btn-sm">Hapus</button>
                     <span style="font-size:12px;color:var(--text3);margin-left:4px;">(aksi permanen)</span>
@@ -1425,10 +1499,9 @@
                     }
                 }
 
-                showToast(`✅ ${deleted} review dihapus`);
+                showToast(`${deleted} review dihapus`);
             });
 
-            // RENDER ADMIN REVIEW LIST
             const adminList = document.getElementById('adminReviewsList');
             if (allReviews.length === 0) {
                 adminList.innerHTML = '<div class="empty">Belum ada review</div>';
@@ -1476,21 +1549,44 @@
             if (currentUser) {
                 const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
                 const verified = currentUser.emailVerified;
+
+                let statusHtml = '';
+                if (verified) {
+                    statusHtml = `<span class="status-verified">Verified</span>`;
+                } else {
+                    statusHtml = `
+                        <span class="status-unverified" id="resendVerifyNav">Unverified</span>
+                    `;
+                }
+
                 section.innerHTML = `
                     <div class="user-badge">
                         <span>${displayName}</span>
-                        <span class="${verified ? 'verified' : 'unverified'}">${verified ? '✓' : '✗'}</span>
+                        ${statusHtml}
                         <button class="logout-btn" id="logoutBtnNav">Logout</button>
                     </div>
                 `;
+
                 document.getElementById('logoutBtnNav').addEventListener('click', () => signOut(auth));
+
+                const resendBtn = document.getElementById('resendVerifyNav');
+                if (resendBtn) {
+                    resendBtn.addEventListener('click', async () => {
+                        try {
+                            await sendEmailVerification(currentUser);
+                            showToast('Email verifikasi dikirim! Cek inbox/spam');
+                        } catch (e) {
+                            showToast('Gagal kirim ulang', true);
+                        }
+                    });
+                }
             } else {
                 section.innerHTML = `
                     <button class="auth-btn" id="loginNavBtn">Login</button>
                 `;
                 document.getElementById('loginNavBtn').addEventListener('click', () => {
                     $$('.nav-left button').forEach(b => b.classList.remove('active'));
-                    document.querySelector('[data-page="admin"]').classList.add('active');
+                    document.querySelector('[data-page="admin"]')?.classList.add('active');
                     $$('.page').forEach(p => p.classList.remove('active'));
                     $('#page-admin').classList.add('active');
                     renderAdmin();
