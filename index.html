@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>SekolahMu App</title>
+    <title>SekolahMu</title>
     <script type="importmap">
         {
             "imports": {
@@ -20,13 +20,42 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-primary: #0f0e1a;
+            --bg-secondary: #1a1833;
+            --bg-card: rgba(26, 24, 51, 0.8);
+            --bg-input: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8e4f0;
+            --text-secondary: #a8a4b8;
+            --text-muted: #6a6678;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --gradient: linear-gradient(135deg, #0f0e1a 0%, #1a1833 50%, #2d1b4e 100%);
+            --card-hover: rgba(255, 255, 255, 0.04);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f0edf5;
+            --bg-secondary: #e8e4f0;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-input: rgba(0, 0, 0, 0.04);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-primary: #1a1833;
+            --text-secondary: #4a4660;
+            --text-muted: #8a86a0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #f0edf5 0%, #e8e4f0 50%, #ddd6ea 100%);
+            --card-hover: rgba(0, 0, 0, 0.03);
+        }
+
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-            background: #0b0b0f;
-            color: #e6e0e9;
+            background: var(--gradient);
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 16px;
             overflow-x: hidden;
+            transition: background 0.4s ease, color 0.3s ease;
         }
 
         .container {
@@ -39,20 +68,32 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            background: rgba(20, 18, 24, 0.85);
+            background: var(--bg-card);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             padding: 10px 16px;
             border-radius: 16px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
             position: sticky;
             top: 8px;
             z-index: 50;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-left {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .nav-right {
+            display: flex;
+            gap: 6px;
+            align-items: center;
         }
         .nav button {
             background: transparent;
-            color: #cac4cf;
+            color: var(--text-secondary);
             border: none;
             padding: 8px 14px;
             border-radius: 10px;
@@ -60,7 +101,6 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.25s ease;
-            flex: 1 1 auto;
             position: relative;
         }
         .nav button::after {
@@ -76,8 +116,8 @@
             transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
         }
         .nav button:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: #e6e0e9;
+            background: var(--card-hover);
+            color: var(--text-primary);
         }
         .nav button.active {
             color: #d0bcff;
@@ -87,6 +127,43 @@
         }
         .nav button:active {
             transform: scale(0.94);
+        }
+
+        .theme-toggle {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--card-hover);
+        }
+
+        .user-badge {
+            font-size: 13px;
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            background: var(--bg-input);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .user-badge .logout-btn {
+            background: none;
+            border: none;
+            color: #f2b8b5;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 0 4px;
+        }
+        .user-badge .logout-btn:hover {
+            color: #ff6b6b;
         }
 
         /* ===== PAGES ===== */
@@ -111,28 +188,24 @@
 
         /* ===== CARDS ===== */
         .card {
-            background: rgba(20, 18, 24, 0.75);
+            background: var(--bg-card);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 22px 24px;
             margin-bottom: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            will-change: transform;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
         }
         .card:hover {
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .card-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         /* ===== BUTTONS ===== */
@@ -149,21 +222,6 @@
             gap: 6px;
             text-decoration: none;
             will-change: transform;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.15), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.4s;
-            pointer-events: none;
-        }
-        .btn:hover::after {
-            opacity: 1;
         }
         .btn:active {
             transform: scale(0.94);
@@ -188,11 +246,11 @@
         }
         .btn-outline {
             background: transparent;
-            color: #e6e0e9;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-hover);
             transform: translateY(-1px);
         }
         .btn-sm {
@@ -212,8 +270,8 @@
 
         /* ===== DOWNLOAD ===== */
         .download-box {
-            background: rgba(29, 27, 32, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 20px 22px;
             margin-top: 12px;
@@ -230,41 +288,12 @@
             gap: 12px;
         }
         .download-box .info .ver {
-            color: #cac4cf;
+            color: var(--text-secondary);
             font-size: 14px;
         }
         .download-box .info .sz {
-            color: #cac4cf;
+            color: var(--text-secondary);
             font-size: 13px;
-        }
-        .coming {
-            color: #cac4cf;
-            text-align: center;
-            padding: 28px 16px;
-            background: rgba(29, 27, 32, 0.4);
-            border-radius: 16px;
-            border: 1px dashed rgba(255, 255, 255, 0.08);
-            margin-top: 12px;
-            transition: all 0.3s;
-        }
-        .coming:hover {
-            border-color: rgba(255, 255, 255, 0.12);
-        }
-        .coming .icon {
-            font-size: 36px;
-            margin-bottom: 6px;
-            display: block;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-6px);
-            }
         }
 
         /* ===== STARS ===== */
@@ -326,17 +355,16 @@
             font-size: 13px;
             font-weight: 500;
             margin-bottom: 4px;
-            color: #cac4cf;
-            transition: all 0.3s;
+            color: var(--text-secondary);
         }
         .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 11px 14px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            background: rgba(255, 255, 255, 0.04);
-            color: #e6e0e9;
+            border: 1px solid var(--border-color);
+            background: var(--bg-input);
+            color: var(--text-primary);
             font-size: 14px;
             outline: none;
             transition: all 0.3s ease;
@@ -345,7 +373,6 @@
         .form-group input:focus,
         .form-group textarea:focus {
             border-color: #d0bcff;
-            background: rgba(255, 255, 255, 0.06);
             box-shadow: 0 0 0 3px rgba(208, 188, 255, 0.08);
         }
         .form-group textarea {
@@ -353,7 +380,6 @@
             min-height: 70px;
         }
 
-        /* Password field with eye */
         .password-wrap {
             position: relative;
         }
@@ -367,7 +393,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #cac4cf;
+            color: var(--text-secondary);
             font-size: 20px;
             cursor: pointer;
             padding: 4px 8px;
@@ -376,14 +402,13 @@
             line-height: 1;
         }
         .password-toggle:hover {
-            background: rgba(255, 255, 255, 0.06);
-            color: #e6e0e9;
+            background: var(--card-hover);
+            color: var(--text-primary);
         }
         .password-toggle:active {
             transform: translateY(-50%) scale(0.9);
         }
 
-        /* Name field animation */
         .name-field-wrap {
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
@@ -410,9 +435,10 @@
             cursor: pointer;
             padding: 4px 0;
             transition: all 0.2s;
+            color: var(--text-secondary);
         }
         .checkbox-wrap:hover {
-            color: #e6e0e9;
+            color: var(--text-primary);
         }
         .checkbox-wrap input {
             width: 18px;
@@ -427,8 +453,8 @@
 
         /* ===== REVIEW ITEMS ===== */
         .review-item {
-            background: rgba(29, 27, 32, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
             padding: 16px 18px;
             margin-bottom: 10px;
@@ -437,8 +463,7 @@
             will-change: transform, opacity;
         }
         .review-item:hover {
-            border-color: rgba(255, 255, 255, 0.08);
-            background: rgba(29, 27, 32, 0.8);
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
         .review-item.removing {
@@ -480,14 +505,16 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            color: var(--text-primary);
         }
         .review-item .name .badge-anon {
             font-size: 10px;
             font-weight: 500;
-            background: rgba(255, 255, 255, 0.06);
-            color: #cac4cf;
+            background: var(--bg-input);
+            color: var(--text-secondary);
             padding: 1px 10px;
             border-radius: 20px;
+            border: 1px solid var(--border-color);
         }
         .review-item .stars-display {
             color: #ffd700;
@@ -495,14 +522,14 @@
             letter-spacing: 1px;
         }
         .review-item .msg {
-            color: #cac4cf;
+            color: var(--text-secondary);
             font-size: 14px;
             margin-top: 4px;
             word-break: break-word;
             line-height: 1.5;
         }
         .review-item .meta {
-            color: #48454e;
+            color: var(--text-muted);
             font-size: 11px;
             margin-top: 6px;
         }
@@ -519,15 +546,15 @@
             margin-bottom: 18px;
         }
         .admin-stats .stat {
-            background: rgba(29, 27, 32, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 14px;
             text-align: center;
             transition: all 0.3s;
         }
         .admin-stats .stat:hover {
-            border-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
         }
         .admin-stats .stat .num {
@@ -537,7 +564,7 @@
         }
         .admin-stats .stat .lbl {
             font-size: 11px;
-            color: #cac4cf;
+            color: var(--text-secondary);
         }
         .admin-header {
             display: flex;
@@ -553,10 +580,10 @@
             bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: rgba(29, 27, 32, 0.92);
+            background: var(--bg-card);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
             padding: 12px 24px;
             border-radius: 14px;
             font-size: 14px;
@@ -566,7 +593,8 @@
             z-index: 999;
             max-width: 90%;
             text-align: center;
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow);
+            color: var(--text-primary);
         }
         .toast.show {
             opacity: 1;
@@ -574,20 +602,67 @@
         }
 
         .empty {
-            color: #48454e;
+            color: var(--text-muted);
             text-align: center;
             padding: 40px 12px;
             font-size: 15px;
         }
-        .text-muted {
-            color: #cac4cf;
+
+        /* ===== LOGIN / REGISTER ===== */
+        .auth-container {
+            max-width: 400px;
+            margin: 0 auto;
         }
-        .text-center {
-            text-align: center;
+        .auth-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        .auth-tabs button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .auth-tabs button.active {
+            background: #d0bcff;
+            color: #381e72;
+        }
+        .auth-tabs button:hover:not(.active) {
+            background: var(--card-hover);
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+
+        .verify-badge {
+            display: inline-block;
+            background: rgba(168, 230, 207, 0.15);
+            color: #a8e6cf;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid rgba(168, 230, 207, 0.15);
+        }
+        .verify-badge.unverified {
+            background: rgba(242, 184, 181, 0.15);
+            color: #f2b8b5;
+            border-color: rgba(242, 184, 181, 0.15);
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 500px) {
+        @media (max-width: 600px) {
             body {
                 padding: 10px;
             }
@@ -598,9 +673,21 @@
                 font-size: 32px;
                 gap: 4px;
             }
+            .nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .nav-left {
+                width: 100%;
+                justify-content: center;
+            }
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+            }
             .nav button {
                 font-size: 11px;
-                padding: 6px 8px;
+                padding: 6px 10px;
             }
             .download-box .row {
                 flex-direction: column;
@@ -608,6 +695,20 @@
             }
             .download-box .row .btn {
                 justify-content: center;
+            }
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-left button {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            .user-badge {
+                font-size: 11px;
+                padding: 4px 8px;
             }
         }
     </style>
@@ -618,34 +719,33 @@
 
         <!-- ===== NAVBAR ===== -->
         <nav class="nav" id="navbar">
-            <button class="active" data-page="home">🏠 Home</button>
-            <button data-page="rating">⭐ Rating</button>
-            <button data-page="reviews">📝 Reviews</button>
-            <button data-page="admin">🔐 Admin</button>
+            <div class="nav-left">
+                <button class="active" data-page="home">Home</button>
+                <button data-page="rating">Rating</button>
+                <button data-page="reviews">Reviews</button>
+                <button data-page="admin">Admin</button>
+            </div>
+            <div class="nav-right">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+                <div id="userBadge" style="display:none;" class="user-badge"></div>
+            </div>
         </nav>
 
         <!-- ===== PAGE: HOME ===== -->
         <div id="page-home" class="page active">
             <div class="card">
-                <h1 class="card-title">📚 SekolahMu</h1>
-                <p style="color:#cac4cf;font-size:15px;margin-bottom:16px;">Aplikasi SMM untuk Android</p>
+                <h1 class="card-title">SekolahMu</h1>
+                <p style="color:var(--text-secondary);font-size:15px;margin-bottom:16px;">Aplikasi SMM untuk Android</p>
 
                 <div class="download-box">
                     <div class="row">
                         <div class="info">
-                            <strong style="font-size:17px;">📱 Download APK</strong>
+                            <strong style="font-size:17px;">Download APK</strong>
                             <div class="ver">Versi: <span id="apkVersion">2.2.0</span></div>
                             <div class="sz">Ukuran: <span id="apkSize">3.78 MB</span></div>
                         </div>
-                        <a id="downloadBtn" href="#" class="btn btn-primary">⬇ Download</a>
+                        <a id="downloadBtn" href="#" class="btn btn-primary">Download</a>
                     </div>
-                </div>
-
-                <div class="coming">
-                    <span class="icon">🖥</span>
-                    <strong>SekolahMu untuk Windows</strong>
-                    <div style="color:#cac4cf;font-size:14px;margin-top:4px;">Sedang dalam proses pembuatan</div>
-                    <div style="color:#48454e;font-size:13px;margin-top:2px;">🚧 Coming Soon</div>
                 </div>
             </div>
         </div>
@@ -653,49 +753,58 @@
         <!-- ===== PAGE: RATING ===== -->
         <div id="page-rating" class="page">
             <div class="card">
-                <h2 class="card-title">⭐ Beri Penilaian</h2>
-                <p style="color:#cac4cf;font-size:14px;margin-bottom:16px;">Bagaimana pengalaman kamu menggunakan SekolahMu?</p>
+                <h2 class="card-title">Beri Penilaian</h2>
+                <p style="color:var(--text-secondary);font-size:14px;margin-bottom:16px;">Bagaimana pengalaman kamu menggunakan SekolahMu?</p>
 
-                <div class="form-group">
-                    <label>Rating</label>
-                    <div class="stars" id="starSelector">
-                        <span data-value="1">☆</span>
-                        <span data-value="2">☆</span>
-                        <span data-value="3">☆</span>
-                        <span data-value="4">☆</span>
-                        <span data-value="5">☆</span>
-                    </div>
+                <!-- Auth required message -->
+                <div id="ratingAuthRequired" style="text-align:center;padding:20px 0;">
+                    <div style="font-size:40px;margin-bottom:10px;">🔐</div>
+                    <p style="color:var(--text-secondary);">Login untuk memberi penilaian</p>
+                    <button id="gotoLoginBtn" class="btn btn-primary" style="margin-top:12px;">Login</button>
                 </div>
 
-                <!-- Name field - animates hide/show -->
-                <div class="name-field-wrap" id="nameFieldWrap">
+                <!-- Rating form (hidden if not logged in) -->
+                <div id="ratingForm" style="display:none;">
                     <div class="form-group">
-                        <label id="nameLabel">Nama</label>
-                        <input type="text" id="reviewName" placeholder="Masukkan nama kamu..." maxlength="50" />
+                        <label>Rating</label>
+                        <div class="stars" id="starSelector">
+                            <span data-value="1">☆</span>
+                            <span data-value="2">☆</span>
+                            <span data-value="3">☆</span>
+                            <span data-value="4">☆</span>
+                            <span data-value="5">☆</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="checkbox-wrap">
-                        <input type="checkbox" id="reviewAnonymous" />
-                        <span>Kirim sebagai anonim</span>
-                    </label>
-                </div>
+                    <div class="name-field-wrap" id="nameFieldWrap">
+                        <div class="form-group">
+                            <label id="nameLabel">Nama</label>
+                            <input type="text" id="reviewName" placeholder="Masukkan nama kamu..." maxlength="50" />
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Pesan</label>
-                    <textarea id="reviewMessage" placeholder="Tulis pengalaman kamu..." maxlength="500"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label class="checkbox-wrap">
+                            <input type="checkbox" id="reviewAnonymous" />
+                            <span>Kirim sebagai anonim</span>
+                        </label>
+                    </div>
 
-                <button id="submitReview" class="btn btn-primary btn-block">📤 Kirim Review</button>
-                <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:#cac4cf;text-align:center;"></div>
+                    <div class="form-group">
+                        <label>Pesan</label>
+                        <textarea id="reviewMessage" placeholder="Tulis pengalaman kamu..." maxlength="500"></textarea>
+                    </div>
+
+                    <button id="submitReview" class="btn btn-primary btn-block">Kirim Review</button>
+                    <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:var(--text-secondary);text-align:center;"></div>
+                </div>
             </div>
         </div>
 
         <!-- ===== PAGE: REVIEWS ===== -->
         <div id="page-reviews" class="page">
             <div class="card">
-                <h2 class="card-title">📝 Review Pengguna</h2>
+                <h2 class="card-title">Review Pengguna</h2>
                 <div id="reviewsStats" style="margin-bottom:16px;"></div>
                 <div id="reviewsList"></div>
             </div>
@@ -730,8 +839,13 @@
         import {
             getAuth,
             signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
             onAuthStateChanged,
-            signOut
+            signOut,
+            sendEmailVerification,
+            sendPasswordResetEmail,
+            isSignInWithEmailLink,
+            signInWithEmailLink
         } from "firebase/auth";
 
         const firebaseConfig = {
@@ -759,6 +873,7 @@
         let allReviews = [];
         let updateData = {};
         let isSubmitting = false;
+        let isDarkMode = true;
 
         // ============================================================
         // DOM HELPERS
@@ -776,11 +891,30 @@
         }
 
         // ============================================================
+        // THEME TOGGLE
+        // ============================================================
+        const themeToggle = $('#themeToggle');
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+            themeToggle.textContent = isDarkMode ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        });
+
+        // Load theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            isDarkMode = false;
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggle.textContent = '☀️';
+        }
+
+        // ============================================================
         // NAVIGATION
         // ============================================================
-        $$('.nav button').forEach(btn => {
+        $$('.nav-left button').forEach(btn => {
             btn.addEventListener('click', () => {
-                $$('.nav button').forEach(b => b.classList.remove('active'));
+                $$('.nav-left button').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const page = btn.dataset.page;
                 $$('.page').forEach(c => c.classList.remove('active'));
@@ -792,11 +926,35 @@
                 }
                 if (page === 'reviews') renderReviews();
                 if (page === 'admin') renderAdmin();
+                if (page === 'rating') checkRatingAuth();
             });
         });
 
         // ============================================================
-        // STARS with Animation
+        // RATING AUTH CHECK
+        // ============================================================
+        function checkRatingAuth() {
+            const form = $('#ratingForm');
+            const required = $('#ratingAuthRequired');
+            if (currentUser) {
+                form.style.display = 'block';
+                required.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                required.style.display = 'block';
+            }
+        }
+
+        $('#gotoLoginBtn').addEventListener('click', () => {
+            $$('.nav-left button').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-page="admin"]').classList.add('active');
+            $$('.page').forEach(c => c.classList.remove('active'));
+            $('#page-admin').classList.add('active');
+            renderAdmin();
+        });
+
+        // ============================================================
+        // STARS
         // ============================================================
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
@@ -826,29 +984,10 @@
                     }
                 });
             });
-
-            el.addEventListener('mouseenter', () => {
-                const val = parseInt(el.dataset.value);
-                starEls.forEach(s => {
-                    const sv = parseInt(s.dataset.value);
-                    if (sv <= val && !s.classList.contains('active')) {
-                        s.style.color = '#ffd700';
-                        s.style.transform = 'scale(1.1)';
-                    }
-                });
-            });
-            el.addEventListener('mouseleave', () => {
-                starEls.forEach(s => {
-                    s.style.color = '';
-                    if (!s.classList.contains('active')) {
-                        s.style.transform = '';
-                    }
-                });
-            });
         });
 
         // ============================================================
-        // ANONYM TOGGLE - Name field hide/show
+        // ANONYM TOGGLE
         // ============================================================
         const anonCheckbox = $('#reviewAnonymous');
         const nameFieldWrap = $('#nameFieldWrap');
@@ -887,399 +1026,14 @@
         // SUBMIT REVIEW
         // ============================================================
         $('#submitReview').addEventListener('click', async () => {
-            if (isSubmitting) return;
+            if (isSubmitting || !currentUser) {
+                if (!currentUser) showToast('Login dulu untuk memberi review', true);
+                return;
+            }
 
             const name = anonCheckbox.checked ? '' : nameInput.value.trim() || 'Pengguna';
             const message = $('#reviewMessage').value.trim();
             const anonymous = anonCheckbox.checked;
             const rating = selectedRating;
 
-            if (rating === 0) {
-                showToast('❌ Pilih rating dulu!', true);
-                const container = $('#starSelector');
-                container.style.animation = 'none';
-                void container.offsetHeight;
-                container.style.animation = 'shake 0.4s ease';
-                setTimeout(() => container.style.animation = '', 500);
-                return;
-            }
-            if (!message) {
-                showToast('❌ Tulis pesan review!', true);
-                $('#reviewMessage').focus();
-                $('#reviewMessage').style.borderColor = '#f2b8b5';
-                setTimeout(() => $('#reviewMessage').style.borderColor = '', 2000);
-                return;
-            }
-
-            isSubmitting = true;
-            const statusEl = $('#reviewStatus');
-            statusEl.textContent = '⏳ Mengirim...';
-            statusEl.style.color = '#cac4cf';
-            $('#submitReview').disabled = true;
-
-            try {
-                const reviewsRef = ref(db, 'reviews');
-                const newRef = push(reviewsRef);
-                await set(newRef, {
-                    name: anonymous ? '' : name,
-                    anonymous: anonymous,
-                    rating: rating,
-                    message: message,
-                    appVersion: updateData.latestVersion || '2.2.0',
-                    timestamp: Date.now()
-                });
-
-                statusEl.textContent = '✅ Terima kasih! Review berhasil dikirim. 🎉';
-                statusEl.style.color = '#a8e6cf';
-                showToast('✅ Review berhasil dikirim!');
-
-                selectedRating = 0;
-                starEls.forEach(s => {
-                    s.classList.remove('active', 'bounce');
-                    s.textContent = '☆';
-                });
-                nameInput.value = '';
-                $('#reviewMessage').value = '';
-                anonCheckbox.checked = false;
-                nameFieldWrap.classList.remove('hidden');
-
-                loadReviews();
-
-            } catch (err) {
-                statusEl.textContent = '❌ Gagal mengirim: ' + err.message;
-                statusEl.style.color = '#f2b8b5';
-                showToast('❌ Gagal mengirim review', true);
-            }
-
-            isSubmitting = false;
-            $('#submitReview').disabled = false;
-            setTimeout(() => {
-                statusEl.style.color = '#cac4cf';
-            }, 4000);
-        });
-
-        // ============================================================
-        // LOAD & RENDER REVIEWS
-        // ============================================================
-        function loadReviews() {
-            const reviewsRef = ref(db, 'reviews');
-            onValue(reviewsRef, (snap) => {
-                const data = snap.val();
-                allReviews = [];
-                if (data) {
-                    Object.keys(data).forEach(key => {
-                        const item = data[key];
-                        if (item && typeof item === 'object' && item.rating !== undefined) {
-                            allReviews.push({
-                                id: key,
-                                ...item
-                            });
-                        }
-                    });
-                }
-                allReviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                renderReviews();
-            });
-        }
-
-        function renderReviews() {
-            const list = $('#reviewsList');
-            const stats = $('#reviewsStats');
-
-            if (allReviews.length === 0) {
-                list.innerHTML = `
-                        <div class="empty">
-                            <div style="font-size:48px;margin-bottom:12px;">📝</div>
-                            Belum ada review.<br />
-                            <span style="color:#cac4cf;font-size:13px;">Jadilah yang pertama! 🎉</span>
-                        </div>
-                    `;
-                stats.innerHTML = '';
-                return;
-            }
-
-            const total = allReviews.length;
-            const avg = allReviews.reduce((sum, r) => sum + r.rating, 0) / total;
-            const starsCount = [0, 0, 0, 0, 0];
-            allReviews.forEach(r => {
-                if (r.rating >= 1 && r.rating <= 5) starsCount[r.rating - 1]++;
-            });
-
-            stats.innerHTML = `
-                    <div style="display:flex;gap:16px;flex-wrap:wrap;background:rgba(29,27,32,0.4);padding:14px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="font-size:28px;font-weight:700;color:#ffd700;">${avg.toFixed(1)}</span>
-                            <span style="color:#ffd700;font-size:20px;">⭐</span>
-                            <span style="color:#cac4cf;font-size:13px;">(${total} review)</span>
-                        </div>
-                        <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:12px;align-items:center;">
-                            ${[5,4,3,2,1].map(n => `
-                                    <span style="background:rgba(255,255,255,0.04);padding:2px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;">
-                                        <span style="color:#ffd700;">${'★'.repeat(n)}</span>
-                                        <span style="color:#cac4cf;">${starsCount[n-1]}</span>
-                                    </span>
-                                `).join('')}
-                        </div>
-                    </div>
-                `;
-
-            list.innerHTML = allReviews.map((r, index) => {
-                const displayName = r.anonymous ? 'Anonymous' : (r.name || 'Pengguna');
-                const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-                const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                }) : '';
-                const version = r.appVersion ? `v${r.appVersion}` : '';
-
-                let adminBtn = '';
-                if (isAdmin) {
-                    adminBtn = `
-                            <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}" style="margin-top:6px;">
-                                🗑 Hapus
-                            </button>
-                        `;
-                }
-
-                const delay = Math.min(index * 40, 400);
-
-                return `
-                        <div class="review-item" data-id="${r.id}" style="animation-delay:${delay}ms;">
-                            <div class="top">
-                                <span class="name">
-                                    ${displayName}
-                                    ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}
-                                </span>
-                                <span class="stars-display">${starsStr}</span>
-                            </div>
-                            <div class="msg">${r.message}</div>
-                            <div class="meta">${date} ${version ? '• ' + version : ''}</div>
-                            ${adminBtn}
-                        </div>
-                    `;
-            }).join('');
-
-            $$('.delete-review').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    if (!confirm('Hapus review ini secara permanen?')) return;
-
-                    const item = btn.closest('.review-item');
-                    item.classList.add('removing');
-
-                    try {
-                        await remove(ref(db, `reviews/${id}`));
-                        showToast('✅ Review dihapus');
-                    } catch (err) {
-                        showToast('❌ Gagal hapus: ' + err.message, true);
-                        item.classList.remove('removing');
-                    }
-                });
-            });
-        }
-
-        // ============================================================
-        // ADMIN AUTH
-        // ============================================================
-        function renderAdmin() {
-            const container = $('#adminContent');
-            if (!currentUser) {
-                container.innerHTML = `
-                        <div style="animation:pageFadeIn 0.4s ease forwards;">
-                            <h2 class="card-title">🔐 Admin Login</h2>
-                            <div class="admin-login">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" id="adminEmail" placeholder="Email" />
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <div class="password-wrap">
-                                        <input type="password" id="adminPassword" placeholder="Password" />
-                                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
-                                            👁
-                                        </button>
-                                    </div>
-                                </div>
-                                <button id="adminLoginBtn" class="btn btn-primary btn-block">🔑 Login</button>
-                                <div id="adminLoginStatus" style="margin-top:10px;font-size:14px;color:#cac4cf;text-align:center;"></div>
-                            </div>
-                        </div>
-                    `;
-
-                // Password toggle
-                const toggleBtn = $('#togglePassword');
-                const passInput = $('#adminPassword');
-                let passwordVisible = false;
-
-                toggleBtn.addEventListener('click', () => {
-                    passwordVisible = !passwordVisible;
-                    passInput.type = passwordVisible ? 'text' : 'password';
-                    toggleBtn.textContent = passwordVisible ? '🙈' : '👁';
-                });
-
-                $('#adminLoginBtn').addEventListener('click', async () => {
-                    const email = $('#adminEmail').value.trim();
-                    const pass = $('#adminPassword').value.trim();
-                    const status = $('#adminLoginStatus');
-                    if (!email || !pass) {
-                        status.textContent = '❌ Isi email dan password';
-                        status.style.color = '#f2b8b5';
-                        return;
-                    }
-                    status.textContent = '⏳ Login...';
-                    status.style.color = '#cac4cf';
-                    $('#adminLoginBtn').disabled = true;
-                    try {
-                        await signInWithEmailAndPassword(auth, email, pass);
-                        status.textContent = '✅ Login berhasil!';
-                        status.style.color = '#a8e6cf';
-                        showToast('✅ Login berhasil');
-                    } catch (err) {
-                        status.textContent = '❌ ' + err.message;
-                        status.style.color = '#f2b8b5';
-                        showToast('❌ Login gagal', true);
-                    }
-                    $('#adminLoginBtn').disabled = false;
-                });
-
-                $('#adminPassword').addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') $('#adminLoginBtn').click();
-                });
-                $('#adminEmail').addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') $('#adminPassword').focus();
-                });
-
-                return;
-            }
-
-            if (!isAdmin) {
-                container.innerHTML = `
-                        <div style="text-align:center;padding:30px 0;animation:pageFadeIn 0.4s ease forwards;">
-                            <div style="font-size:48px;margin-bottom:12px;">⛔</div>
-                            <h2 style="margin-bottom:6px;">Bukan Admin</h2>
-                            <p style="color:#cac4cf;">Akun ini tidak memiliki akses admin.</p>
-                            <button id="adminLogoutBtn" class="btn btn-outline" style="margin-top:16px;">🚪 Logout</button>
-                        </div>
-                    `;
-                $('#adminLogoutBtn')?.addEventListener('click', () => signOut(auth));
-                return;
-            }
-
-            const total = allReviews.length;
-            const avg = total > 0 ? (allReviews.reduce((s, r) => s + r.rating, 0) / total) : 0;
-
-            container.innerHTML = `
-                    <div style="animation:pageFadeIn 0.4s ease forwards;">
-                        <div class="admin-header">
-                            <h2 class="card-title">🛡 Admin Dashboard</h2>
-                            <button id="adminLogoutBtn" class="btn btn-outline btn-sm">🚪 Logout</button>
-                        </div>
-                        <div class="admin-stats">
-                            <div class="stat"><div class="num">${total}</div><div class="lbl">Total Review</div></div>
-                            <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">⭐ Rating</div></div>
-                            <div class="stat"><div class="num">${updateData.latestVersion || '2.2.0'}</div><div class="lbl">APK Version</div></div>
-                        </div>
-                        <div id="adminReviewsList"></div>
-                    </div>
-                `;
-
-            $('#adminLogoutBtn').addEventListener('click', () => signOut(auth));
-
-            const adminList = $('#adminReviewsList');
-            if (allReviews.length === 0) {
-                adminList.innerHTML = `<div class="empty">Belum ada review.</div>`;
-                return;
-            }
-
-            adminList.innerHTML = allReviews.map((r, index) => {
-                const displayName = r.anonymous ? 'Anonymous' : (r.name || 'Pengguna');
-                const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
-                const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
-                const delay = Math.min(index * 30, 300);
-                return `
-                        <div class="review-item" style="animation-delay:${delay}ms;">
-                            <div class="top">
-                                <span class="name">
-                                    ${displayName}
-                                    ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}
-                                </span>
-                                <span class="stars-display">${starsStr}</span>
-                            </div>
-                            <div class="msg">${r.message}</div>
-                            <div class="meta">${date}</div>
-                            <button class="btn btn-danger btn-sm admin-delete" data-id="${r.id}" style="margin-top:6px;">
-                                🗑 Hapus
-                            </button>
-                        </div>
-                    `;
-            }).join('');
-
-            $$('.admin-delete').forEach(btn => {
-                btn.addEventListener('click', async () => {
-                    const id = btn.dataset.id;
-                    if (!confirm('Hapus review ini?')) return;
-
-                    const item = btn.closest('.review-item');
-                    item.classList.add('removing');
-
-                    try {
-                        await remove(ref(db, `reviews/${id}`));
-                        showToast('✅ Review dihapus');
-                    } catch (err) {
-                        showToast('❌ Gagal hapus: ' + err.message, true);
-                        item.classList.remove('removing');
-                    }
-                });
-            });
-        }
-
-        // ============================================================
-        // AUTH STATE
-        // ============================================================
-        onAuthStateChanged(auth, (user) => {
-            currentUser = user;
-            if (user) {
-                isAdmin = (user.uid === ADMIN_UID);
-                get(ref(db, `admins/${user.uid}`)).then(snap => {
-                    const data = snap.val();
-                    if (data && data.role === 'admin') {
-                        isAdmin = true;
-                    }
-                    renderAdmin();
-                }).catch(() => {
-                    renderAdmin();
-                });
-            } else {
-                isAdmin = false;
-                renderAdmin();
-            }
-        });
-
-        // ============================================================
-        // SHAKE ANIMATION
-        // ============================================================
-        const styleShake = document.createElement('style');
-        styleShake.textContent = `
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    20% { transform: translateX(-12px); }
-                    40% { transform: translateX(12px); }
-                    60% { transform: translateX(-8px); }
-                    80% { transform: translateX(8px); }
-                }
-            `;
-        document.head.appendChild(styleShake);
-
-        // ============================================================
-        // INIT
-        // ============================================================
-        loadReviews();
-
-        console.log('✅ SekolahMu App loaded');
-        console.log('Admin UID:', ADMIN_UID);
-    </script>
-
-</body>
-</html>
+            if (rating ===
