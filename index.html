@@ -810,7 +810,7 @@
         <!-- PAGE HOME -->
         <div id="page-home" class="page active">
             <div class="card">
-                <h1 class="card-title">Sekolahmu</h1>
+                <h1 class="card-title">🏠 Home</h1>
                 <p style="color:var(--text2);font-size:15px;margin-bottom:14px;">Aplikasi SMM untuk Android</p>
                 <div style="background:var(--input);border:1px solid var(--border);border-radius:14px;padding:16px 18px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
@@ -837,7 +837,7 @@
         <!-- PAGE RATING -->
         <div id="page-rating" class="page">
             <div class="card">
-                <h2 class="card-title">Beri Penilaian</h2>
+                <h2 class="card-title">⭐ Rating</h2>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Bagaimana pengalaman kamu?</p>
 
                 <div id="ratingAuthRequired" style="text-align:center;padding:20px 0;">
@@ -895,7 +895,7 @@
         <!-- PAGE REVIEWS -->
         <div id="page-reviews" class="page">
             <div class="card">
-                <h2 class="card-title">Review Pengguna</h2>
+                <h2 class="card-title">📝 Reviews</h2>
                 <div id="reviewsStats" style="margin-bottom:14px;"></div>
                 <div id="reviewsList"></div>
             </div>
@@ -904,7 +904,7 @@
         <!-- PAGE DOWNLOADS -->
         <div id="page-downloads" class="page">
             <div class="card">
-                <h2 class="card-title">Downloads</h2>
+                <h2 class="card-title">⬇ Downloads</h2>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">Unduh aplikasi Sekolahmu</p>
 
                 <div class="download-box">
@@ -1060,12 +1060,19 @@
             themeToggle.textContent = '☀️';
         }
 
-        // ===== NAVIGATION =====
+        // ===== NAVIGASI PAKAI TAG =====
         function goToHome() {
-            $$('.nav-left button').forEach(b => b.classList.remove('active'));
+            // Matikan semua active di navbar
+            document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
+
+            // Aktifkan tombol Home
             const homeBtn = document.querySelector('[data-page="home"]');
             if (homeBtn) homeBtn.classList.add('active');
-            $$('.page').forEach(p => p.classList.remove('active'));
+
+            // Matikan semua page
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            // Aktifkan page Home
             const homePage = document.getElementById('page-home');
             if (homePage) {
                 homePage.classList.remove('active');
@@ -1075,22 +1082,32 @@
         }
 
         function goToPage(page) {
-            $$('.nav-left button').forEach(b => b.classList.remove('active'));
+            // Matikan semua active
+            document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
+
+            // Aktifkan tombol yang dipilih
             const btn = document.querySelector(`[data-page="${page}"]`);
             if (btn) btn.classList.add('active');
-            $$('.page').forEach(p => p.classList.remove('active'));
+
+            // Matikan semua page
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            // Aktifkan page yang dipilih
             const target = document.getElementById(`page-${page}`);
             if (target) {
                 target.classList.remove('active');
                 void target.offsetHeight;
                 target.classList.add('active');
             }
+
+            // Render konten sesuai page
             if (page === 'reviews') renderReviews();
             if (page === 'admin') renderAdmin();
             if (page === 'rating') checkRatingAuth();
         }
 
-        $$('.nav-left button').forEach(btn => {
+        // Event listener untuk semua tombol navbar
+        document.querySelectorAll('.nav-left button').forEach(btn => {
             btn.addEventListener('click', () => {
                 const page = btn.dataset.page;
                 goToPage(page);
@@ -1598,7 +1615,7 @@
             if (!currentUser) {
                 container.innerHTML = `
                     <div class="auth-container">
-                        <h2 style="margin-bottom:12px;">Login / Daftar</h2>
+                        <h2 style="margin-bottom:12px;">🔐 Login / Daftar</h2>
                         <div class="auth-tabs">
                             <button class="active" data-tab="login">Login</button>
                             <button data-tab="register">Daftar</button>
@@ -1774,8 +1791,13 @@
                         }
                         if (spamNotice) spamNotice.classList.add('show');
                         showToast('📧 Cek email untuk verifikasi');
+
+                        // Logout dulu (karena belum verified)
                         await signOut(auth);
+
+                        // Tetap di Home
                         goToHome();
+
                     } catch (err) {
                         if (status) {
                             status.textContent = err.message;
@@ -1825,12 +1847,12 @@
 
             container.innerHTML = `
                 <div class="admin-header">
-                    <h2>Admin Panel</h2>
+                    <h2>🛡 Admin Panel</h2>
                     <button id="logoutBtn" class="btn btn-outline btn-sm">Logout</button>
                 </div>
                 <div class="admin-stats">
                     <div class="stat"><div class="num">${total}</div><div class="lbl">Total Review</div></div>
-                    <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">Rating</div></div>
+                    <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">⭐ Rating</div></div>
                     <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">APK Version</div></div>
                 </div>
 
@@ -2022,11 +2044,20 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
+
+                // Pastikan user selalu di Home setelah login/register
+                // Cek apakah page yang aktif bukan Home, maka pindah ke Home
+                const activePage = document.querySelector('.page.active');
+                if (activePage && activePage.id !== 'page-home') {
+                    goToHome();
+                }
             } else {
                 isAdmin = false;
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
+                // Kalau logout, balik ke Home
+                goToHome();
             }
         });
 
