@@ -442,6 +442,10 @@
         .review-item.removing {
             animation: slideOut 0.3s ease forwards;
         }
+        .review-item.editing {
+            border-color: #d0bcff;
+            background: rgba(208, 188, 255, 0.05);
+        }
 
         @keyframes slideIn {
             from {
@@ -496,9 +500,47 @@
             margin-top: 4px;
             line-height: 1.5;
         }
+        .review-item .msg.editable {
+            display: none;
+        }
+        .review-item .msg-edit {
+            display: none;
+            margin-top: 4px;
+        }
+        .review-item .msg-edit.active {
+            display: block;
+        }
+        .review-item .msg-edit textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+        }
+        .review-item .msg-edit textarea:focus {
+            border-color: #d0bcff;
+        }
+        .review-item .msg-edit .edit-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
         .review-item .meta {
             color: var(--text3);
             font-size: 11px;
+            margin-top: 6px;
+        }
+        .review-item .actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
             margin-top: 6px;
         }
 
@@ -588,7 +630,64 @@
             display: block;
         }
 
-        /* === CUSTOM CONFIRM DIALOG === */
+        .spam-notice {
+            background: rgba(208, 188, 255, 0.08);
+            border: 1px solid rgba(208, 188, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-top: 10px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .spam-notice.show {
+            display: block;
+        }
+        .spam-notice .title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #d0bcff;
+        }
+        .spam-notice .desc {
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+        .spam-notice .desc strong {
+            color: var(--text);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.35s ease;
+            z-index: 999;
+            box-shadow: var(--shadow);
+            color: var(--text);
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .empty {
+            color: var(--text3);
+            text-align: center;
+            padding: 30px 12px;
+        }
+
+        /* CONFIRM DIALOG */
         .confirm-overlay {
             position: fixed;
             inset: 0;
@@ -648,64 +747,6 @@
             justify-content: center;
         }
 
-        /* === SPAM NOTIFICATION === */
-        .spam-notice {
-            background: rgba(208, 188, 255, 0.08);
-            border: 1px solid rgba(208, 188, 255, 0.12);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin-top: 10px;
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
-        .spam-notice.show {
-            display: block;
-        }
-        .spam-notice .title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #d0bcff;
-        }
-        .spam-notice .desc {
-            font-size: 13px;
-            color: var(--text2);
-            margin-top: 2px;
-        }
-        .spam-notice .desc strong {
-            color: var(--text);
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: var(--card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            padding: 10px 22px;
-            border-radius: 12px;
-            font-size: 14px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.35s ease;
-            z-index: 999;
-            box-shadow: var(--shadow);
-            color: var(--text);
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .empty {
-            color: var(--text3);
-            text-align: center;
-            padding: 30px 12px;
-        }
-
         @media (max-width: 600px) {
             body {
                 padding: 8px;
@@ -744,6 +785,9 @@
             }
             .confirm-dialog {
                 padding: 20px 16px 18px;
+            }
+            .review-item .actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -810,6 +854,8 @@
                         <div style="font-size:32px;">✅</div>
                         <p style="color:var(--text2);">Kamu sudah memberi penilaian!</p>
                         <p style="color:var(--text3);font-size:13px;">Terima kasih atas feedback kamu 🙏</p>
+                        <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:8px;">Edit Review</button>
+                        <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:8px;">Hapus Review</button>
                     </div>
 
                     <div id="reviewForm">
@@ -894,7 +940,7 @@
 
     </div>
 
-    <!-- CUSTOM CONFIRM DIALOG -->
+    <!-- CONFIRM DIALOG -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
             <div class="icon" id="confirmIcon">⚠️</div>
@@ -919,7 +965,8 @@
             onValue,
             remove,
             get,
-            set
+            set,
+            update
         } from "firebase/database";
         import {
             getAuth,
@@ -927,8 +974,7 @@
             createUserWithEmailAndPassword,
             onAuthStateChanged,
             signOut,
-            sendEmailVerification,
-            sendPasswordResetEmail
+            sendEmailVerification
         } from "firebase/auth";
 
         const firebaseConfig = {
@@ -957,6 +1003,7 @@
         let isDarkMode = true;
         let userHasReviewed = false;
         let userReviewId = null;
+        let editingReviewId = null;
 
         // DOM HELPERS
         const $ = (s) => document.querySelector(s);
@@ -971,7 +1018,7 @@
             el._timer = setTimeout(() => el.classList.remove('show'), 4000);
         }
 
-        // ===== CUSTOM CONFIRM =====
+        // ===== CONFIRM =====
         let confirmResolve = null;
 
         function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
@@ -997,7 +1044,6 @@
             if (confirmResolve) confirmResolve(true);
         });
 
-        // Close on overlay click
         document.getElementById('confirmOverlay').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) {
                 document.getElementById('confirmOverlay').classList.remove('show');
@@ -1107,12 +1153,128 @@
                 userReviewId = reviewed.id;
                 alreadyDiv.style.display = 'block';
                 reviewForm.style.display = 'none';
+                // Setup edit/delete buttons
+                document.getElementById('editMyReviewBtn').onclick = () => startEditingReview(reviewed.id);
+                document.getElementById('deleteMyReviewBtn').onclick = () => deleteMyReview(reviewed.id);
             } else {
                 userHasReviewed = false;
                 userReviewId = null;
                 alreadyDiv.style.display = 'none';
                 reviewForm.style.display = 'block';
             }
+        }
+
+        // ===== DELETE MY REVIEW =====
+        async function deleteMyReview(id) {
+            const confirmed = await showConfirm(
+                'Hapus Review?',
+                'Review kamu akan dihapus secara permanen.',
+                '🗑️',
+                'Ya, Hapus'
+            );
+            if (!confirmed) return;
+
+            try {
+                await remove(ref(db, `reviews/${id}`));
+                showToast('Review kamu dihapus');
+                userHasReviewed = false;
+                userReviewId = null;
+                document.getElementById('alreadyReviewed').style.display = 'none';
+                document.getElementById('reviewForm').style.display = 'block';
+                renderReviews();
+            } catch (err) {
+                showToast('Gagal hapus review', true);
+            }
+        }
+
+        // ===== EDIT MY REVIEW =====
+        function startEditingReview(id) {
+            const review = allReviews.find(r => r.id === id);
+            if (!review) return;
+
+            // Go to reviews page and enter edit mode
+            $$('.nav-left button').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-page="reviews"]')?.classList.add('active');
+            $$('.page').forEach(p => p.classList.remove('active'));
+            $('#page-reviews').classList.add('active');
+
+            // Find the review item and make it editable
+            const item = document.querySelector(`.review-item[data-id="${id}"]`);
+            if (!item) {
+                // If not rendered, render and try again
+                renderReviews();
+                setTimeout(() => {
+                    const item2 = document.querySelector(`.review-item[data-id="${id}"]`);
+                    if (item2) makeEditable(item2, review);
+                }, 300);
+                return;
+            }
+            makeEditable(item, review);
+        }
+
+        function makeEditable(item, review) {
+            // Cancel any existing edit
+            document.querySelectorAll('.review-item.editing').forEach(el => {
+                cancelEdit(el);
+            });
+
+            item.classList.add('editing');
+
+            // Hide display elements
+            const msgEl = item.querySelector('.msg');
+            const actionsEl = item.querySelector('.actions');
+            if (msgEl) msgEl.style.display = 'none';
+            if (actionsEl) actionsEl.style.display = 'none';
+
+            // Create edit form
+            const editDiv = document.createElement('div');
+            editDiv.className = 'msg-edit active';
+            editDiv.innerHTML = `
+                <textarea id="editTextarea">${review.message}</textarea>
+                <div class="edit-actions">
+                    <button class="btn btn-primary btn-sm save-edit" data-id="${review.id}">Simpan</button>
+                    <button class="btn btn-outline btn-sm cancel-edit">Batal</button>
+                </div>
+            `;
+            item.appendChild(editDiv);
+
+            // Save handler
+            editDiv.querySelector('.save-edit').addEventListener('click', async () => {
+                const newMsg = editDiv.querySelector('textarea').value.trim();
+                if (!newMsg) {
+                    showToast('Pesan tidak boleh kosong', true);
+                    return;
+                }
+                try {
+                    await update(ref(db, `reviews/${review.id}`), {
+                        message: newMsg,
+                        timestamp: Date.now()
+                    });
+                    showToast('Review diperbarui');
+                    cancelEdit(item);
+                    renderReviews();
+                } catch (err) {
+                    showToast('Gagal update review', true);
+                }
+            });
+
+            // Cancel handler
+            editDiv.querySelector('.cancel-edit').addEventListener('click', () => {
+                cancelEdit(item);
+            });
+
+            // Focus textarea
+            setTimeout(() => editDiv.querySelector('textarea').focus(), 100);
+        }
+
+        function cancelEdit(item) {
+            item.classList.remove('editing');
+            const editDiv = item.querySelector('.msg-edit');
+            if (editDiv) editDiv.remove();
+            const msgEl = item.querySelector('.msg');
+            if (msgEl) msgEl.style.display = '';
+            const actionsEl = item.querySelector('.actions');
+            if (actionsEl) actionsEl.style.display = '';
         }
 
         // ===== STARS =====
@@ -1279,6 +1441,8 @@
                         if (alreadyDiv && reviewForm) {
                             alreadyDiv.style.display = 'block';
                             reviewForm.style.display = 'none';
+                            document.getElementById('editMyReviewBtn').onclick = () => startEditingReview(reviewed.id);
+                            document.getElementById('deleteMyReviewBtn').onclick = () => deleteMyReview(reviewed.id);
                         }
                     } else {
                         userHasReviewed = false;
@@ -1299,6 +1463,9 @@
         function renderReviews() {
             const list = $('#reviewsList');
             const stats = $('#reviewsStats');
+
+            // Cancel any active edits
+            document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
             if (allReviews.length === 0) {
                 list.innerHTML = '<div class="empty">Belum ada review. Jadilah yang pertama!</div>';
@@ -1335,13 +1502,21 @@
                 const displayName = r.anonymous ? 'Anonymous' : (r.name || 'Pengguna');
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
+                const isOwner = currentUser && r.uid === currentUser.uid;
 
-                let adminBtn = '';
-                if (isAdmin) {
-                    adminBtn = `
-                        <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}" style="margin-top:6px;">
-                            Hapus
-                        </button>
+                let actionsHtml = '';
+                if (isOwner) {
+                    actionsHtml = `
+                        <div class="actions">
+                            <button class="btn btn-outline btn-sm edit-review" data-id="${r.id}">✏️ Edit</button>
+                            <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}">🗑 Hapus</button>
+                        </div>
+                    `;
+                } else if (isAdmin) {
+                    actionsHtml = `
+                        <div class="actions">
+                            <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}">🗑 Hapus</button>
+                        </div>
                     `;
                 }
 
@@ -1351,25 +1526,29 @@
                             <span class="name">
                                 ${displayName}
                                 ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}
+                                ${isOwner ? ' <span style="font-size:10px;color:var(--text3);">(kamu)</span>' : ''}
                             </span>
                             <span class="stars-display">${starsStr}</span>
                         </div>
                         <div class="msg">${r.message}</div>
                         <div class="meta">${date}</div>
-                        ${adminBtn}
+                        ${actionsHtml}
                     </div>
                 `;
             }).join('');
 
-            $$('.delete-review').forEach(btn => {
+            // ===== DELETE REVIEW (user & admin) =====
+            document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
-                    const confirmed = await showConfirm(
-                        'Hapus Review?',
-                        'Review ini akan dihapus secara permanen.',
-                        '🗑️',
-                        'Ya, Hapus'
-                    );
+                    const review = allReviews.find(r => r.id === id);
+                    const isOwner = currentUser && review && review.uid === currentUser.uid;
+                    const title = isOwner ? 'Hapus Review Kamu?' : 'Hapus Review?';
+                    const message = isOwner ?
+                        'Review kamu akan dihapus secara permanen.' :
+                        'Review ini akan dihapus secara permanen.';
+
+                    const confirmed = await showConfirm(title, message, '🗑️', 'Ya, Hapus');
                     if (!confirmed) return;
 
                     const item = btn.closest('.review-item');
@@ -1377,11 +1556,28 @@
 
                     try {
                         await remove(ref(db, `reviews/${id}`));
-                        showToast('Review dihapus');
+                        showToast(isOwner ? 'Review kamu dihapus' : 'Review dihapus');
+                        if (isOwner) {
+                            userHasReviewed = false;
+                            userReviewId = null;
+                            document.getElementById('alreadyReviewed').style.display = 'none';
+                            document.getElementById('reviewForm').style.display = 'block';
+                        }
                     } catch (err) {
                         showToast('Gagal hapus', true);
                         item.classList.remove('removing');
                     }
+                });
+            });
+
+            // ===== EDIT REVIEW (user only) =====
+            document.querySelectorAll('.edit-review').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const review = allReviews.find(r => r.id === id);
+                    if (!review) return;
+                    const item = document.querySelector(`.review-item[data-id="${id}"]`);
+                    if (item) makeEditable(item, review);
                 });
             });
         }
@@ -1413,10 +1609,9 @@
                             </div>
                             <button id="loginBtn" class="btn btn-primary btn-block">Login</button>
                             <div id="loginStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
-                            <!-- Spam notice -->
                             <div class="spam-notice" id="loginSpamNotice">
                                 <div class="title">📬 Cek Folder Spam!</div>
-                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>. Jangan lupa cek ya!</div>
+                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
                             </div>
                         </div>
 
@@ -1434,10 +1629,9 @@
                             </div>
                             <button id="registerBtn" class="btn btn-primary btn-block">Daftar</button>
                             <div id="registerStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
-                            <!-- Spam notice -->
                             <div class="spam-notice" id="registerSpamNotice">
                                 <div class="title">📬 Cek Folder Spam!</div>
-                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>. Jangan lupa cek ya!</div>
+                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
                             </div>
                         </div>
                     </div>
@@ -1451,7 +1645,6 @@
                         $$('.auth-form').forEach(f => f.classList.remove('active'));
                         const target = tab.dataset.tab === 'login' ? 'loginForm' : 'registerForm';
                         $(`#${target}`).classList.add('active');
-                        // Hide spam notices
                         document.getElementById('loginSpamNotice').classList.remove('show');
                         document.getElementById('registerSpamNotice').classList.remove('show');
                     });
@@ -1488,13 +1681,11 @@
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
 
-                        // Cek apakah admin (admin skip verifikasi)
                         const isAdminUser = userCred.user.uid === ADMIN_UID;
                         if (isAdminUser) {
                             status.textContent = '✅ Login berhasil! (Admin)';
                             status.style.color = '#a8e6cf';
                             showToast('Login berhasil');
-                            // Kembali ke home
                             $$('.nav-left button').forEach(b => b.classList.remove('active'));
                             document.querySelector('[data-page="home"]')?.classList.add('active');
                             $$('.page').forEach(p => p.classList.remove('active'));
@@ -1515,7 +1706,6 @@
                         status.textContent = '✅ Login berhasil!';
                         status.style.color = '#a8e6cf';
                         showToast('Login berhasil');
-                        // Kembali ke home
                         $$('.nav-left button').forEach(b => b.classList.remove('active'));
                         document.querySelector('[data-page="home"]')?.classList.add('active');
                         $$('.page').forEach(p => p.classList.remove('active'));
@@ -1575,7 +1765,6 @@
                 return;
             }
 
-            // Check admin
             if (currentUser.uid !== ADMIN_UID) {
                 get(ref(db, `admins/${currentUser.uid}`)).then(snap => {
                     const data = snap.val();
@@ -1637,7 +1826,7 @@
 
             document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-            // ===== BULK DELETE with custom confirm =====
+            // ===== BULK DELETE =====
             document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select.value;
@@ -1763,14 +1952,12 @@
                         try {
                             await sendEmailVerification(currentUser);
                             showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
-                            // Show spam notice
                             const spamNotice = document.createElement('div');
                             spamNotice.className = 'spam-notice show';
                             spamNotice.innerHTML = `
                                 <div class="title">📬 Cek Folder Spam!</div>
                                 <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
                             `;
-                            // Append near the user badge
                             const badge = document.querySelector('.user-badge');
                             if (badge) {
                                 badge.parentNode.insertBefore(spamNotice, badge.nextSibling);
