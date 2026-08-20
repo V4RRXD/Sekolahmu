@@ -701,6 +701,10 @@
             min-width: 120px;
             justify-content: center;
         }
+        .spam-notification .box-actions .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .spam-notification .box-actions .guide-link {
             font-size: 12px;
             color: var(--text3);
@@ -713,6 +717,12 @@
         }
         .spam-notification .box-actions .guide-link:hover {
             color: var(--text);
+        }
+        .spam-notification .cooldown-text {
+            font-size: 12px;
+            color: var(--text3);
+            text-align: center;
+            margin-top: 4px;
         }
 
         /* ===== GUIDE PAGE ===== */
@@ -1068,13 +1078,16 @@
                 Jika tidak menemukan email verifikasi, coba kirim ulang atau cek kembali.
             </p>
             <div class="box-actions">
-                <button class="btn btn-primary" id="spamUnderstandBtn">Saya Mengerti</button>
+                <button class="btn btn-primary" id="spamResendBtn">📧 Kirim Ulang Verifikasi</button>
+                <div class="cooldown-text" id="spamCooldown"></div>
+                <button class="btn btn-success" id="spamVerifiedBtn">✅ Saya Sudah Verifikasi</button>
+                <button class="btn btn-outline" id="spamUnderstandBtn">Saya Mengerti</button>
                 <button class="guide-link" id="spamGuideBtn">📖 Panduan Verifikasi Email</button>
             </div>
         </div>
     </div>
 
-    <!-- ===== GUIDE PAGE (tersembunyi, muncul di dalam notif) ===== -->
+    <!-- ===== GUIDE PAGE ===== -->
     <div class="spam-notification" id="guideNotification">
         <div class="box" id="guideBox">
             <div class="guide-content">
@@ -1108,7 +1121,7 @@
                 </ul>
 
                 <h2>Langkah 4: Konfirmasi Keberhasilan</h2>
-                <p>Setelah Anda mengklik tautan, sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi. Anda kini dapat:</p>
+                <p>Setelah Anda mengklik tautan verifikasi, Anda akan diarahkan kembali ke halaman website. Pada halaman tersebut terdapat tombol <strong>"Saya Sudah Verifikasi"</strong> dan sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi. Anda kini dapat:</p>
                 <ul>
                     <li>Login ke akun Anda dengan email dan kata sandi.</li>
                     <li>Menggunakan seluruh fitur yang memerlukan status akun terverifikasi.</li>
@@ -1208,6 +1221,9 @@
         let userHasReviewed = false;
         let userReviewId = null;
         let spamNotifShown = false;
+        let resendCooldown = 0;
+        let resendTimer = null;
+        let isCooldownActive = false;
 
         // DOM HELPERS
         const $ = (s) => document.querySelector(s);
@@ -1232,6 +1248,7 @@
             if (el) {
                 el.classList.add('show');
                 spamNotifShown = true;
+                updateCooldownDisplay();
             }
         }
 
@@ -1240,9 +1257,92 @@
             if (el) el.classList.remove('show');
         }
 
+        // ===== COOLDOWN =====
+        function updateCooldownDisplay() {
+            const el = document.getElementById('spamCooldown');
+            const btn = document.getElementById('spamResendBtn');
+            if (!el || !btn) return;
+
+            if (isCooldownActive && resendCooldown > 0) {
+                el.textContent = `⏳ Tunggu ${resendCooldown} detik sebelum kirim ulang`;
+                btn.disabled = true;
+            } else {
+                el.textContent = '';
+                btn.disabled = false;
+            }
+        }
+
+        function startCooldown() {
+            // Tambah 10 detik setiap kali
+            resendCooldown += 10;
+            isCooldownActive = true;
+            updateCooldownDisplay();
+
+            if (resendTimer) clearInterval(resendTimer);
+
+            resendTimer = setInterval(() => {
+                resendCooldown--;
+                updateCooldownDisplay();
+                if (resendCooldown <= 0) {
+                    clearInterval(resendTimer);
+                    resendTimer = null;
+                    isCooldownActive = false;
+                    updateCooldownDisplay();
+                }
+            }, 1000);
+        }
+
+        // ===== RESEND VERIFICATION =====
+        async function resendVerification() {
+            if (isCooldownActive) {
+                showToast('⏳ Tunggu cooldown selesai', true);
+                return;
+            }
+            if (!currentUser) {
+                showToast('❌ Login dulu untuk kirim ulang', true);
+                return;
+            }
+            if (currentUser.emailVerified) {
+                showToast('✅ Email sudah terverifikasi!', false);
+                hideSpamNotification();
+                return;
+            }
+
+            try {
+                await sendEmailVerification(currentUser);
+                showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
+                startCooldown();
+            } catch (err) {
+                showToast('❌ Gagal kirim ulang: ' + err.message, true);
+            }
+        }
+
+        // ===== CHECK VERIFIED =====
+        async function checkVerified() {
+            if (!currentUser) {
+                showToast('❌ Login dulu', true);
+                return;
+            }
+
+            // Refresh user data
+            await currentUser.reload();
+            const refreshedUser = auth.currentUser;
+
+            if (refreshedUser && refreshedUser.emailVerified) {
+                showToast('✅ Email sudah terverifikasi!', false);
+                hideSpamNotification();
+                spamNotifShown = true; // prevent reappear
+                // Update UI
+                updateAuthUI();
+                goToHome();
+            } else {
+                showToast('❌ Email belum terverifikasi. Cek inbox/spam!', true);
+                showSpamNotification();
+            }
+        }
+
         // ===== GUIDE NOTIFICATION =====
         function showGuideNotification() {
-            // Sembunyikan spam notif dulu
             document.getElementById('spamNotification')?.classList.remove('show');
             const el = document.getElementById('guideNotification');
             if (el) {
@@ -1253,24 +1353,19 @@
         function hideGuideNotification() {
             const el = document.getElementById('guideNotification');
             if (el) el.classList.remove('show');
-            // Tampilkan spam notif kembali (jika belum di-close)
             if (spamNotifShown && !currentUser?.emailVerified && !isAdmin) {
                 document.getElementById('spamNotification')?.classList.add('show');
             }
         }
 
-        // Event listeners untuk notifikasi
+        // ===== EVENT LISTENERS NOTIFIKASI =====
+        document.getElementById('spamResendBtn')?.addEventListener('click', resendVerification);
+        document.getElementById('spamVerifiedBtn')?.addEventListener('click', checkVerified);
         document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
             hideSpamNotification();
         });
-
-        document.getElementById('spamGuideBtn')?.addEventListener('click', () => {
-            showGuideNotification();
-        });
-
-        document.getElementById('guideBackBtn')?.addEventListener('click', () => {
-            hideGuideNotification();
-        });
+        document.getElementById('spamGuideBtn')?.addEventListener('click', showGuideNotification);
+        document.getElementById('guideBackBtn')?.addEventListener('click', hideGuideNotification);
 
         // ===== CONFIRM =====
         let confirmResolve = null;
@@ -1398,13 +1493,7 @@
                         </div>
                     `;
                     document.getElementById('resendVerifyBtn')?.addEventListener('click', async () => {
-                        try {
-                            await sendEmailVerification(currentUser);
-                            showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
-                            showSpamNotification();
-                        } catch (e) {
-                            showToast('Gagal kirim ulang', true);
-                        }
+                        await resendVerification();
                     });
                     return;
                 }
@@ -1617,7 +1706,7 @@
                     return;
                 }
                 if (!currentUser.emailVerified && !isAdmin) {
-                    showToast('Verifikasi email dulu', true);
+                    showToast('⚠️ Verifikasi email dulu!', true);
                     showSpamNotification();
                     return;
                 }
@@ -1969,7 +2058,7 @@
                                 status.style.color = '#f2b8b5';
                             }
                             await signOut(auth);
-                            showToast('Verifikasi email dulu', true);
+                            showToast('⚠️ Verifikasi email dulu!', true);
                             showSpamNotification();
                             return;
                         }
@@ -2236,13 +2325,7 @@
                 const resendBtn = document.getElementById('resendVerifyNav');
                 if (resendBtn) {
                     resendBtn.addEventListener('click', async () => {
-                        try {
-                            await sendEmailVerification(currentUser);
-                            showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
-                            showSpamNotification();
-                        } catch (e) {
-                            showToast('Gagal kirim ulang', true);
-                        }
+                        await resendVerification();
                     });
                 }
 
@@ -2271,6 +2354,8 @@
 
                 if (user.emailVerified) {
                     spamNotifShown = true;
+                    // Hide spam notif if showing
+                    hideSpamNotification();
                 }
 
                 const activePage = document.querySelector('.page.active');
@@ -2280,6 +2365,14 @@
             } else {
                 isAdmin = false;
                 spamNotifShown = false;
+                // Reset cooldown on logout
+                if (resendTimer) {
+                    clearInterval(resendTimer);
+                    resendTimer = null;
+                }
+                resendCooldown = 0;
+                isCooldownActive = false;
+                updateCooldownDisplay();
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
