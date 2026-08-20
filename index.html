@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>SekolahMu</title>
+    <title>Sekolahmu</title>
     <script type="importmap">
         {
             "imports": {
@@ -58,7 +58,6 @@
             margin: 0 auto;
         }
 
-        /* NAVBAR */
         .nav {
             display: flex;
             flex-wrap: wrap;
@@ -74,21 +73,18 @@
             top: 8px;
             z-index: 50;
         }
-
         .nav-left {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
             flex: 1;
         }
-
         .nav-right {
             display: flex;
             gap: 6px;
             align-items: center;
             margin-left: auto;
         }
-
         .nav button {
             background: transparent;
             color: var(--text2);
@@ -107,6 +103,9 @@
         .nav button.active {
             color: #d0bcff;
             background: rgba(208, 188, 255, 0.1);
+        }
+        .nav button.hidden-nav {
+            display: none;
         }
 
         .theme-toggle {
@@ -171,7 +170,6 @@
             font-size: 12px;
         }
 
-        /* PAGES */
         .page {
             display: none;
             animation: fadeIn 0.35s ease;
@@ -191,7 +189,6 @@
             }
         }
 
-        /* CARDS */
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
@@ -202,14 +199,12 @@
             box-shadow: var(--shadow);
             transition: 0.3s;
         }
-
         .card-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 10px;
         }
 
-        /* BUTTONS */
         .btn {
             border: none;
             border-radius: 12px;
@@ -242,6 +237,14 @@
         .btn-danger:hover {
             background: rgba(242, 184, 181, 0.25);
         }
+        .btn-success {
+            background: rgba(168, 230, 207, 0.15);
+            color: #a8e6cf;
+            border: 1px solid rgba(168, 230, 207, 0.15);
+        }
+        .btn-success:hover {
+            background: rgba(168, 230, 207, 0.25);
+        }
         .btn-outline {
             background: transparent;
             color: var(--text);
@@ -263,12 +266,12 @@
             cursor: not-allowed;
         }
 
-        /* DOWNLOAD */
         .download-box {
             background: var(--input);
             border: 1px solid var(--border);
             border-radius: 14px;
             padding: 18px 20px;
+            margin-bottom: 12px;
         }
         .download-box .row {
             display: flex;
@@ -282,8 +285,20 @@
             color: var(--text2);
             font-size: 14px;
         }
+        .coming-soon {
+            background: var(--input);
+            border: 1px dashed var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            text-align: center;
+            color: var(--text2);
+        }
+        .coming-soon .icon {
+            font-size: 36px;
+            display: block;
+            margin-bottom: 6px;
+        }
 
-        /* STARS */
         .stars {
             display: flex;
             gap: 4px;
@@ -307,7 +322,6 @@
             color: #ffd700;
         }
 
-        /* FORM */
         .form-group {
             margin-bottom: 12px;
         }
@@ -393,7 +407,6 @@
             cursor: pointer;
         }
 
-        /* REVIEW ITEMS */
         .review-item {
             background: var(--input);
             border: 1px solid var(--border);
@@ -469,7 +482,6 @@
             margin-top: 6px;
         }
 
-        /* ADMIN */
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -501,7 +513,25 @@
             margin-bottom: 14px;
         }
 
-        /* AUTH */
+        .admin-bulk-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 14px;
+            background: var(--input);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .admin-bulk-actions select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+        }
+
         .auth-container {
             max-width: 400px;
             margin: 0 auto;
@@ -538,7 +568,6 @@
             display: block;
         }
 
-        /* TOAST */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -570,7 +599,6 @@
             padding: 30px 12px;
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             body {
                 padding: 8px;
@@ -604,6 +632,9 @@
             .admin-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+            .admin-bulk-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -617,7 +648,8 @@
                 <button class="active" data-page="home">Home</button>
                 <button data-page="rating">Rating</button>
                 <button data-page="reviews">Reviews</button>
-                <button data-page="admin">Admin</button>
+                <button data-page="downloads">Downloads</button>
+                <button data-page="admin" id="adminNavBtn" class="hidden-nav">Admin</button>
             </div>
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle">🌙</button>
@@ -628,17 +660,26 @@
         <!-- PAGE HOME -->
         <div id="page-home" class="page active">
             <div class="card">
-                <h1 class="card-title">SekolahMu</h1>
+                <h1 class="card-title">Sekolahmu</h1>
                 <p style="color:var(--text2);font-size:15px;margin-bottom:14px;">Aplikasi SMM untuk Android</p>
-                <div class="download-box">
-                    <div class="row">
-                        <div class="info">
-                            <strong style="font-size:17px;">Download APK</strong>
-                            <div class="ver">Versi: <span id="apkVersion">2.2.0</span></div>
-                            <div class="sz">Ukuran: <span id="apkSize">3.78 MB</span></div>
+                <div style="background:var(--input);border:1px solid var(--border);border-radius:14px;padding:16px 18px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                        <div>
+                            <strong style="font-size:15px;">Versi</strong>
+                            <div style="color:var(--text2);font-size:14px;">Current: <span id="apkVersion">2.4.0</span></div>
                         </div>
-                        <a id="downloadBtn" href="#" class="btn btn-primary">Download</a>
+                        <span style="background:rgba(208,188,255,0.1);color:#d0bcff;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
                     </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2 class="card-title">Tentang</h2>
+                <p style="color:var(--text2);font-size:14px;line-height:1.6;">
+                    Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.
+                </p>
+                <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">📱 Android</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">🖥 Windows (Soon)</span>
                 </div>
             </div>
         </div>
@@ -655,38 +696,46 @@
                 </div>
 
                 <div id="ratingForm" style="display:none;">
-                    <div class="form-group">
-                        <label>Rating</label>
-                        <div class="stars" id="starSelector">
-                            <span data-value="1">☆</span>
-                            <span data-value="2">☆</span>
-                            <span data-value="3">☆</span>
-                            <span data-value="4">☆</span>
-                            <span data-value="5">☆</span>
-                        </div>
+                    <div id="alreadyReviewed" style="display:none;text-align:center;padding:20px;background:var(--input);border-radius:12px;border:1px solid var(--border);margin-bottom:14px;">
+                        <div style="font-size:32px;">✅</div>
+                        <p style="color:var(--text2);">Kamu sudah memberi penilaian!</p>
+                        <p style="color:var(--text3);font-size:13px;">Terima kasih atas feedback kamu 🙏</p>
                     </div>
 
-                    <div class="name-field-wrap" id="nameFieldWrap">
+                    <div id="reviewForm">
                         <div class="form-group">
-                            <label>Nama</label>
-                            <input type="text" id="reviewName" placeholder="Nama kamu..." maxlength="50" />
+                            <label>Rating</label>
+                            <div class="stars" id="starSelector">
+                                <span data-value="1">☆</span>
+                                <span data-value="2">☆</span>
+                                <span data-value="3">☆</span>
+                                <span data-value="4">☆</span>
+                                <span data-value="5">☆</span>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="checkbox-wrap">
-                            <input type="checkbox" id="reviewAnonymous" />
-                            <span>Kirim sebagai anonim</span>
-                        </label>
-                    </div>
+                        <div class="name-field-wrap" id="nameFieldWrap">
+                            <div class="form-group">
+                                <label>Nama</label>
+                                <input type="text" id="reviewName" placeholder="Nama kamu..." maxlength="50" />
+                            </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label>Pesan</label>
-                        <textarea id="reviewMessage" placeholder="Tulis pengalaman kamu..." maxlength="500"></textarea>
-                    </div>
+                        <div class="form-group">
+                            <label class="checkbox-wrap">
+                                <input type="checkbox" id="reviewAnonymous" />
+                                <span>Kirim sebagai anonim</span>
+                            </label>
+                        </div>
 
-                    <button id="submitReview" class="btn btn-primary btn-block">Kirim Review</button>
-                    <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                        <div class="form-group">
+                            <label>Pesan</label>
+                            <textarea id="reviewMessage" placeholder="Tulis pengalaman kamu..." maxlength="500"></textarea>
+                        </div>
+
+                        <button id="submitReview" class="btn btn-primary btn-block">Kirim Review</button>
+                        <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -697,6 +746,32 @@
                 <h2 class="card-title">Review Pengguna</h2>
                 <div id="reviewsStats" style="margin-bottom:14px;"></div>
                 <div id="reviewsList"></div>
+            </div>
+        </div>
+
+        <!-- PAGE DOWNLOADS -->
+        <div id="page-downloads" class="page">
+            <div class="card">
+                <h2 class="card-title">Downloads</h2>
+                <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">Unduh aplikasi Sekolahmu</p>
+
+                <div class="download-box">
+                    <div class="row">
+                        <div class="info">
+                            <strong style="font-size:16px;">📱 Android APK</strong>
+                            <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
+                            <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
+                        </div>
+                        <a id="downloadBtn" href="#" class="btn btn-primary">Download</a>
+                    </div>
+                </div>
+
+                <div class="coming-soon">
+                    <span class="icon">🖥</span>
+                    <strong style="font-size:16px;">Windows EXE</strong>
+                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Sedang dalam proses pembuatan</div>
+                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">Coming Soon</div>
+                </div>
             </div>
         </div>
 
@@ -721,7 +796,10 @@
             onValue,
             remove,
             get,
-            set
+            set,
+            query,
+            orderByChild,
+            equalTo
         } from "firebase/database";
         import {
             getAuth,
@@ -756,6 +834,8 @@
         let updateData = {};
         let isSubmitting = false;
         let isDarkMode = true;
+        let userHasReviewed = false;
+        let userReviewId = null;
 
         // DOM HELPERS
         const $ = (s) => document.querySelector(s);
@@ -803,6 +883,16 @@
             });
         });
 
+        // UPDATE NAV VISIBILITY
+        function updateNavVisibility() {
+            const adminBtn = document.getElementById('adminNavBtn');
+            if (isAdmin) {
+                adminBtn.classList.remove('hidden-nav');
+            } else {
+                adminBtn.classList.add('hidden-nav');
+            }
+        }
+
         // RATING AUTH CHECK
         function checkRatingAuth() {
             const form = $('#ratingForm');
@@ -810,9 +900,30 @@
             if (currentUser) {
                 form.style.display = 'block';
                 req.style.display = 'none';
+                checkUserReview();
             } else {
                 form.style.display = 'none';
                 req.style.display = 'block';
+            }
+        }
+
+        // CHECK IF USER ALREADY REVIEWED
+        function checkUserReview() {
+            if (!currentUser) return;
+            const reviewed = allReviews.find(r => r.uid === currentUser.uid);
+            const alreadyDiv = document.getElementById('alreadyReviewed');
+            const reviewForm = document.getElementById('reviewForm');
+
+            if (reviewed) {
+                userHasReviewed = true;
+                userReviewId = reviewed.id;
+                alreadyDiv.style.display = 'block';
+                reviewForm.style.display = 'none';
+            } else {
+                userHasReviewed = false;
+                userReviewId = null;
+                alreadyDiv.style.display = 'none';
+                reviewForm.style.display = 'block';
             }
         }
 
@@ -828,6 +939,10 @@
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
+                if (userHasReviewed) {
+                    showToast('Kamu sudah memberi rating', true);
+                    return;
+                }
                 const val = parseInt(el.dataset.value);
                 if (selectedRating === val) {
                     selectedRating = 0;
@@ -868,10 +983,15 @@
                 const data = snap.val();
                 if (data) {
                     updateData = data;
-                    $('#apkVersion').textContent = data.latestVersion || '2.2.0';
-                    $('#apkSize').textContent = data.size || '3.78 MB';
-                    $('#downloadBtn').href = data.apkUrl ||
-                        'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.2.0/Sekolahmu.apk';
+                    const version = data.latestVersion || '2.4.0';
+                    const size = data.size || '3.78 MB';
+                    const url = data.apkUrl ||
+                        'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
+
+                    document.getElementById('apkVersion').textContent = version;
+                    document.getElementById('apkVersion2').textContent = version;
+                    document.getElementById('apkSize2').textContent = size;
+                    document.getElementById('downloadBtn').href = url;
                 }
             });
         }
@@ -881,6 +1001,10 @@
         $('#submitReview').addEventListener('click', async () => {
             if (isSubmitting || !currentUser) {
                 if (!currentUser) showToast('Login dulu', true);
+                return;
+            }
+            if (userHasReviewed) {
+                showToast('Kamu sudah memberi rating', true);
                 return;
             }
 
@@ -911,7 +1035,7 @@
                     anonymous: anonymous,
                     rating: rating,
                     message: message,
-                    appVersion: updateData.latestVersion || '2.2.0',
+                    appVersion: updateData.latestVersion || '2.4.0',
                     timestamp: Date.now(),
                     uid: currentUser.uid,
                     email: currentUser.email
@@ -929,6 +1053,9 @@
                 $('#reviewMessage').value = '';
                 anonCheckbox.checked = false;
                 nameFieldWrap.classList.remove('hidden');
+                userHasReviewed = true;
+                document.getElementById('alreadyReviewed').style.display = 'block';
+                document.getElementById('reviewForm').style.display = 'none';
 
                 renderReviews();
 
@@ -957,6 +1084,31 @@
                     });
                 }
                 allReviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                // Check if current user has reviewed
+                if (currentUser) {
+                    const reviewed = allReviews.find(r => r.uid === currentUser.uid);
+                    if (reviewed) {
+                        userHasReviewed = true;
+                        userReviewId = reviewed.id;
+                        const alreadyDiv = document.getElementById('alreadyReviewed');
+                        const reviewForm = document.getElementById('reviewForm');
+                        if (alreadyDiv && reviewForm) {
+                            alreadyDiv.style.display = 'block';
+                            reviewForm.style.display = 'none';
+                        }
+                    } else {
+                        userHasReviewed = false;
+                        userReviewId = null;
+                        const alreadyDiv = document.getElementById('alreadyReviewed');
+                        const reviewForm = document.getElementById('reviewForm');
+                        if (alreadyDiv && reviewForm) {
+                            alreadyDiv.style.display = 'none';
+                            reviewForm.style.display = 'block';
+                        }
+                    }
+                }
+
                 renderReviews();
             });
         }
@@ -1169,7 +1321,6 @@
                     }
                 });
 
-                // Enter key support
                 document.getElementById('loginPassword').addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') document.getElementById('loginBtn').click();
                 });
@@ -1185,10 +1336,12 @@
                 get(ref(db, `admins/${currentUser.uid}`)).then(snap => {
                     const data = snap.val();
                     isAdmin = !!(data && data.role === 'admin');
+                    updateNavVisibility();
                     renderAdminDashboard(container);
                 });
             } else {
                 isAdmin = true;
+                updateNavVisibility();
                 renderAdminDashboard(container);
             }
         }
@@ -1218,13 +1371,64 @@
                 <div class="admin-stats">
                     <div class="stat"><div class="num">${total}</div><div class="lbl">Total Review</div></div>
                     <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">Rating</div></div>
-                    <div class="stat"><div class="num">${updateData.latestVersion || '2.2.0'}</div><div class="lbl">APK Version</div></div>
+                    <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">APK Version</div></div>
                 </div>
+
+                <!-- BULK ACTIONS -->
+                <div class="admin-bulk-actions">
+                    <span style="font-weight:600;font-size:13px;">Hapus Berdasarkan:</span>
+                    <select id="bulkStarSelect">
+                        <option value="all">Semua Review</option>
+                        <option value="5">⭐ 5 Bintang</option>
+                        <option value="4">⭐⭐⭐⭐ 4 Bintang</option>
+                        <option value="3">⭐⭐⭐ 3 Bintang</option>
+                        <option value="2">⭐⭐ 2 Bintang</option>
+                        <option value="1">⭐ 1 Bintang</option>
+                    </select>
+                    <button id="bulkDeleteBtn" class="btn btn-danger btn-sm">Hapus</button>
+                    <span style="font-size:12px;color:var(--text3);margin-left:4px;">(aksi permanen)</span>
+                </div>
+
                 <div id="adminReviewsList"></div>
             `;
 
             document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
+            // BULK DELETE
+            document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
+                const select = document.getElementById('bulkStarSelect');
+                const filter = select.value;
+
+                let toDelete = [];
+                if (filter === 'all') {
+                    toDelete = allReviews.map(r => r.id);
+                } else {
+                    const star = parseInt(filter);
+                    toDelete = allReviews.filter(r => r.rating === star).map(r => r.id);
+                }
+
+                if (toDelete.length === 0) {
+                    showToast('Tidak ada review untuk dihapus', true);
+                    return;
+                }
+
+                const label = filter === 'all' ? 'SEMUA review' : `${filter} bintang (${toDelete.length} review)`;
+                if (!confirm(`Hapus ${label} secara permanen?`)) return;
+
+                let deleted = 0;
+                for (const id of toDelete) {
+                    try {
+                        await remove(ref(db, `reviews/${id}`));
+                        deleted++;
+                    } catch (e) {
+                        console.error('Gagal hapus:', id, e);
+                    }
+                }
+
+                showToast(`✅ ${deleted} review dihapus`);
+            });
+
+            // RENDER ADMIN REVIEW LIST
             const adminList = document.getElementById('adminReviewsList');
             if (allReviews.length === 0) {
                 adminList.innerHTML = '<div class="empty">Belum ada review</div>';
@@ -1303,14 +1507,17 @@
                 get(ref(db, `admins/${user.uid}`)).then(snap => {
                     const data = snap.val();
                     if (data && data.role === 'admin') isAdmin = true;
+                    updateNavVisibility();
                     updateAuthUI();
                     renderAdmin();
                 }).catch(() => {
+                    updateNavVisibility();
                     updateAuthUI();
                     renderAdmin();
                 });
             } else {
                 isAdmin = false;
+                updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
             }
@@ -1319,7 +1526,7 @@
         // INIT
         loadReviews();
 
-        console.log('SekolahMu loaded');
+        console.log('Sekolahmu loaded');
         console.log('Admin UID:', ADMIN_UID);
     </script>
 
