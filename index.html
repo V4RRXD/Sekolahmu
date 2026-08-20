@@ -181,6 +181,14 @@
         .user-badge .status-unverified:hover {
             background: rgba(242, 184, 181, 0.2);
         }
+        .user-badge .admin-badge {
+            color: #d0bcff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(208, 188, 255, 0.12);
+            border: 1px solid rgba(208, 188, 255, 0.15);
+        }
 
         .page {
             display: none;
@@ -580,25 +588,91 @@
             display: block;
         }
 
-        .verify-notice {
-            background: rgba(242, 184, 181, 0.1);
-            border: 1px solid rgba(242, 184, 181, 0.15);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            margin-bottom: 14px;
+        /* === CUSTOM CONFIRM DIALOG === */
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
         }
-        .verify-notice .icon {
-            font-size: 32px;
-            display: block;
+        .confirm-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .confirm-dialog {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 24px 22px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transform: scale(0.9) translateY(10px);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+        .confirm-overlay.show .confirm-dialog {
+            transform: scale(1) translateY(0);
+        }
+        .confirm-dialog .icon {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .confirm-dialog h3 {
+            font-size: 18px;
+            text-align: center;
             margin-bottom: 4px;
         }
-        .verify-notice p {
+        .confirm-dialog p {
             color: var(--text2);
             font-size: 14px;
+            text-align: center;
+            margin-bottom: 18px;
+            line-height: 1.5;
         }
-        .verify-notice .btn {
+        .confirm-dialog .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .confirm-dialog .actions .btn {
+            min-width: 80px;
+            justify-content: center;
+        }
+
+        /* === SPAM NOTIFICATION === */
+        .spam-notice {
+            background: rgba(208, 188, 255, 0.08);
+            border: 1px solid rgba(208, 188, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 18px;
             margin-top: 10px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .spam-notice.show {
+            display: block;
+        }
+        .spam-notice .title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #d0bcff;
+        }
+        .spam-notice .desc {
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+        .spam-notice .desc strong {
+            color: var(--text);
         }
 
         .toast {
@@ -667,6 +741,9 @@
             }
             .admin-bulk-actions {
                 flex-direction: column;
+            }
+            .confirm-dialog {
+                padding: 20px 16px 18px;
             }
         }
     </style>
@@ -817,6 +894,19 @@
 
     </div>
 
+    <!-- CUSTOM CONFIRM DIALOG -->
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-dialog">
+            <div class="icon" id="confirmIcon">⚠️</div>
+            <h3 id="confirmTitle">Konfirmasi</h3>
+            <p id="confirmMessage">Apakah kamu yakin?</p>
+            <div class="actions">
+                <button class="btn btn-outline" id="confirmCancel">Batal</button>
+                <button class="btn btn-danger" id="confirmOk">Ya, Hapus</button>
+            </div>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
 
@@ -878,10 +968,44 @@
             el.style.borderColor = err ? 'rgba(242,184,181,0.2)' : 'rgba(255,255,255,0.06)';
             el.classList.add('show');
             clearTimeout(el._timer);
-            el._timer = setTimeout(() => el.classList.remove('show'), 3500);
+            el._timer = setTimeout(() => el.classList.remove('show'), 4000);
         }
 
-        // THEME
+        // ===== CUSTOM CONFIRM =====
+        let confirmResolve = null;
+
+        function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('confirmOverlay');
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMessage').textContent = message;
+                document.getElementById('confirmIcon').textContent = icon;
+                document.getElementById('confirmOk').textContent = okText;
+
+                overlay.classList.add('show');
+                confirmResolve = resolve;
+            });
+        }
+
+        document.getElementById('confirmCancel').addEventListener('click', () => {
+            document.getElementById('confirmOverlay').classList.remove('show');
+            if (confirmResolve) confirmResolve(false);
+        });
+
+        document.getElementById('confirmOk').addEventListener('click', () => {
+            document.getElementById('confirmOverlay').classList.remove('show');
+            if (confirmResolve) confirmResolve(true);
+        });
+
+        // Close on overlay click
+        document.getElementById('confirmOverlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('confirmOverlay').classList.remove('show');
+                if (confirmResolve) confirmResolve(false);
+            }
+        });
+
+        // ===== THEME =====
         const themeToggle = $('#themeToggle');
         themeToggle.addEventListener('click', () => {
             isDarkMode = !isDarkMode;
@@ -895,7 +1019,7 @@
             themeToggle.textContent = '☀️';
         }
 
-        // NAVIGATION - tetap di halaman yang sama setelah login
+        // ===== NAVIGATION =====
         let currentPage = 'home';
 
         $$('.nav-left button').forEach(btn => {
@@ -917,7 +1041,6 @@
             });
         });
 
-        // UPDATE NAV VISIBILITY
         function updateNavVisibility() {
             const adminBtn = document.getElementById('adminNavBtn');
             if (isAdmin) {
@@ -927,26 +1050,26 @@
             }
         }
 
-        // RATING AUTH CHECK
+        // ===== RATING AUTH CHECK =====
         function checkRatingAuth() {
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
             if (currentUser) {
-                if (!currentUser.emailVerified) {
+                if (!currentUser.emailVerified && !isAdmin) {
                     form.style.display = 'none';
                     req.style.display = 'block';
                     req.innerHTML = `
                         <div style="padding:20px 0;">
                             <div style="font-size:40px;">📧</div>
                             <p style="color:var(--text2);">Verifikasi email dulu untuk memberi penilaian</p>
-                            <p style="color:var(--text3);font-size:13px;margin-top:4px;">Cek inbox atau spam</p>
+                            <p style="color:var(--text3);font-size:13px;margin-top:4px;">Cek inbox atau folder spam</p>
                             <button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:10px;">Kirim Ulang Verifikasi</button>
                         </div>
                     `;
                     document.getElementById('resendVerifyBtn')?.addEventListener('click', async () => {
                         try {
                             await sendEmailVerification(currentUser);
-                            showToast('Email verifikasi dikirim! Cek inbox');
+                            showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
                         } catch (e) {
                             showToast('Gagal kirim ulang', true);
                         }
@@ -973,7 +1096,6 @@
             }
         }
 
-        // CHECK IF USER ALREADY REVIEWED
         function checkUserReview() {
             if (!currentUser) return;
             const reviewed = allReviews.find(r => r.uid === currentUser.uid);
@@ -993,7 +1115,7 @@
             }
         }
 
-        // STARS
+        // ===== STARS =====
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
@@ -1020,7 +1142,7 @@
             });
         });
 
-        // ANONYM
+        // ===== ANONYM =====
         const anonCheckbox = $('#reviewAnonymous');
         const nameFieldWrap = $('#nameFieldWrap');
         const nameInput = $('#reviewName');
@@ -1034,7 +1156,7 @@
             }
         });
 
-        // LOAD UPDATE
+        // ===== LOAD UPDATE =====
         function loadUpdateData() {
             const updRef = ref(db, 'update');
             onValue(updRef, (snap) => {
@@ -1055,13 +1177,13 @@
         }
         loadUpdateData();
 
-        // SUBMIT REVIEW
+        // ===== SUBMIT REVIEW =====
         $('#submitReview').addEventListener('click', async () => {
             if (isSubmitting || !currentUser) {
                 if (!currentUser) showToast('Login dulu', true);
                 return;
             }
-            if (!currentUser.emailVerified) {
+            if (!currentUser.emailVerified && !isAdmin) {
                 showToast('Verifikasi email dulu', true);
                 return;
             }
@@ -1103,7 +1225,7 @@
                     email: currentUser.email
                 });
 
-                statusEl.textContent = 'Review berhasil dikirim!';
+                statusEl.textContent = '✅ Review berhasil dikirim!';
                 showToast('Review berhasil dikirim!');
 
                 selectedRating = 0;
@@ -1131,7 +1253,7 @@
             setTimeout(() => { statusEl.textContent = ''; }, 4000);
         });
 
-        // LOAD REVIEWS
+        // ===== LOAD REVIEWS =====
         function loadReviews() {
             const reviewsRef = ref(db, 'reviews');
             onValue(reviewsRef, (snap) => {
@@ -1242,7 +1364,13 @@
             $$('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
-                    if (!confirm('Hapus review ini?')) return;
+                    const confirmed = await showConfirm(
+                        'Hapus Review?',
+                        'Review ini akan dihapus secara permanen.',
+                        '🗑️',
+                        'Ya, Hapus'
+                    );
+                    if (!confirmed) return;
 
                     const item = btn.closest('.review-item');
                     item.classList.add('removing');
@@ -1258,7 +1386,7 @@
             });
         }
 
-        // ADMIN
+        // ===== ADMIN =====
         function renderAdmin() {
             const container = $('#adminContent');
 
@@ -1285,6 +1413,11 @@
                             </div>
                             <button id="loginBtn" class="btn btn-primary btn-block">Login</button>
                             <div id="loginStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                            <!-- Spam notice -->
+                            <div class="spam-notice" id="loginSpamNotice">
+                                <div class="title">📬 Cek Folder Spam!</div>
+                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>. Jangan lupa cek ya!</div>
+                            </div>
                         </div>
 
                         <div id="registerForm" class="auth-form">
@@ -1301,6 +1434,11 @@
                             </div>
                             <button id="registerBtn" class="btn btn-primary btn-block">Daftar</button>
                             <div id="registerStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                            <!-- Spam notice -->
+                            <div class="spam-notice" id="registerSpamNotice">
+                                <div class="title">📬 Cek Folder Spam!</div>
+                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>. Jangan lupa cek ya!</div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1313,6 +1451,9 @@
                         $$('.auth-form').forEach(f => f.classList.remove('active'));
                         const target = tab.dataset.tab === 'login' ? 'loginForm' : 'registerForm';
                         $(`#${target}`).classList.add('active');
+                        // Hide spam notices
+                        document.getElementById('loginSpamNotice').classList.remove('show');
+                        document.getElementById('registerSpamNotice').classList.remove('show');
                     });
                 });
 
@@ -1328,11 +1469,13 @@
                     this.textContent = input.type === 'password' ? '👁' : '🙈';
                 });
 
-                // Login - cek verifikasi
+                // ===== LOGIN =====
                 document.getElementById('loginBtn').addEventListener('click', async () => {
                     const email = document.getElementById('loginEmail').value.trim();
                     const pass = document.getElementById('loginPassword').value.trim();
                     const status = document.getElementById('loginStatus');
+                    const spamNotice = document.getElementById('loginSpamNotice');
+
                     if (!email || !pass) {
                         status.textContent = 'Isi email dan password';
                         status.style.color = '#f2b8b5';
@@ -1340,16 +1483,36 @@
                     }
                     status.textContent = 'Login...';
                     status.style.color = 'var(--text2)';
+                    spamNotice.classList.remove('show');
+
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
+
+                        // Cek apakah admin (admin skip verifikasi)
+                        const isAdminUser = userCred.user.uid === ADMIN_UID;
+                        if (isAdminUser) {
+                            status.textContent = '✅ Login berhasil! (Admin)';
+                            status.style.color = '#a8e6cf';
+                            showToast('Login berhasil');
+                            // Kembali ke home
+                            $$('.nav-left button').forEach(b => b.classList.remove('active'));
+                            document.querySelector('[data-page="home"]')?.classList.add('active');
+                            $$('.page').forEach(p => p.classList.remove('active'));
+                            $('#page-home').classList.add('active');
+                            currentPage = 'home';
+                            return;
+                        }
+
                         if (!userCred.user.emailVerified) {
                             status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
                             status.style.color = '#f2b8b5';
+                            spamNotice.classList.add('show');
                             await signOut(auth);
                             showToast('Verifikasi email dulu', true);
                             return;
                         }
-                        status.textContent = 'Login berhasil!';
+
+                        status.textContent = '✅ Login berhasil!';
                         status.style.color = '#a8e6cf';
                         showToast('Login berhasil');
                         // Kembali ke home
@@ -1358,6 +1521,7 @@
                         $$('.page').forEach(p => p.classList.remove('active'));
                         $('#page-home').classList.add('active');
                         currentPage = 'home';
+
                     } catch (err) {
                         status.textContent = err.message;
                         status.style.color = '#f2b8b5';
@@ -1365,11 +1529,13 @@
                     }
                 });
 
-                // Register - kirim verifikasi
+                // ===== REGISTER =====
                 document.getElementById('registerBtn').addEventListener('click', async () => {
                     const email = document.getElementById('registerEmail').value.trim();
                     const pass = document.getElementById('registerPassword').value.trim();
                     const status = document.getElementById('registerStatus');
+                    const spamNotice = document.getElementById('registerSpamNotice');
+
                     if (!email || !pass) {
                         status.textContent = 'Isi email dan password';
                         status.style.color = '#f2b8b5';
@@ -1382,12 +1548,15 @@
                     }
                     status.textContent = 'Mendaftar...';
                     status.style.color = 'var(--text2)';
+                    spamNotice.classList.remove('show');
+
                     try {
                         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                         await sendEmailVerification(userCred.user);
                         status.textContent = '✅ Verifikasi email dikirim! Cek inbox/spam';
                         status.style.color = '#a8e6cf';
-                        showToast('Cek email untuk verifikasi');
+                        spamNotice.classList.add('show');
+                        showToast('📧 Cek email untuk verifikasi');
                         await signOut(auth);
                     } catch (err) {
                         status.textContent = err.message;
@@ -1468,17 +1637,20 @@
 
             document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
-            // BULK DELETE
+            // ===== BULK DELETE with custom confirm =====
             document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select.value;
 
                 let toDelete = [];
+                let label = '';
                 if (filter === 'all') {
                     toDelete = allReviews.map(r => r.id);
+                    label = `SEMUA review (${toDelete.length})`;
                 } else {
                     const star = parseInt(filter);
                     toDelete = allReviews.filter(r => r.rating === star).map(r => r.id);
+                    label = `${filter} bintang (${toDelete.length} review)`;
                 }
 
                 if (toDelete.length === 0) {
@@ -1486,8 +1658,13 @@
                     return;
                 }
 
-                const label = filter === 'all' ? 'SEMUA review' : `${filter} bintang (${toDelete.length} review)`;
-                if (!confirm(`Hapus ${label} secara permanen?`)) return;
+                const confirmed = await showConfirm(
+                    'Hapus Review?',
+                    `Hapus ${label} secara permanen?`,
+                    '⚠️',
+                    'Ya, Hapus Semua'
+                );
+                if (!confirmed) return;
 
                 let deleted = 0;
                 for (const id of toDelete) {
@@ -1502,6 +1679,7 @@
                 showToast(`${deleted} review dihapus`);
             });
 
+            // ===== ADMIN REVIEW LIST =====
             const adminList = document.getElementById('adminReviewsList');
             if (allReviews.length === 0) {
                 adminList.innerHTML = '<div class="empty">Belum ada review</div>';
@@ -1528,7 +1706,14 @@
             document.querySelectorAll('.admin-delete').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
-                    if (!confirm('Hapus review ini?')) return;
+                    const confirmed = await showConfirm(
+                        'Hapus Review?',
+                        'Review ini akan dihapus secara permanen.',
+                        '🗑️',
+                        'Ya, Hapus'
+                    );
+                    if (!confirmed) return;
+
                     const item = btn.closest('.review-item');
                     item.classList.add('removing');
                     try {
@@ -1542,16 +1727,19 @@
             });
         }
 
-        // AUTH STATE
+        // ===== AUTH STATE =====
         function updateAuthUI() {
             const section = document.getElementById('authSection');
 
             if (currentUser) {
                 const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
                 const verified = currentUser.emailVerified;
+                const isAdminUser = currentUser.uid === ADMIN_UID || isAdmin;
 
                 let statusHtml = '';
-                if (verified) {
+                if (isAdminUser) {
+                    statusHtml = `<span class="admin-badge">Admin</span>`;
+                } else if (verified) {
                     statusHtml = `<span class="status-verified">Verified</span>`;
                 } else {
                     statusHtml = `
@@ -1574,7 +1762,20 @@
                     resendBtn.addEventListener('click', async () => {
                         try {
                             await sendEmailVerification(currentUser);
-                            showToast('Email verifikasi dikirim! Cek inbox/spam');
+                            showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
+                            // Show spam notice
+                            const spamNotice = document.createElement('div');
+                            spamNotice.className = 'spam-notice show';
+                            spamNotice.innerHTML = `
+                                <div class="title">📬 Cek Folder Spam!</div>
+                                <div class="desc">Email verifikasi mungkin masuk ke folder <strong>Spam</strong> atau <strong>Promosi</strong>.</div>
+                            `;
+                            // Append near the user badge
+                            const badge = document.querySelector('.user-badge');
+                            if (badge) {
+                                badge.parentNode.insertBefore(spamNotice, badge.nextSibling);
+                                setTimeout(() => spamNotice.remove(), 8000);
+                            }
                         } catch (e) {
                             showToast('Gagal kirim ulang', true);
                         }
@@ -1619,7 +1820,7 @@
             }
         });
 
-        // INIT
+        // ===== INIT =====
         loadReviews();
 
         console.log('Sekolahmu loaded');
