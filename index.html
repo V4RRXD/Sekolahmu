@@ -318,6 +318,20 @@
             display: block;
             margin-bottom: 6px;
         }
+        .download-locked {
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            text-align: center;
+            color: var(--text2);
+            font-size: 14px;
+        }
+        .download-locked .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 4px;
+        }
 
         .stars {
             display: flex;
@@ -1037,22 +1051,8 @@
                 <h2 class="card-title">⬇ Downloads</h2>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">Unduh aplikasi Sekolahmu</p>
 
-                <div class="download-box">
-                    <div class="row">
-                        <div class="info">
-                            <strong style="font-size:16px;">Android APK</strong>
-                            <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
-                            <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
-                        </div>
-                        <a id="downloadBtn" href="#" class="btn btn-primary">Download</a>
-                    </div>
-                </div>
-
-                <div class="coming-soon">
-                    <span class="icon">🖥</span>
-                    <strong style="font-size:16px;">Windows EXE</strong>
-                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Sedang dalam proses pembuatan</div>
-                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">Coming Soon</div>
+                <div id="downloadSection">
+                    <!-- Akan di-render oleh JS -->
                 </div>
             </div>
         </div>
@@ -1243,6 +1243,7 @@
             if (spamNotifShown) return;
             if (currentUser && currentUser.emailVerified) return;
             if (isAdmin) return;
+            if (!currentUser) return;
 
             const el = document.getElementById('spamNotification');
             if (el) {
@@ -1273,7 +1274,6 @@
         }
 
         function startCooldown() {
-            // Tambah 10 detik setiap kali
             resendCooldown += 10;
             isCooldownActive = true;
             updateCooldownDisplay();
@@ -1324,15 +1324,13 @@
                 return;
             }
 
-            // Refresh user data
             await currentUser.reload();
             const refreshedUser = auth.currentUser;
 
             if (refreshedUser && refreshedUser.emailVerified) {
                 showToast('✅ Email sudah terverifikasi!', false);
                 hideSpamNotification();
-                spamNotifShown = true; // prevent reappear
-                // Update UI
+                spamNotifShown = true;
                 updateAuthUI();
                 goToHome();
             } else {
@@ -1353,7 +1351,7 @@
         function hideGuideNotification() {
             const el = document.getElementById('guideNotification');
             if (el) el.classList.remove('show');
-            if (spamNotifShown && !currentUser?.emailVerified && !isAdmin) {
+            if (spamNotifShown && !currentUser?.emailVerified && !isAdmin && currentUser) {
                 document.getElementById('spamNotification')?.classList.add('show');
             }
         }
@@ -1445,6 +1443,7 @@
             if (page === 'reviews') renderReviews();
             if (page === 'admin') renderAdmin();
             if (page === 'rating') checkRatingAuth();
+            if (page === 'downloads') renderDownloads();
         }
 
         document.querySelectorAll('.nav-left button').forEach(btn => {
@@ -1474,6 +1473,64 @@
             }
         }
 
+        // ===== DOWNLOADS - WAJIB LOGIN + VERIFIKASI =====
+        function renderDownloads() {
+            const section = document.getElementById('downloadSection');
+            if (!section) return;
+
+            if (!currentUser) {
+                section.innerHTML = `
+                    <div class="download-locked">
+                        <span class="icon">🔒</span>
+                        <p>Login untuk mengunduh APK</p>
+                        <button class="btn btn-primary btn-sm" id="downloadLoginBtn" style="margin-top:8px;">Login</button>
+                    </div>
+                `;
+                document.getElementById('downloadLoginBtn')?.addEventListener('click', () => {
+                    goToPage('admin');
+                });
+                return;
+            }
+
+            if (!currentUser.emailVerified && !isAdmin) {
+                section.innerHTML = `
+                    <div class="download-locked">
+                        <span class="icon">📧</span>
+                        <p>Verifikasi email dulu untuk mengunduh</p>
+                        <button class="btn btn-primary btn-sm" id="downloadVerifyBtn" style="margin-top:8px;">Kirim Ulang Verifikasi</button>
+                    </div>
+                `;
+                document.getElementById('downloadVerifyBtn')?.addEventListener('click', resendVerification);
+                return;
+            }
+
+            // Sudah login + verified
+            section.innerHTML = `
+                <div class="download-box">
+                    <div class="row">
+                        <div class="info">
+                            <strong style="font-size:16px;">📱 Android APK</strong>
+                            <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
+                            <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
+                        </div>
+                        <a id="downloadBtn" href="#" class="btn btn-primary">⬇ Download</a>
+                    </div>
+                </div>
+
+                <div class="coming-soon">
+                    <span class="icon">🖥</span>
+                    <strong style="font-size:16px;">Windows EXE</strong>
+                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Sedang dalam proses pembuatan</div>
+                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">🚧 Coming Soon</div>
+                </div>
+            `;
+
+            // Update link
+            const url = updateData.apkUrl || 'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
+            const btn = document.getElementById('downloadBtn');
+            if (btn) btn.href = url;
+        }
+
         // ===== RATING AUTH =====
         function checkRatingAuth() {
             const form = $('#ratingForm');
@@ -1492,9 +1549,7 @@
                             <button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:10px;">Kirim Ulang Verifikasi</button>
                         </div>
                     `;
-                    document.getElementById('resendVerifyBtn')?.addEventListener('click', async () => {
-                        await resendVerification();
-                    });
+                    document.getElementById('resendVerifyBtn')?.addEventListener('click', resendVerification);
                     return;
                 }
                 form.style.display = 'block';
@@ -1521,13 +1576,28 @@
 
             if (!alreadyDiv || !reviewForm) return;
 
-            if (reviewed) {
+            // User bisa edit/hapus review hanya jika verified (kecuali admin)
+            const canEdit = currentUser.emailVerified || isAdmin;
+
+            if (reviewed && canEdit) {
                 userHasReviewed = true;
                 userReviewId = reviewed.id;
                 alreadyDiv.style.display = 'block';
                 reviewForm.style.display = 'none';
                 document.getElementById('editMyReviewBtn').onclick = () => startEditingReview(reviewed.id);
                 document.getElementById('deleteMyReviewBtn').onclick = () => deleteMyReview(reviewed.id);
+            } else if (reviewed && !canEdit) {
+                userHasReviewed = true;
+                userReviewId = reviewed.id;
+                alreadyDiv.style.display = 'block';
+                reviewForm.style.display = 'none';
+                document.getElementById('editMyReviewBtn').style.display = 'none';
+                document.getElementById('deleteMyReviewBtn').style.display = 'none';
+                // Add info text
+                const info = document.createElement('p');
+                info.style.cssText = 'color:var(--text3);font-size:13px;margin-top:6px;';
+                info.textContent = '📧 Verifikasi email untuk edit/hapus review';
+                alreadyDiv.appendChild(info);
             } else {
                 userHasReviewed = false;
                 userReviewId = null;
@@ -1538,6 +1608,12 @@
 
         // ===== DELETE MY REVIEW =====
         async function deleteMyReview(id) {
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
+                showToast('⚠️ Verifikasi email dulu!', true);
+                showSpamNotification();
+                return;
+            }
+
             const confirmed = await showConfirm(
                 'Hapus Review?',
                 'Review kamu akan dihapus secara permanen.',
@@ -1562,6 +1638,12 @@
 
         // ===== EDIT MY REVIEW =====
         function startEditingReview(id) {
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
+                showToast('⚠️ Verifikasi email dulu!', true);
+                showSpamNotification();
+                return;
+            }
+
             const review = allReviews.find(r => r.id === id);
             if (!review) return;
             goToPage('reviews');
@@ -1693,6 +1775,7 @@
                     if (apkSize2) apkSize2.textContent = size;
                     if (downloadBtn) downloadBtn.href = url;
                 }
+                renderDownloads();
             });
         }
         loadUpdateData();
@@ -1862,9 +1945,10 @@
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 const isOwner = currentUser && r.uid === currentUser.uid;
+                const canEdit = isOwner && (currentUser?.emailVerified || isAdmin);
 
                 let actionsHtml = '';
-                if (isOwner) {
+                if (canEdit) {
                     actionsHtml = `
                         <div class="actions">
                             <button class="btn btn-outline btn-sm edit-review" data-id="${r.id}">✏️ Edit</button>
@@ -1875,6 +1959,12 @@
                     actionsHtml = `
                         <div class="actions">
                             <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}">🗑 Hapus</button>
+                        </div>
+                    `;
+                } else if (isOwner && !currentUser?.emailVerified) {
+                    actionsHtml = `
+                        <div class="actions">
+                            <span style="font-size:12px;color:var(--text3);">📧 Verifikasi untuk edit/hapus</span>
                         </div>
                     `;
                 }
@@ -2057,9 +2147,10 @@
                                 status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
                                 status.style.color = '#f2b8b5';
                             }
-                            await signOut(auth);
+                            // Jangan logout! Biarkan user tetap login
                             showToast('⚠️ Verifikasi email dulu!', true);
                             showSpamNotification();
+                            goToHome();
                             return;
                         }
 
@@ -2112,9 +2203,8 @@
                             status.style.color = '#a8e6cf';
                         }
                         showToast('📧 Cek email untuk verifikasi');
+                        // Jangan logout! Biarkan user tetap login
                         showSpamNotification();
-
-                        await signOut(auth);
                         goToHome();
 
                     } catch (err) {
@@ -2324,13 +2414,12 @@
 
                 const resendBtn = document.getElementById('resendVerifyNav');
                 if (resendBtn) {
-                    resendBtn.addEventListener('click', async () => {
-                        await resendVerification();
-                    });
+                    resendBtn.addEventListener('click', resendVerification);
                 }
 
+                // Tampilkan spam notification jika belum verified
                 if (!verified && !isAdmin && !spamNotifShown) {
-                    setTimeout(() => showSpamNotification(), 1000);
+                    setTimeout(() => showSpamNotification(), 1500);
                 }
             } else {
                 section.innerHTML = `
@@ -2342,6 +2431,7 @@
             }
 
             checkRatingAuth();
+            renderDownloads();
         }
 
         onAuthStateChanged(auth, async (user) => {
@@ -2351,10 +2441,10 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
+                renderDownloads();
 
                 if (user.emailVerified) {
                     spamNotifShown = true;
-                    // Hide spam notif if showing
                     hideSpamNotification();
                 }
 
@@ -2365,7 +2455,6 @@
             } else {
                 isAdmin = false;
                 spamNotifShown = false;
-                // Reset cooldown on logout
                 if (resendTimer) {
                     clearInterval(resendTimer);
                     resendTimer = null;
@@ -2376,12 +2465,14 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
+                renderDownloads();
                 goToHome();
             }
         });
 
         // ===== INIT =====
         loadReviews();
+        renderDownloads();
 
         console.log('✅ Sekolahmu loaded');
         console.log('Admin UID:', ADMIN_UID);
