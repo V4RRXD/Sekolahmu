@@ -687,7 +687,6 @@
             padding: 30px 12px;
         }
 
-        /* CONFIRM DIALOG */
         .confirm-overlay {
             position: fixed;
             inset: 0;
@@ -1003,7 +1002,6 @@
         let isDarkMode = true;
         let userHasReviewed = false;
         let userReviewId = null;
-        let editingReviewId = null;
 
         // DOM HELPERS
         const $ = (s) => document.querySelector(s);
@@ -1096,11 +1094,23 @@
             }
         }
 
+        // ===== CEK ADMIN ROLE DARI FIREBASE =====
+        async function checkIsAdmin(uid) {
+            try {
+                const snap = await get(ref(db, `admins/${uid}`));
+                const data = snap.val();
+                return !!(data && data.role === 'admin');
+            } catch {
+                return false;
+            }
+        }
+
         // ===== RATING AUTH CHECK =====
         function checkRatingAuth() {
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
             if (currentUser) {
+                // Admin tidak perlu verifikasi
                 if (!currentUser.emailVerified && !isAdmin) {
                     form.style.display = 'none';
                     req.style.display = 'block';
@@ -1153,7 +1163,6 @@
                 userReviewId = reviewed.id;
                 alreadyDiv.style.display = 'block';
                 reviewForm.style.display = 'none';
-                // Setup edit/delete buttons
                 document.getElementById('editMyReviewBtn').onclick = () => startEditingReview(reviewed.id);
                 document.getElementById('deleteMyReviewBtn').onclick = () => deleteMyReview(reviewed.id);
             } else {
@@ -1181,7 +1190,7 @@
                 userReviewId = null;
                 document.getElementById('alreadyReviewed').style.display = 'none';
                 document.getElementById('reviewForm').style.display = 'block';
-                renderReviews();
+                // Data akan update otomatis via onValue
             } catch (err) {
                 showToast('Gagal hapus review', true);
             }
@@ -1192,41 +1201,26 @@
             const review = allReviews.find(r => r.id === id);
             if (!review) return;
 
-            // Go to reviews page and enter edit mode
+            // Go to reviews page
             $$('.nav-left button').forEach(b => b.classList.remove('active'));
             document.querySelector('[data-page="reviews"]')?.classList.add('active');
             $$('.page').forEach(p => p.classList.remove('active'));
             $('#page-reviews').classList.add('active');
 
-            // Find the review item and make it editable
             const item = document.querySelector(`.review-item[data-id="${id}"]`);
-            if (!item) {
-                // If not rendered, render and try again
-                renderReviews();
-                setTimeout(() => {
-                    const item2 = document.querySelector(`.review-item[data-id="${id}"]`);
-                    if (item2) makeEditable(item2, review);
-                }, 300);
-                return;
-            }
-            makeEditable(item, review);
+            if (item) makeEditable(item, review);
         }
 
         function makeEditable(item, review) {
-            // Cancel any existing edit
-            document.querySelectorAll('.review-item.editing').forEach(el => {
-                cancelEdit(el);
-            });
+            document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
             item.classList.add('editing');
 
-            // Hide display elements
             const msgEl = item.querySelector('.msg');
             const actionsEl = item.querySelector('.actions');
             if (msgEl) msgEl.style.display = 'none';
             if (actionsEl) actionsEl.style.display = 'none';
 
-            // Create edit form
             const editDiv = document.createElement('div');
             editDiv.className = 'msg-edit active';
             editDiv.innerHTML = `
@@ -1238,7 +1232,6 @@
             `;
             item.appendChild(editDiv);
 
-            // Save handler
             editDiv.querySelector('.save-edit').addEventListener('click', async () => {
                 const newMsg = editDiv.querySelector('textarea').value.trim();
                 if (!newMsg) {
@@ -1252,18 +1245,15 @@
                     });
                     showToast('Review diperbarui');
                     cancelEdit(item);
-                    renderReviews();
                 } catch (err) {
                     showToast('Gagal update review', true);
                 }
             });
 
-            // Cancel handler
             editDiv.querySelector('.cancel-edit').addEventListener('click', () => {
                 cancelEdit(item);
             });
 
-            // Focus textarea
             setTimeout(() => editDiv.querySelector('textarea').focus(), 100);
         }
 
@@ -1403,8 +1393,6 @@
                 document.getElementById('alreadyReviewed').style.display = 'block';
                 document.getElementById('reviewForm').style.display = 'none';
 
-                renderReviews();
-
             } catch (err) {
                 statusEl.textContent = 'Gagal: ' + err.message;
                 showToast('Gagal kirim review', true);
@@ -1415,7 +1403,9 @@
             setTimeout(() => { statusEl.textContent = ''; }, 4000);
         });
 
-        // ===== LOAD REVIEWS =====
+        // ===== LOAD REVIEWS - REALTIME =====
+        let reviewsInitialized = false;
+
         function loadReviews() {
             const reviewsRef = ref(db, 'reviews');
             onValue(reviewsRef, (snap) => {
@@ -1431,6 +1421,7 @@
                 }
                 allReviews.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
+                // Update user review status
                 if (currentUser) {
                     const reviewed = allReviews.find(r => r.uid === currentUser.uid);
                     if (reviewed) {
@@ -1457,6 +1448,7 @@
                 }
 
                 renderReviews();
+                reviewsInitialized = true;
             });
         }
 
@@ -1464,7 +1456,6 @@
             const list = $('#reviewsList');
             const stats = $('#reviewsStats');
 
-            // Cancel any active edits
             document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
             if (allReviews.length === 0) {
@@ -1537,7 +1528,7 @@
                 `;
             }).join('');
 
-            // ===== DELETE REVIEW (user & admin) =====
+            // ===== DELETE REVIEW =====
             document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
@@ -1563,6 +1554,7 @@
                             document.getElementById('alreadyReviewed').style.display = 'none';
                             document.getElementById('reviewForm').style.display = 'block';
                         }
+                        // Data akan update otomatis via onValue
                     } catch (err) {
                         showToast('Gagal hapus', true);
                         item.classList.remove('removing');
@@ -1570,7 +1562,7 @@
                 });
             });
 
-            // ===== EDIT REVIEW (user only) =====
+            // ===== EDIT REVIEW =====
             document.querySelectorAll('.edit-review').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -1681,7 +1673,9 @@
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
 
-                        const isAdminUser = userCred.user.uid === ADMIN_UID;
+                        // Cek apakah user adalah admin (dari Firebase DB)
+                        const isAdminUser = await checkIsAdmin(userCred.user.uid);
+
                         if (isAdminUser) {
                             status.textContent = '✅ Login berhasil! (Admin)';
                             status.style.color = '#a8e6cf';
@@ -1765,18 +1759,12 @@
                 return;
             }
 
-            if (currentUser.uid !== ADMIN_UID) {
-                get(ref(db, `admins/${currentUser.uid}`)).then(snap => {
-                    const data = snap.val();
-                    isAdmin = !!(data && data.role === 'admin');
-                    updateNavVisibility();
-                    renderAdminDashboard(container);
-                });
-            } else {
-                isAdmin = true;
+            // Cek admin role
+            checkIsAdmin(currentUser.uid).then(admin => {
+                isAdmin = admin;
                 updateNavVisibility();
                 renderAdminDashboard(container);
-            }
+            });
         }
 
         function renderAdminDashboard(container) {
@@ -1923,10 +1911,9 @@
             if (currentUser) {
                 const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
                 const verified = currentUser.emailVerified;
-                const isAdminUser = currentUser.uid === ADMIN_UID || isAdmin;
 
                 let statusHtml = '';
-                if (isAdminUser) {
+                if (isAdmin) {
                     statusHtml = `<span class="admin-badge">Admin</span>`;
                 } else if (verified) {
                     statusHtml = `<span class="status-verified">Verified</span>`;
@@ -1984,21 +1971,13 @@
             checkRatingAuth();
         }
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
-                isAdmin = (user.uid === ADMIN_UID);
-                get(ref(db, `admins/${user.uid}`)).then(snap => {
-                    const data = snap.val();
-                    if (data && data.role === 'admin') isAdmin = true;
-                    updateNavVisibility();
-                    updateAuthUI();
-                    renderAdmin();
-                }).catch(() => {
-                    updateNavVisibility();
-                    updateAuthUI();
-                    renderAdmin();
-                });
+                isAdmin = await checkIsAdmin(user.uid);
+                updateNavVisibility();
+                updateAuthUI();
+                renderAdmin();
             } else {
                 isAdmin = false;
                 updateNavVisibility();
