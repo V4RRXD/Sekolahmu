@@ -32,10 +32,10 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
             --primary: #d65a62;
             --primary-hover: #e07078;
-            --primary-dark: #b84a52;
-            --primary-light: #e88a90;
             --primary-bg: rgba(214, 90, 98, 0.08);
             --primary-border: rgba(214, 90, 98, 0.15);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 16px;
         }
 
         [data-theme="light"] {
@@ -50,10 +50,14 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
             --primary: #d65a62;
             --primary-hover: #c44a52;
-            --primary-dark: #b84048;
-            --primary-light: #e88a90;
             --primary-bg: rgba(214, 90, 98, 0.06);
             --primary-border: rgba(214, 90, 98, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -62,7 +66,7 @@
             color: var(--text);
             min-height: 100vh;
             padding: 12px;
-            transition: background 0.3s, color 0.3s;
+            transition: background var(--transition), color var(--transition);
             position: relative;
         }
 
@@ -86,8 +90,7 @@
             font-weight: 400;
             pointer-events: none;
             z-index: 10;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            transition: color 0.3s, opacity 0.3s;
+            transition: color var(--transition), opacity var(--transition);
         }
 
         .watermark span {
@@ -99,8 +102,103 @@
             border: 1px solid var(--primary-border);
             font-size: 11px;
             opacity: 0.35;
+            transition: all var(--transition);
         }
 
+        /* ===== BANNER NOTIFICATION ===== */
+        .banner-container {
+            position: sticky;
+            top: 0;
+            z-index: 45;
+            margin: -12px -12px 16px -12px;
+            padding: 12px 12px 0 12px;
+            background: var(--bg);
+            transition: all var(--transition);
+        }
+
+        .banner {
+            background: var(--primary);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
+            animation: bannerSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner.show {
+            display: flex;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @keyframes bannerSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .banner .icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .banner .content {
+            flex: 1;
+        }
+
+        .banner .content .title {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .banner .content .message {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .banner .close-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all var(--transition);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner .close-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        /* ===== NAVBAR ===== */
         .nav {
             display: flex;
             flex-wrap: wrap;
@@ -109,25 +207,30 @@
             background: var(--card);
             backdrop-filter: blur(16px);
             padding: 10px 16px;
-            border-radius: 16px;
+            border-radius: var(--radius);
             margin-bottom: 16px;
             border: 1px solid var(--primary-border);
             position: sticky;
-            top: 8px;
-            z-index: 50;
+            top: 76px;
+            z-index: 40;
+            transition: all var(--transition);
+            box-shadow: var(--shadow);
         }
+
         .nav-left {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
             flex: 1;
         }
+
         .nav-right {
             display: flex;
             gap: 6px;
             align-items: center;
             margin-left: auto;
         }
+
         .nav button {
             background: transparent;
             color: var(--text2);
@@ -137,16 +240,37 @@
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all var(--transition);
+            position: relative;
         }
+
+        .nav button::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: transform var(--transition);
+        }
+
         .nav button:hover {
             background: var(--primary-bg);
             color: var(--text);
         }
+
         .nav button.active {
             color: var(--primary);
             background: var(--primary-bg);
         }
+
+        .nav button.active::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
         .nav button.hidden-nav {
             display: none;
         }
@@ -159,10 +283,12 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-            transition: 0.2s;
+            transition: all var(--transition);
         }
+
         .theme-toggle:hover {
             background: var(--primary-border);
+            transform: scale(1.05);
         }
 
         .auth-btn {
@@ -174,8 +300,9 @@
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all var(--transition);
         }
+
         .auth-btn:hover {
             background: var(--primary-hover);
             transform: scale(0.97);
@@ -191,7 +318,16 @@
             border: 1px solid var(--primary-border);
             font-size: 13px;
             color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
         }
+
+        .user-badge:hover {
+            background: var(--primary-bg);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
         .user-badge .logout-btn {
             background: none;
             border: none;
@@ -200,10 +336,13 @@
             font-size: 13px;
             padding: 2px 6px;
             border-radius: 6px;
+            transition: all var(--transition);
         }
+
         .user-badge .logout-btn:hover {
             background: rgba(242, 184, 181, 0.15);
         }
+
         .user-badge .status-verified {
             color: #6fcf97;
             font-size: 11px;
@@ -212,6 +351,7 @@
             background: rgba(111, 207, 151, 0.12);
             border: 1px solid rgba(111, 207, 151, 0.15);
         }
+
         .user-badge .status-unverified {
             color: #f2b8b5;
             font-size: 11px;
@@ -220,10 +360,13 @@
             background: rgba(242, 184, 181, 0.12);
             border: 1px solid rgba(242, 184, 181, 0.15);
             cursor: pointer;
+            transition: all var(--transition);
         }
+
         .user-badge .status-unverified:hover {
             background: rgba(242, 184, 181, 0.2);
         }
+
         .user-badge .admin-badge {
             color: var(--primary);
             font-size: 11px;
@@ -233,41 +376,57 @@
             border: 1px solid var(--primary-border);
         }
 
+        /* ===== PAGES ===== */
         .page {
             display: none;
-            animation: fadeIn 0.35s ease;
+            animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
+
         .page.active {
             display: block;
         }
 
-        @keyframes fadeIn {
+        @keyframes pageFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(16px);
+                transform: translateY(24px) scale(0.98);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
+        /* ===== CARDS ===== */
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
             border: 1px solid var(--primary-border);
-            border-radius: 20px;
+            border-radius: var(--radius);
             padding: 20px 22px;
             margin-bottom: 14px;
             box-shadow: var(--shadow);
-            transition: 0.3s;
+            transition: all var(--transition);
         }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 40px rgba(214, 90, 98, 0.08);
+        }
+
         .card-title {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 10px;
         }
 
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text2);
+            margin-bottom: 14px;
+        }
+
+        /* ===== BUTTONS ===== */
         .btn {
             border: none;
             border-radius: 12px;
@@ -275,133 +434,84 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 6px;
             text-decoration: none;
+            will-change: transform;
         }
+
         .btn:active {
             transform: scale(0.95);
         }
+
         .btn-primary {
             background: var(--primary);
             color: #fff;
         }
+
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
         }
+
         .btn-danger {
             background: rgba(242, 184, 181, 0.15);
             color: #f2b8b5;
             border: 1px solid rgba(242, 184, 181, 0.15);
         }
+
         .btn-danger:hover {
             background: rgba(242, 184, 181, 0.25);
+            transform: translateY(-1px);
         }
+
         .btn-success {
             background: rgba(111, 207, 151, 0.15);
             color: #6fcf97;
             border: 1px solid rgba(111, 207, 151, 0.15);
         }
+
         .btn-success:hover {
             background: rgba(111, 207, 151, 0.25);
+            transform: translateY(-1px);
         }
+
         .btn-outline {
             background: transparent;
             color: var(--text);
             border: 1px solid var(--primary-border);
         }
+
         .btn-outline:hover {
             background: var(--primary-bg);
+            transform: translateY(-1px);
         }
+
         .btn-sm {
             padding: 4px 12px;
             font-size: 12px;
+            border-radius: 8px;
         }
+
         .btn-block {
             width: 100%;
             justify-content: center;
         }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
-        .download-box {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 12px;
-        }
-        .download-box .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .download-box .info .ver,
-        .download-box .info .sz {
-            color: var(--text2);
-            font-size: 14px;
-        }
-        .coming-soon {
-            background: var(--input);
-            border: 1px dashed var(--primary-border);
-            border-radius: 14px;
-            padding: 24px;
-            text-align: center;
-            color: var(--text2);
-        }
-        .coming-soon .icon {
-            font-size: 36px;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .download-locked {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 14px;
-            padding: 16px 20px;
-            text-align: center;
-            color: var(--text2);
-            font-size: 14px;
-        }
-        .download-locked .icon {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .stars {
-            display: flex;
-            gap: 4px;
-            font-size: 38px;
-            cursor: pointer;
-            margin: 8px 0 14px;
-            user-select: none;
-            justify-content: center;
-        }
-        .stars span {
-            transition: 0.15s;
-            color: #48454e;
-            display: inline-block;
-        }
-        .stars span.active {
-            color: #ffd700;
-            transform: scale(1.1);
-        }
-        .stars span:hover {
-            transform: scale(1.2);
-            color: #ffd700;
-        }
-
+        /* ===== FORM ===== */
         .form-group {
             margin-bottom: 12px;
         }
+
         .form-group label {
             display: block;
             font-size: 13px;
@@ -409,8 +519,10 @@
             margin-bottom: 4px;
             color: var(--text2);
         }
+
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 10px 14px;
             border-radius: 12px;
@@ -419,86 +531,48 @@
             color: var(--text);
             font-size: 14px;
             outline: none;
-            transition: 0.3s;
+            transition: all var(--transition);
             font-family: inherit;
         }
+
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-bg);
         }
+
         .form-group textarea {
             min-height: 70px;
             resize: vertical;
         }
 
-        .password-wrap {
-            position: relative;
-        }
-        .password-wrap input {
-            padding-right: 44px;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text2);
-            font-size: 18px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .name-field-wrap {
-            overflow: hidden;
-            transition: all 0.35s ease;
-            max-height: 80px;
-            opacity: 1;
-            margin-bottom: 12px;
-        }
-        .name-field-wrap.hidden {
-            max-height: 0;
-            opacity: 0;
-            margin-bottom: 0;
-            pointer-events: none;
-        }
-        .name-field-wrap .form-group {
-            margin-bottom: 0;
-        }
-
-        .checkbox-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            color: var(--text2);
-        }
-        .checkbox-wrap:hover {
+        .form-group select option {
+            background: var(--bg);
             color: var(--text);
         }
-        .checkbox-wrap input {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
 
+        /* ===== REVIEW ITEMS ===== */
         .review-item {
             background: var(--input);
             border: 1px solid var(--primary-border);
-            border-radius: 14px;
+            border-radius: var(--radius);
             padding: 14px 18px;
             margin-bottom: 10px;
-            animation: slideIn 0.35s ease forwards;
-            transition: 0.3s;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transition: all var(--transition);
         }
+
         .review-item:hover {
             border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
         .review-item.removing {
-            animation: slideOut 0.3s ease forwards;
+            animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
+
         .review-item.editing {
             border-color: var(--primary);
             background: var(--primary-bg);
@@ -507,21 +581,22 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(-12px);
+                transform: translateY(-16px) scale(0.96);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
+
         @keyframes slideOut {
             from {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
             to {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-12px) scale(0.94);
             }
         }
 
@@ -532,11 +607,13 @@
             flex-wrap: wrap;
             gap: 4px;
         }
+
         .review-item .name {
             font-weight: 600;
             font-size: 14px;
             color: var(--text);
         }
+
         .review-item .name .badge-anon {
             font-size: 10px;
             background: var(--input);
@@ -546,51 +623,30 @@
             border: 1px solid var(--primary-border);
             margin-left: 4px;
         }
+
         .review-item .stars-display {
             color: #ffd700;
             font-size: 14px;
             letter-spacing: 1px;
         }
+
         .review-item .msg {
             color: var(--text2);
             font-size: 14px;
             margin-top: 4px;
             line-height: 1.5;
         }
-        .review-item .msg-edit {
-            display: none;
-            margin-top: 4px;
-        }
-        .review-item .msg-edit.active {
-            display: block;
-        }
-        .review-item .msg-edit textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--primary-border);
-            background: var(--input);
-            color: var(--text);
-            font-size: 14px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 60px;
-            outline: none;
-        }
-        .review-item .msg-edit textarea:focus {
-            border-color: var(--primary);
-        }
-        .review-item .msg-edit .edit-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 6px;
-        }
 
         .review-item .meta {
             color: var(--text3);
             font-size: 11px;
             margin-top: 6px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
         }
+
         .review-item .actions {
             display: flex;
             gap: 6px;
@@ -598,24 +654,145 @@
             margin-top: 6px;
         }
 
+        /* ===== LIKE/DISLIKE ===== */
+        .like-dislike {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .like-dislike button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text2);
+        }
+
+        .like-dislike button:hover {
+            background: var(--primary-bg);
+            transform: scale(1.05);
+        }
+
+        .like-dislike button.liked {
+            color: #6fcf97;
+        }
+
+        .like-dislike button.disliked {
+            color: #f2b8b5;
+        }
+
+        .like-dislike .count {
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 16px;
+        }
+
+        /* ===== COMMENTS ===== */
+        .comments-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--primary-border);
+        }
+
+        .comments-section .comment {
+            background: var(--input);
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .comments-section .comment .cname {
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        .comments-section .comment .cmsg {
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+
+        .comments-section .comment .cmeta {
+            font-size: 10px;
+            color: var(--text3);
+        }
+
+        .comments-section .comment-form {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .comments-section .comment-form input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .comments-section .comment-form input:focus {
+            border-color: var(--primary);
+        }
+
+        .comments-section .comment-form button {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 13px;
+        }
+
+        .comments-section .comment-form button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        /* ===== ADMIN ===== */
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 10px;
             margin-bottom: 16px;
         }
+
         .admin-stats .stat {
             background: var(--input);
             border: 1px solid var(--primary-border);
             border-radius: 12px;
             padding: 14px;
             text-align: center;
+            transition: all var(--transition);
         }
+
+        .admin-stats .stat:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
         .admin-stats .stat .num {
             font-size: 24px;
             font-weight: 700;
             color: var(--primary);
         }
+
         .admin-stats .stat .lbl {
             font-size: 11px;
             color: var(--text2);
@@ -639,6 +816,7 @@
             border-radius: 12px;
             border: 1px solid var(--primary-border);
         }
+
         .admin-bulk-actions select {
             padding: 6px 12px;
             border-radius: 8px;
@@ -648,10 +826,223 @@
             font-size: 13px;
         }
 
+        /* ===== BADGE ===== */
+        .badge-item {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transition: all var(--transition);
+        }
+
+        .badge-item:hover {
+            border-color: var(--primary);
+        }
+
+        .badge-item .rank {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffd700;
+            min-width: 30px;
+        }
+
+        .badge-item .bname {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .badge-item .bcount {
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        .badge-item .bbadge {
+            font-size: 22px;
+        }
+
+        /* ===== FEATURE REQUEST ===== */
+        .fr-item {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transition: all var(--transition);
+        }
+
+        .fr-item:hover {
+            border-color: var(--primary);
+        }
+
+        .fr-item .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .fr-item .title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .fr-item .desc {
+            font-size: 13px;
+            color: var(--text2);
+            margin-top: 4px;
+        }
+
+        .fr-item .meta {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 6px;
+        }
+
+        .fr-item .status {
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .fr-item .status.pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .fr-item .status.approved {
+            background: rgba(111, 207, 151, 0.15);
+            color: #6fcf97;
+        }
+
+        .fr-item .status.rejected {
+            background: rgba(242, 184, 181, 0.15);
+            color: #f2b8b5;
+        }
+
+        /* ===== CHART ===== */
+        .chart-container {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .chart-bar .label {
+            font-size: 12px;
+            min-width: 60px;
+            color: var(--text2);
+        }
+
+        .chart-bar .track {
+            flex: 1;
+            height: 20px;
+            background: var(--input);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-bar .fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 10px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 2px;
+        }
+
+        .chart-bar .value {
+            font-size: 12px;
+            min-width: 30px;
+            color: var(--text2);
+            text-align: right;
+        }
+
+        /* ===== SORTIR ===== */
+        .sort-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .sort-container select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .sort-container select:focus {
+            border-color: var(--primary);
+        }
+
+        /* ===== SEARCH ===== */
+        .search-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .search-container input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-bg);
+        }
+
+        .search-container button {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .search-container button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.02);
+        }
+
+        /* ===== AUTH ===== */
         .auth-container {
             max-width: 400px;
             margin: 0 auto;
         }
+
         .auth-tabs {
             display: flex;
             border-radius: 12px;
@@ -659,6 +1050,7 @@
             border: 1px solid var(--primary-border);
             margin-bottom: 16px;
         }
+
         .auth-tabs button {
             flex: 1;
             padding: 10px;
@@ -668,22 +1060,54 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
-            transition: 0.3s;
+            transition: all var(--transition);
         }
+
         .auth-tabs button.active {
             background: var(--primary);
             color: #fff;
         }
+
         .auth-tabs button:hover:not(.active) {
             background: var(--primary-border);
         }
+
         .auth-form {
             display: none;
         }
+
         .auth-form.active {
             display: block;
+            animation: pageFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 44px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+            transition: all var(--transition);
+        }
+
+        .password-toggle:hover {
+            color: var(--text);
+        }
+
+        /* ===== SPAM NOTIFICATION ===== */
         .spam-notification {
             position: fixed;
             top: 0;
@@ -702,6 +1126,7 @@
             pointer-events: none;
             transition: opacity 0.4s ease;
         }
+
         .spam-notification.show {
             opacity: 1;
             pointer-events: auto;
@@ -720,6 +1145,7 @@
             max-height: 90vh;
             overflow-y: auto;
         }
+
         .spam-notification.show .box {
             transform: scale(1) translateY(0);
         }
@@ -729,12 +1155,14 @@
             text-align: center;
             margin-bottom: 6px;
         }
+
         .spam-notification h3 {
             font-size: 20px;
             font-weight: 700;
             text-align: center;
             margin-bottom: 6px;
         }
+
         .spam-notification p {
             color: var(--text2);
             font-size: 14px;
@@ -742,10 +1170,12 @@
             line-height: 1.6;
             margin-bottom: 4px;
         }
+
         .spam-notification .highlight {
             color: #ffd700;
             font-weight: 600;
         }
+
         .spam-notification .box-actions {
             display: flex;
             flex-direction: column;
@@ -753,14 +1183,17 @@
             align-items: center;
             margin-top: 18px;
         }
+
         .spam-notification .box-actions .btn {
             min-width: 120px;
             justify-content: center;
         }
+
         .spam-notification .box-actions .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
+
         .spam-notification .box-actions .guide-link {
             font-size: 12px;
             color: var(--text3);
@@ -771,9 +1204,11 @@
             border: none;
             font-family: inherit;
         }
+
         .spam-notification .box-actions .guide-link:hover {
             color: var(--text);
         }
+
         .spam-notification .cooldown-text {
             font-size: 12px;
             color: var(--text3);
@@ -781,37 +1216,42 @@
             margin-top: 4px;
         }
 
+        /* ===== GUIDE ===== */
         .guide-content {
             max-width: 720px;
             margin: 0 auto;
             padding: 10px 0;
         }
+
         .guide-content h1 {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 12px;
-            color: var(--text);
         }
+
         .guide-content h2 {
             font-size: 18px;
             font-weight: 600;
             margin-top: 20px;
             margin-bottom: 8px;
-            color: var(--text);
         }
+
         .guide-content p,
         .guide-content li {
             color: var(--text2);
             font-size: 14px;
             line-height: 1.7;
         }
+
         .guide-content ul {
             padding-left: 20px;
             margin: 6px 0 10px;
         }
+
         .guide-content ul li {
             margin-bottom: 4px;
         }
+
         .guide-content .note {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -819,18 +1259,22 @@
             padding: 14px 18px;
             margin: 12px 0;
         }
+
         .guide-content .note strong {
             color: var(--text);
         }
+
         .guide-content .back-btn {
             margin-top: 18px;
         }
+
         .guide-content hr {
             border: none;
             border-top: 1px solid var(--primary-border);
             margin: 16px 0;
         }
 
+        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 80px;
@@ -844,13 +1288,14 @@
             font-size: 14px;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.35s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 999;
             box-shadow: var(--shadow);
             color: var(--text);
             max-width: 90%;
             text-align: center;
         }
+
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
@@ -862,6 +1307,7 @@
             padding: 30px 12px;
         }
 
+        /* ===== CONFIRM ===== */
         .confirm-overlay {
             position: fixed;
             inset: 0;
@@ -876,10 +1322,12 @@
             transition: opacity 0.3s ease;
             padding: 20px;
         }
+
         .confirm-overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
+
         .confirm-dialog {
             background: var(--card);
             border: 1px solid var(--primary-border);
@@ -891,19 +1339,23 @@
             transform: scale(0.9) translateY(10px);
             transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
         }
+
         .confirm-overlay.show .confirm-dialog {
             transform: scale(1) translateY(0);
         }
+
         .confirm-dialog .icon {
             font-size: 40px;
             text-align: center;
             margin-bottom: 8px;
         }
+
         .confirm-dialog h3 {
             font-size: 18px;
             text-align: center;
             margin-bottom: 4px;
         }
+
         .confirm-dialog p {
             color: var(--text2);
             font-size: 14px;
@@ -911,72 +1363,122 @@
             margin-bottom: 18px;
             line-height: 1.5;
         }
+
         .confirm-dialog .actions {
             display: flex;
             gap: 10px;
             justify-content: center;
         }
+
         .confirm-dialog .actions .btn {
             min-width: 80px;
             justify-content: center;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 600px) {
             body {
                 padding: 8px;
             }
+
             .card {
                 padding: 14px 12px;
             }
+
             .stars {
                 font-size: 30px;
             }
+
             .nav {
                 padding: 8px 12px;
                 gap: 4px;
+                top: 68px;
             }
+
             .nav button {
                 font-size: 11px;
                 padding: 5px 10px;
             }
+
             .nav-right {
                 margin-left: 0;
                 width: 100%;
                 justify-content: center;
             }
-            .download-box .row {
-                flex-direction: column;
-                align-items: stretch;
+
+            .banner-container {
+                margin: -8px -8px 12px -8px;
+                padding: 8px 8px 0 8px;
             }
-            .download-box .row .btn {
-                justify-content: center;
+
+            .banner {
+                padding: 12px 14px;
+                flex-wrap: wrap;
             }
+
             .admin-stats {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .admin-bulk-actions {
                 flex-direction: column;
             }
+
             .confirm-dialog {
                 padding: 20px 16px 18px;
             }
+
             .review-item .actions {
                 flex-direction: column;
             }
+
             .spam-notification .box {
                 padding: 24px 18px 20px;
                 max-height: 95vh;
             }
+
             .guide-content h1 {
                 font-size: 20px;
             }
+
             .watermark {
                 font-size: 10px;
                 bottom: 8px;
             }
+
             .watermark span {
                 font-size: 9px;
                 padding: 2px 12px;
+            }
+
+            .search-container {
+                flex-direction: column;
+            }
+
+            .sort-container {
+                flex-direction: column;
+            }
+
+            .comments-section .comment-form {
+                flex-direction: column;
+            }
+
+            .badge-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .nav-left button {
+                font-size: 10px;
+                padding: 4px 8px;
+            }
+            .user-badge {
+                font-size: 11px;
+                padding: 4px 8px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
@@ -986,15 +1488,28 @@
     <!-- WATERMARK -->
     <div class="watermark"><span>Made By V4RRXD</span></div>
 
+    <!-- ===== BANNER ===== -->
+    <div class="banner-container" id="bannerContainer">
+        <div class="banner" id="banner">
+            <span class="icon" id="bannerIcon">📢</span>
+            <div class="content">
+                <div class="title" id="bannerTitle">Pengumuman</div>
+                <div class="message" id="bannerMessage"></div>
+            </div>
+            <button class="close-btn" id="bannerClose">✕</button>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- NAVBAR -->
         <nav class="nav" id="navbar">
             <div class="nav-left">
                 <button class="active" data-page="home">Beranda</button>
-                <button data-page="rating">Penilaian</button>
-                <button data-page="reviews">Ulasan</button>
-                <button data-page="downloads">Unduhan</button>
+                <button data-page="review">Ulasan</button>
+                <button data-page="reviews">Lihat Ulasan</button>
+                <button data-page="leaderboard">Papan Peringkat</button>
+                <button data-page="features">Request Fitur</button>
                 <button data-page="admin" id="adminNavBtn" class="hidden-nav">Admin</button>
             </div>
             <div class="nav-right">
@@ -1028,13 +1543,19 @@
                     <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--primary-border);">Windows (Segera)</span>
                 </div>
             </div>
+
+            <!-- ===== REVIEW TERBARU DI HOME ===== -->
+            <div class="card">
+                <h2 class="card-title">📝 Ulasan Terbaru</h2>
+                <div id="homeReviewsList"></div>
+            </div>
         </div>
 
-        <!-- PAGE RATING -->
-        <div id="page-rating" class="page">
+        <!-- PAGE REVIEW (BUAT ULASAN) -->
+        <div id="page-review" class="page">
             <div class="card">
-                <h2 class="card-title">Beri Penilaian</h2>
-                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Bagaimana pengalaman kamu?</p>
+                <h2 class="card-title">✏️ Buat Ulasan</h2>
+                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Bagikan pengalaman kamu menggunakan Sekolahmu</p>
 
                 <div id="ratingAuthRequired" style="text-align:center;padding:20px 0;">
                     <p style="color:var(--text2);">Login untuk memberi penilaian</p>
@@ -1088,21 +1609,71 @@
             </div>
         </div>
 
-        <!-- PAGE REVIEWS -->
+        <!-- PAGE REVIEWS (LIHAT ULASAN) -->
         <div id="page-reviews" class="page">
             <div class="card">
-                <h2 class="card-title">Ulasan Pengguna</h2>
+                <h2 class="card-title">📋 Semua Ulasan</h2>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Cari ulasan..." />
+                    <button id="searchBtn">🔍</button>
+                    <button id="clearSearchBtn" class="btn btn-outline btn-sm">✕</button>
+                </div>
+
+                <!-- Sortir -->
+                <div class="sort-container">
+                    <select id="sortSelect">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="highest">Rating Tertinggi</option>
+                        <option value="lowest">Rating Terendah</option>
+                        <option value="mostLiked">Terbanyak Like</option>
+                    </select>
+                </div>
+
                 <div id="reviewsStats" style="margin-bottom:14px;"></div>
                 <div id="reviewsList"></div>
             </div>
         </div>
 
-        <!-- PAGE DOWNLOADS -->
-        <div id="page-downloads" class="page">
+        <!-- PAGE LEADERBOARD -->
+        <div id="page-leaderboard" class="page">
             <div class="card">
-                <h2 class="card-title">Unduhan</h2>
-                <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">Unduh aplikasi Sekolahmu</p>
-                <div id="downloadSection"></div>
+                <h2 class="card-title">🏆 Papan Peringkat</h2>
+                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Pengguna paling berkontribusi</p>
+                <div id="leaderboardList"></div>
+            </div>
+        </div>
+
+        <!-- PAGE FEATURE REQUESTS -->
+        <div id="page-features" class="page">
+            <div class="card">
+                <h2 class="card-title">💡 Request Fitur</h2>
+                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Kirim ide fitur yang kamu inginkan</p>
+
+                <div id="featureAuthRequired" style="text-align:center;padding:20px 0;">
+                    <p style="color:var(--text2);">Login untuk request fitur</p>
+                    <button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:10px;">Login</button>
+                </div>
+
+                <div id="featureForm" style="display:none;">
+                    <div class="form-group">
+                        <label>Judul Fitur</label>
+                        <input type="text" id="frTitle" placeholder="Masukkan judul fitur..." maxlength="100" />
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <textarea id="frDesc" placeholder="Jelaskan fitur yang kamu inginkan..." maxlength="500"></textarea>
+                    </div>
+                    <button id="submitFR" class="btn btn-primary btn-block">Kirim Request</button>
+                    <div id="frStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <h3 style="font-size:16px;font-weight:600;margin-bottom:10px;">Request dari Pengguna</h3>
+                    <div id="frList"></div>
+                </div>
             </div>
         </div>
 
@@ -1110,6 +1681,17 @@
         <div id="page-admin" class="page">
             <div class="card">
                 <div id="adminContent"></div>
+            </div>
+        </div>
+
+        <!-- PAGE DASHBOARD (muncul sebagai overlay/modal) -->
+        <div class="spam-notification" id="dashboardModal">
+            <div class="box" id="dashboardBox">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                    <h2 style="font-size:20px;">👤 Dashboard</h2>
+                    <button class="btn btn-outline btn-sm" id="dashboardClose">✕ Tutup</button>
+                </div>
+                <div id="dashboardContent"></div>
             </div>
         </div>
 
@@ -1136,13 +1718,13 @@
         </div>
     </div>
 
-    <!-- GUIDE PAGE -->
+    <!-- GUIDE -->
     <div class="spam-notification" id="guideNotification">
         <div class="box" id="guideBox">
             <div class="guide-content">
                 <h1>📖 Panduan Verifikasi Alamat Email</h1>
                 <p>
-                    Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan. Agar akun Anda dapat digunakan sepenuhnya (misalnya untuk login, reset kata sandi, atau mengakses fitur tertentu), Anda wajib melakukan verifikasi email terlebih dahulu.
+                    Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan. Agar akun Anda dapat digunakan sepenuhnya, Anda wajib melakukan verifikasi email terlebih dahulu.
                 </p>
                 <p>Ikuti langkah-langkah di bawah ini dengan saksama:</p>
 
@@ -1157,47 +1739,28 @@
                 <p>Terkadang email verifikasi dapat tertahan atau masuk ke folder lain. Lakukan pengecekan tambahan:</p>
                 <ul>
                     <li><strong>Folder Spam / Junk</strong> – Buka folder spam atau sampah di email Anda. Jika ada, tandai sebagai <em>Not Spam</em> agar email berikutnya tidak masuk ke folder tersebut.</li>
-                    <li><strong>Folder Promosi / Sosial (khusus Gmail)</strong> – Periksa tab <em>Promotions</em> atau <em>Social</em>, karena terkadang email otomatis dari sistem masuk ke sana.</li>
+                    <li><strong>Folder Promosi / Sosial (khusus Gmail)</strong> – Periksa tab <em>Promotions</em> atau <em>Social</em>.</li>
                     <li><strong>Folder Archive / All Mail</strong> – Jika Anda menggunakan fitur arsip, cek seluruh surat masuk.</li>
-                    <li><strong>Filter atau Aturan Email</strong> – Pastikan tidak ada aturan penyaringan (filter) yang secara otomatis memindahkan atau menghapus email dari pengirim kami.</li>
                 </ul>
 
                 <h2>Langkah 3: Buka Tautan Verifikasi</h2>
                 <ul>
                     <li>Setelah menemukan email verifikasi, klik tautan yang diawali <strong>"https://sekolahmu-status.firebaseapp.com/"</strong>.</li>
-                    <li>Tautan tersebut akan mengarahkan Anda ke halaman konfirmasi yang dikelola oleh sistem Firebase.</li>
                     <li>Jika tautan tidak dapat diklik, salin (copy) seluruh alamat tautan tersebut dan tempelkan (paste) ke bilah alamat peramban (browser) Anda, lalu tekan Enter.</li>
                 </ul>
 
                 <h2>Langkah 4: Konfirmasi Keberhasilan</h2>
-                <p>Setelah Anda mengklik tautan verifikasi, Anda akan diarahkan kembali ke halaman website. Pada halaman tersebut terdapat tombol <strong>"Saya Sudah Verifikasi"</strong> dan sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi. Anda kini dapat:</p>
-                <ul>
-                    <li>Login ke akun Anda dengan email dan kata sandi.</li>
-                    <li>Menggunakan seluruh fitur yang memerlukan status akun terverifikasi.</li>
-                    <li>Melakukan reset kata sandi jika diperlukan di kemudian hari.</li>
-                </ul>
-
-                <h2>Langkah 5: Jika Masih Mengalami Kendala</h2>
-                <p>Apabila Anda telah mengikuti semua langkah di atas tetapi belum menerima email verifikasi dalam waktu 5–10 menit, silakan:</p>
-                <ul>
-                    <li>Kembali ke halaman login atau profil, lalu pilih opsi <strong>"Kirim ulang email verifikasi"</strong>.</li>
-                    <li>Pastikan alamat email yang Anda masukkan sudah benar dan aktif.</li>
-                    <li>Periksa kembali seluruh folder di penyedia email Anda.</li>
-                    <li>Jika tetap tidak berhasil, hubungi dukungan teknis kami dengan menyertakan alamat email yang Anda daftarkan.</li>
-                </ul>
+                <p>Setelah Anda mengklik tautan verifikasi, Anda akan diarahkan kembali ke halaman website. Pada halaman tersebut terdapat tombol <strong>"Saya Sudah Verifikasi"</strong> dan sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi.</p>
 
                 <div class="note">
                     <strong>📌 Catatan Penting</strong>
                     <ul>
-                        <li>Tautan verifikasi hanya berlaku selama <strong>3 hari</strong>. Jika sudah kedaluwarsa, Anda harus meminta kirim ulang.</li>
-                        <li>Jangan membagikan tautan verifikasi kepada siapa pun, karena tautan tersebut bersifat pribadi.</li>
+                        <li>Tautan verifikasi hanya berlaku selama <strong>3 hari</strong>.</li>
+                        <li>Jangan membagikan tautan verifikasi kepada siapa pun.</li>
                         <li>Proses verifikasi ini wajib dilakukan <strong>satu kali</strong> untuk setiap akun.</li>
                     </ul>
                 </div>
 
-                <p style="font-size:13px;color:var(--text3);">
-                    Kami memahami bahwa proses ini penting untuk keamanan akun Anda. Terima kasih atas kerja sama dan kesabarannya. Jika ada pertanyaan, jangan ragu untuk menghubungi tim kami.
-                </p>
                 <p style="font-size:13px;color:var(--text3);margin-top:4px;"><strong>Hormat kami,</strong> V4RRXD</p>
 
                 <hr />
@@ -1206,7 +1769,7 @@
         </div>
     </div>
 
-    <!-- CONFIRM DIALOG -->
+    <!-- CONFIRM -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
             <div class="icon" id="confirmIcon">⚠️</div>
@@ -1232,7 +1795,12 @@
             remove,
             get,
             set,
-            update
+            update,
+            query,
+            orderByChild,
+            equalTo,
+            limitToLast,
+            orderByKey
         } from "firebase/database";
         import {
             getAuth,
@@ -1259,7 +1827,7 @@
 
         const ADMIN_UID = "3JIwxiDLKoOp8T1LIuaCpB0fqYA2";
 
-        // STATE
+        // ===== STATE =====
         let selectedRating = 0;
         let currentUser = null;
         let isAdmin = false;
@@ -1273,7 +1841,11 @@
         let resendCooldown = 0;
         let resendTimer = null;
         let isCooldownActive = false;
+        let allComments = {};
+        let featureRequests = [];
+        let bannerClosed = false;
 
+        // ===== DOM =====
         const $ = (s) => document.querySelector(s);
         const $$ = (s) => document.querySelectorAll(s);
 
@@ -1283,9 +1855,32 @@
             el.style.borderColor = err ? 'rgba(242,184,181,0.2)' : 'rgba(255,255,255,0.06)';
             el.classList.add('show');
             clearTimeout(el._timer);
-            el._timer = setTimeout(() => el.classList.remove('show'), 4000);
+            el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
 
+        // ===== BANNER =====
+        function loadBanner() {
+            const bannerRef = ref(db, 'banner');
+            onValue(bannerRef, (snap) => {
+                const data = snap.val();
+                const el = document.getElementById('banner');
+                if (data && data.active && !bannerClosed) {
+                    document.getElementById('bannerTitle').textContent = data.title || 'Pengumuman';
+                    document.getElementById('bannerMessage').textContent = data.message || '';
+                    document.getElementById('bannerIcon').textContent = data.icon || '📢';
+                    el.classList.add('show');
+                } else {
+                    el.classList.remove('show');
+                }
+            });
+        }
+
+        document.getElementById('bannerClose').addEventListener('click', () => {
+            document.getElementById('banner').classList.remove('show');
+            bannerClosed = true;
+        });
+
+        // ===== SPAM =====
         function showSpamNotification() {
             if (spamNotifShown) return;
             if (currentUser && currentUser.emailVerified) return;
@@ -1376,7 +1971,7 @@
                 hideSpamNotification();
                 spamNotifShown = true;
                 updateAuthUI();
-                goToHome();
+                goToPage('home');
             } else {
                 showToast('❌ Email belum terverifikasi. Cek inbox/spam!', true);
                 showSpamNotification();
@@ -1386,9 +1981,7 @@
         function showGuideNotification() {
             document.getElementById('spamNotification')?.classList.remove('show');
             const el = document.getElementById('guideNotification');
-            if (el) {
-                el.classList.add('show');
-            }
+            if (el) el.classList.add('show');
         }
 
         function hideGuideNotification() {
@@ -1401,12 +1994,11 @@
 
         document.getElementById('spamResendBtn')?.addEventListener('click', resendVerification);
         document.getElementById('spamVerifiedBtn')?.addEventListener('click', checkVerified);
-        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
-            hideSpamNotification();
-        });
+        document.getElementById('spamUnderstandBtn')?.addEventListener('click', hideSpamNotification);
         document.getElementById('spamGuideBtn')?.addEventListener('click', showGuideNotification);
         document.getElementById('guideBackBtn')?.addEventListener('click', hideGuideNotification);
 
+        // ===== CONFIRM =====
         let confirmResolve = null;
 
         function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
@@ -1439,6 +2031,7 @@
             }
         });
 
+        // ===== THEME =====
         const themeToggle = $('#themeToggle');
         themeToggle.addEventListener('click', () => {
             isDarkMode = !isDarkMode;
@@ -1452,20 +2045,7 @@
             themeToggle.textContent = '☀️';
         }
 
-        function goToHome() {
-            document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
-            const homeBtn = document.querySelector('[data-page="home"]');
-            if (homeBtn) homeBtn.classList.add('active');
-
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const homePage = document.getElementById('page-home');
-            if (homePage) {
-                homePage.classList.remove('active');
-                void homePage.offsetHeight;
-                homePage.classList.add('active');
-            }
-        }
-
+        // ===== NAVIGATION =====
         function goToPage(page) {
             document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
             const btn = document.querySelector(`[data-page="${page}"]`);
@@ -1481,8 +2061,14 @@
 
             if (page === 'reviews') renderReviews();
             if (page === 'admin') renderAdmin();
-            if (page === 'rating') checkRatingAuth();
-            if (page === 'downloads') renderDownloads();
+            if (page === 'review') checkRatingAuth();
+            if (page === 'leaderboard') renderLeaderboard();
+            if (page === 'features') checkFeatureAuth();
+            if (page === 'home') renderHomeReviews();
+        }
+
+        function goToHome() {
+            goToPage('home');
         }
 
         document.querySelectorAll('.nav-left button').forEach(btn => {
@@ -1501,6 +2087,7 @@
             }
         }
 
+        // ===== CHECK ADMIN =====
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
@@ -1511,61 +2098,293 @@
             }
         }
 
-        function renderDownloads() {
-            const section = document.getElementById('downloadSection');
-            if (!section) return;
+        // ===== DASHBOARD =====
+        function openDashboard() {
+            const modal = document.getElementById('dashboardModal');
+            const content = document.getElementById('dashboardContent');
 
             if (!currentUser) {
-                section.innerHTML = `
-                    <div class="download-locked">
-                        <span class="icon">🔒</span>
-                        <p>Login untuk mengunduh APK</p>
-                        <button class="btn btn-primary btn-sm" id="downloadLoginBtn" style="margin-top:8px;">Login</button>
-                    </div>
-                `;
-                document.getElementById('downloadLoginBtn')?.addEventListener('click', () => {
-                    goToPage('admin');
-                });
+                content.innerHTML = '<p style="color:var(--text2);text-align:center;">Login dulu untuk lihat dashboard</p>';
+                modal.classList.add('show');
                 return;
             }
 
-            if (!currentUser.emailVerified && !isAdmin) {
-                section.innerHTML = `
-                    <div class="download-locked">
-                        <span class="icon">📧</span>
-                        <p>Verifikasi email dulu untuk mengunduh</p>
-                        <button class="btn btn-primary btn-sm" id="downloadVerifyBtn" style="margin-top:8px;">Kirim Ulang Verifikasi</button>
-                    </div>
-                `;
-                document.getElementById('downloadVerifyBtn')?.addEventListener('click', resendVerification);
-                return;
-            }
+            const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna';
+            const userReviews = allReviews.filter(r => r.uid === currentUser.uid);
+            const totalReviews = userReviews.length;
+            const avgRating = totalReviews > 0 ? (userReviews.reduce((s, r) => s + r.rating, 0) / totalReviews) : 0;
 
-            section.innerHTML = `
-                <div class="download-box">
-                    <div class="row">
-                        <div class="info">
-                            <strong style="font-size:16px;">📱 Android APK</strong>
-                            <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
-                            <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
-                        </div>
-                        <a id="downloadBtn" href="#" class="btn btn-primary">⬇ Unduh</a>
+            content.innerHTML = `
+                <div style="text-align:center;padding:4px 0;">
+                    <div style="font-size:48px;margin-bottom:4px;">👤</div>
+                    <h3 style="font-size:18px;">${displayName}</h3>
+                    <p style="color:var(--text2);font-size:13px;">${currentUser.email}</p>
+                    <p style="margin-top:4px;">
+                        <span class="${currentUser.emailVerified ? 'status-verified' : 'status-unverified'}">
+                            ${currentUser.emailVerified ? '✅ Terverifikasi' : '⚠️ Belum Verifikasi'}
+                        </span>
+                    </p>
+                </div>
+                <hr style="border-color:var(--primary-border);margin:12px 0;" />
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
+                    <div style="background:var(--input);padding:12px;border-radius:10px;">
+                        <div style="font-size:24px;font-weight:700;color:var(--primary);">${totalReviews}</div>
+                        <div style="font-size:11px;color:var(--text2);">Total Ulasan</div>
+                    </div>
+                    <div style="background:var(--input);padding:12px;border-radius:10px;">
+                        <div style="font-size:24px;font-weight:700;color:#ffd700;">${avgRating.toFixed(1)}</div>
+                        <div style="font-size:11px;color:var(--text2);">Rating Rata-rata</div>
+                    </div>
+                    <div style="background:var(--input);padding:12px;border-radius:10px;">
+                        <div style="font-size:24px;font-weight:700;color:var(--text2);">${currentUser.metadata?.creationTime ? new Date(currentUser.metadata.creationTime).toLocaleDateString('id-ID') : '-'}</div>
+                        <div style="font-size:11px;color:var(--text2);">Bergabung</div>
                     </div>
                 </div>
-
-                <div class="coming-soon">
-                    <span class="icon">🖥</span>
-                    <strong style="font-size:16px;">Windows EXE</strong>
-                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Dalam tahap pengembangan</div>
-                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">🚧 Segera hadir</div>
+                <div style="margin-top:12px;">
+                    <button class="btn btn-outline btn-sm btn-block" id="dashboardLogout">Logout</button>
                 </div>
             `;
 
-            const url = updateData.apkUrl || 'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
-            const btn = document.getElementById('downloadBtn');
-            if (btn) btn.href = url;
+            document.getElementById('dashboardLogout')?.addEventListener('click', () => {
+                signOut(auth);
+                modal.classList.remove('show');
+                goToHome();
+            });
+
+            modal.classList.add('show');
         }
 
+        document.getElementById('dashboardClose').addEventListener('click', () => {
+            document.getElementById('dashboardModal').classList.remove('show');
+        });
+
+        document.getElementById('dashboardModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.getElementById('dashboardModal').classList.remove('show');
+            }
+        });
+
+        // ===== HOME REVIEWS =====
+        function renderHomeReviews() {
+            const list = document.getElementById('homeReviewsList');
+            if (!list) return;
+
+            const sorted = [...allReviews].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            const recent = sorted.slice(0, 5);
+
+            if (recent.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada ulasan. Jadilah yang pertama!</div>';
+                return;
+            }
+
+            list.innerHTML = recent.map((r, index) => {
+                const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
+                const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
+                return `
+                    <div class="review-item" style="animation-delay:${Math.min(index * 50, 300)}ms;">
+                        <div class="top">
+                            <span class="name">${displayName} ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}</span>
+                            <span class="stars-display">${starsStr}</span>
+                        </div>
+                        <div class="msg">${r.message}</div>
+                        <div class="meta">${date}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== LEADERBOARD =====
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            if (!list) return;
+
+            // Hitung statistik per user
+            const userStats = {};
+            allReviews.forEach(r => {
+                if (r.anonymous) return;
+                const key = r.uid || 'unknown';
+                if (!userStats[key]) {
+                    userStats[key] = { name: r.name || 'Pengguna', total: 0, ratings: [] };
+                }
+                userStats[key].total++;
+                userStats[key].ratings.push(r.rating);
+            });
+
+            const sorted = Object.keys(userStats).map(key => ({
+                uid: key,
+                name: userStats[key].name,
+                total: userStats[key].total,
+                avg: userStats[key].ratings.reduce((a, b) => a + b, 0) / userStats[key].ratings.length
+            })).sort((a, b) => b.total - a.total);
+
+            if (sorted.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada data untuk leaderboard</div>';
+                return;
+            }
+
+            const medals = ['🥇', '🥈', '🥉'];
+
+            list.innerHTML = sorted.slice(0, 10).map((item, index) => {
+                const medal = index < 3 ? medals[index] : `#${index + 1}`;
+                return `
+                    <div class="badge-item" style="animation-delay:${Math.min(index * 30, 300)}ms;">
+                        <div class="rank">${medal}</div>
+                        <div class="bname">${item.name}</div>
+                        <div class="bcount">${item.total} ulasan • ${item.avg.toFixed(1)} ★</div>
+                        <div class="bbadge">${item.total >= 10 ? '🏅' : item.total >= 5 ? '⭐' : '📝'}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ===== FEATURE REQUEST =====
+        function checkFeatureAuth() {
+            const form = document.getElementById('featureForm');
+            const req = document.getElementById('featureAuthRequired');
+            if (currentUser) {
+                form.style.display = 'block';
+                req.style.display = 'none';
+            } else {
+                form.style.display = 'none';
+                req.style.display = 'block';
+            }
+        }
+
+        document.getElementById('gotoLoginBtn3')?.addEventListener('click', () => {
+            goToPage('admin');
+        });
+
+        document.getElementById('submitFR')?.addEventListener('click', async () => {
+            if (!currentUser) {
+                showToast('Login dulu', true);
+                return;
+            }
+
+            const title = document.getElementById('frTitle').value.trim();
+            const desc = document.getElementById('frDesc').value.trim();
+
+            if (!title) {
+                showToast('Masukkan judul fitur', true);
+                return;
+            }
+            if (!desc) {
+                showToast('Masukkan deskripsi fitur', true);
+                return;
+            }
+
+            try {
+                const frRef = ref(db, 'featureRequests');
+                const newRef = push(frRef);
+                await set(newRef, {
+                    uid: currentUser.uid,
+                    name: currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna',
+                    title: title,
+                    description: desc,
+                    status: 'pending',
+                    timestamp: Date.now(),
+                    upvotes: 0
+                });
+
+                showToast('✅ Request fitur berhasil dikirim!');
+                document.getElementById('frTitle').value = '';
+                document.getElementById('frDesc').value = '';
+                loadFeatureRequests();
+            } catch (err) {
+                showToast('❌ Gagal kirim: ' + err.message, true);
+            }
+        });
+
+        function loadFeatureRequests() {
+            const frRef = ref(db, 'featureRequests');
+            onValue(frRef, (snap) => {
+                const data = snap.val();
+                featureRequests = [];
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        featureRequests.push({ id: key, ...data[key] });
+                    });
+                }
+                featureRequests.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                renderFeatureRequests();
+            });
+        }
+
+        function renderFeatureRequests() {
+            const list = document.getElementById('frList');
+            if (!list) return;
+
+            if (featureRequests.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada request fitur</div>';
+                return;
+            }
+
+            list.innerHTML = featureRequests.map((fr, index) => {
+                const statusLabel = {
+                    pending: '⏳ Menunggu',
+                    approved: '✅ Disetujui',
+                    rejected: '❌ Ditolak'
+                };
+                const statusClass = fr.status || 'pending';
+                return `
+                    <div class="fr-item" style="animation-delay:${Math.min(index * 20, 200)}ms;">
+                        <div class="top">
+                            <span class="title">${fr.title}</span>
+                            <span class="status ${statusClass}">${statusLabel[statusClass] || 'Menunggu'}</span>
+                        </div>
+                        <div class="desc">${fr.description}</div>
+                        <div class="meta">oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}</div>
+                        ${isAdmin ? `
+                            <div style="margin-top:6px;display:flex;gap:6px;">
+                                <button class="btn btn-success btn-sm fr-approve" data-id="${fr.id}">Setujui</button>
+                                <button class="btn btn-danger btn-sm fr-reject" data-id="${fr.id}">Tolak</button>
+                                <button class="btn btn-danger btn-sm fr-delete" data-id="${fr.id}">Hapus</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            if (isAdmin) {
+                document.querySelectorAll('.fr-approve').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        try {
+                            await update(ref(db, `featureRequests/${id}`), { status: 'approved' });
+                            showToast('✅ Request disetujui');
+                        } catch (err) {
+                            showToast('❌ Gagal: ' + err.message, true);
+                        }
+                    });
+                });
+                document.querySelectorAll('.fr-reject').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        try {
+                            await update(ref(db, `featureRequests/${id}`), { status: 'rejected' });
+                            showToast('❌ Request ditolak');
+                        } catch (err) {
+                            showToast('❌ Gagal: ' + err.message, true);
+                        }
+                    });
+                });
+                document.querySelectorAll('.fr-delete').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const confirmed = await showConfirm('Hapus Request?', 'Request ini akan dihapus permanen.', '🗑️');
+                        if (!confirmed) return;
+                        try {
+                            await remove(ref(db, `featureRequests/${id}`));
+                            showToast('Request dihapus');
+                        } catch (err) {
+                            showToast('❌ Gagal: ' + err.message, true);
+                        }
+                    });
+                });
+            }
+        }
+
+        // ===== RATING AUTH =====
         function checkRatingAuth() {
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
@@ -1638,6 +2457,93 @@
             }
         }
 
+        // ===== LIKE/DISLIKE =====
+        async function toggleLike(reviewId, type) {
+            if (!currentUser) {
+                showToast('Login dulu untuk memberi like', true);
+                return;
+            }
+
+            const reviewRef = ref(db, `reviews/${reviewId}`);
+            const snap = await get(reviewRef);
+            const data = snap.val();
+            if (!data) return;
+
+            const likes = data.likes || 0;
+            const dislikes = data.dislikes || 0;
+            const likedBy = data.likedBy || {};
+            const dislikedBy = data.dislikedBy || {};
+            const uid = currentUser.uid;
+
+            let updates = {};
+
+            if (type === 'like') {
+                if (likedBy[uid]) {
+                    // Unlikes
+                    updates['likes'] = Math.max(0, likes - 1);
+                    updates[`likedBy/${uid}`] = null;
+                } else {
+                    updates['likes'] = likes + 1;
+                    updates[`likedBy/${uid}`] = true;
+                    // Remove dislike if exists
+                    if (dislikedBy[uid]) {
+                        updates['dislikes'] = Math.max(0, dislikes - 1);
+                        updates[`dislikedBy/${uid}`] = null;
+                    }
+                }
+            } else {
+                if (dislikedBy[uid]) {
+                    updates['dislikes'] = Math.max(0, dislikes - 1);
+                    updates[`dislikedBy/${uid}`] = null;
+                } else {
+                    updates['dislikes'] = dislikes + 1;
+                    updates[`dislikedBy/${uid}`] = true;
+                    if (likedBy[uid]) {
+                        updates['likes'] = Math.max(0, likes - 1);
+                        updates[`likedBy/${uid}`] = null;
+                    }
+                }
+            }
+
+            try {
+                await update(ref(db, `reviews/${reviewId}`), updates);
+            } catch (err) {
+                showToast('Gagal: ' + err.message, true);
+            }
+        }
+
+        // ===== COMMENTS =====
+        async function addComment(reviewId) {
+            if (!currentUser) {
+                showToast('Login dulu untuk komentar', true);
+                return;
+            }
+
+            const input = document.getElementById(`commentInput_${reviewId}`);
+            if (!input) return;
+            const message = input.value.trim();
+            if (!message) {
+                showToast('Tulis komentar dulu', true);
+                return;
+            }
+
+            try {
+                const commentsRef = ref(db, `reviews/${reviewId}/comments`);
+                const newRef = push(commentsRef);
+                await set(newRef, {
+                    uid: currentUser.uid,
+                    name: currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna',
+                    message: message,
+                    timestamp: Date.now()
+                });
+                input.value = '';
+                showToast('💬 Komentar ditambahkan');
+            } catch (err) {
+                showToast('Gagal: ' + err.message, true);
+            }
+        }
+
+        // ===== DELETE MY REVIEW =====
         async function deleteMyReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -1667,6 +2573,7 @@
             }
         }
 
+        // ===== EDIT REVIEW =====
         function startEditingReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -1740,6 +2647,7 @@
             if (actionsEl) actionsEl.style.display = '';
         }
 
+        // ===== STARS =====
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
@@ -1766,6 +2674,7 @@
             });
         });
 
+        // ===== ANONYM =====
         const anonCheckbox = $('#reviewAnonymous');
         const nameFieldWrap = $('#nameFieldWrap');
         const nameInput = $('#reviewName');
@@ -1781,6 +2690,7 @@
             });
         }
 
+        // ===== LOAD UPDATE =====
         function loadUpdateData() {
             const updRef = ref(db, 'update');
             onValue(updRef, (snap) => {
@@ -1793,20 +2703,16 @@
                         'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
 
                     const apkVer = document.getElementById('apkVersion');
-                    const apkVer2 = document.getElementById('apkVersion2');
-                    const apkSize2 = document.getElementById('apkSize2');
                     const downloadBtn = document.getElementById('downloadBtn');
 
                     if (apkVer) apkVer.textContent = version;
-                    if (apkVer2) apkVer2.textContent = version;
-                    if (apkSize2) apkSize2.textContent = size;
                     if (downloadBtn) downloadBtn.href = url;
                 }
-                renderDownloads();
             });
         }
         loadUpdateData();
 
+        // ===== SUBMIT REVIEW =====
         const submitBtn = document.getElementById('submitReview');
         if (submitBtn) {
             submitBtn.addEventListener('click', async () => {
@@ -1854,7 +2760,11 @@
                         appVersion: updateData.latestVersion || '2.4.0',
                         timestamp: Date.now(),
                         uid: currentUser.uid,
-                        email: currentUser.email
+                        email: currentUser.email,
+                        likes: 0,
+                        dislikes: 0,
+                        likedBy: {},
+                        dislikedBy: {}
                     });
 
                     if (statusEl) statusEl.textContent = '✅ Ulasan berhasil dikirim!';
@@ -1887,6 +2797,7 @@
             });
         }
 
+        // ===== LOAD REVIEWS =====
         function loadReviews() {
             const reviewsRef = ref(db, 'reviews');
             onValue(reviewsRef, (snap) => {
@@ -1922,9 +2833,12 @@
                 }
 
                 renderReviews();
+                renderHomeReviews();
+                renderLeaderboard();
             });
         }
 
+        // ===== RENDER REVIEWS =====
         function renderReviews() {
             const list = document.getElementById('reviewsList');
             const stats = document.getElementById('reviewsStats');
@@ -1932,16 +2846,49 @@
 
             document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
-            if (allReviews.length === 0) {
-                list.innerHTML = '<div class="empty">Belum ada ulasan. Jadilah yang pertama!</div>';
+            // Search filter
+            const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            let filtered = allReviews;
+            if (searchQuery) {
+                filtered = allReviews.filter(r =>
+                    (r.name || '').toLowerCase().includes(searchQuery) ||
+                    (r.message || '').toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sort
+            const sortBy = document.getElementById('sortSelect')?.value || 'newest';
+            filtered = [...filtered];
+            switch (sortBy) {
+                case 'newest':
+                    filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    break;
+                case 'oldest':
+                    filtered.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                    break;
+                case 'highest':
+                    filtered.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'lowest':
+                    filtered.sort((a, b) => a.rating - b.rating);
+                    break;
+                case 'mostLiked':
+                    filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+                    break;
+                default:
+                    break;
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty">Tidak ada ulasan yang cocok</div>';
                 if (stats) stats.innerHTML = '';
                 return;
             }
 
-            const total = allReviews.length;
-            const avg = allReviews.reduce((s, r) => s + r.rating, 0) / total;
+            const total = filtered.length;
+            const avg = filtered.reduce((s, r) => s + r.rating, 0) / total;
             const starsCount = [0, 0, 0, 0, 0];
-            allReviews.forEach(r => {
+            filtered.forEach(r => {
                 if (r.rating >= 1 && r.rating <= 5) starsCount[r.rating - 1]++;
             });
 
@@ -1965,12 +2912,16 @@
                 `;
             }
 
-            list.innerHTML = allReviews.map((r, index) => {
+            list.innerHTML = filtered.map((r, index) => {
                 const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 const isOwner = currentUser && r.uid === currentUser.uid;
                 const canEdit = isOwner && (currentUser?.emailVerified || isAdmin);
+                const likes = r.likes || 0;
+                const dislikes = r.dislikes || 0;
+                const userLiked = currentUser && r.likedBy && r.likedBy[currentUser.uid];
+                const userDisliked = currentUser && r.dislikedBy && r.dislikedBy[currentUser.uid];
 
                 let actionsHtml = '';
                 if (canEdit) {
@@ -1994,8 +2945,33 @@
                     `;
                 }
 
+                // Comments
+                const comments = r.comments ? Object.values(r.comments) : [];
+                const commentsHtml = comments.length > 0 ? `
+                    <div class="comments-section">
+                        ${comments.map(c => `
+                            <div class="comment">
+                                <div class="cname">${c.name || 'Pengguna'}</div>
+                                <div class="cmsg">${c.message}</div>
+                                <div class="cmeta">${c.timestamp ? new Date(c.timestamp).toLocaleDateString('id-ID') : ''}</div>
+                            </div>
+                        `).join('')}
+                        <div class="comment-form">
+                            <input type="text" id="commentInput_${r.id}" placeholder="Tulis komentar..." />
+                            <button onclick="document.querySelector('script[type=module]').__addComment('${r.id}')">Kirim</button>
+                        </div>
+                    </div>
+                ` : `
+                    <div class="comments-section">
+                        <div class="comment-form">
+                            <input type="text" id="commentInput_${r.id}" placeholder="Tulis komentar..." />
+                            <button onclick="document.querySelector('script[type=module]').__addComment('${r.id}')">Kirim</button>
+                        </div>
+                    </div>
+                `;
+
                 return `
-                    <div class="review-item" data-id="${r.id}" style="animation-delay:${Math.min(index * 30, 300)}ms;">
+                    <div class="review-item" data-id="${r.id}" style="animation-delay:${Math.min(index * 20, 300)}ms;">
                         <div class="top">
                             <span class="name">
                                 ${displayName}
@@ -2005,12 +2981,35 @@
                             <span class="stars-display">${starsStr}</span>
                         </div>
                         <div class="msg">${r.message}</div>
-                        <div class="meta">${date}</div>
+                        <div class="meta">
+                            <span>${date}</span>
+                            <span>•</span>
+                            <span>Versi ${r.appVersion || '-'}</span>
+                        </div>
+                        <div class="like-dislike">
+                            <button class="${userLiked ? 'liked' : ''}" data-review="${r.id}" data-type="like">
+                                👍 <span class="count" id="likeCount_${r.id}">${likes}</span>
+                            </button>
+                            <button class="${userDisliked ? 'disliked' : ''}" data-review="${r.id}" data-type="dislike">
+                                👎 <span class="count" id="dislikeCount_${r.id}">${dislikes}</span>
+                            </button>
+                        </div>
                         ${actionsHtml}
+                        ${commentsHtml}
                     </div>
                 `;
             }).join('');
 
+            // ===== LIKE/DISLIKE EVENTS =====
+            document.querySelectorAll('.like-dislike button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const reviewId = btn.dataset.review;
+                    const type = btn.dataset.type;
+                    toggleLike(reviewId, type);
+                });
+            });
+
+            // ===== DELETE REVIEW =====
             document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
@@ -2045,6 +3044,7 @@
                 });
             });
 
+            // ===== EDIT REVIEW =====
             document.querySelectorAll('.edit-review').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -2056,6 +3056,7 @@
             });
         }
 
+        // ===== ADMIN =====
         function renderAdmin() {
             const container = document.getElementById('adminContent');
             if (!container) return;
@@ -2269,6 +3270,33 @@
             const total = allReviews.length;
             const avg = total > 0 ? (allReviews.reduce((s, r) => s + r.rating, 0) / total) : 0;
 
+            // Hitung rating per bulan untuk grafik
+            const monthData = {};
+            allReviews.forEach(r => {
+                if (r.timestamp) {
+                    const date = new Date(r.timestamp);
+                    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    if (!monthData[key]) monthData[key] = { total: 0, sum: 0 };
+                    monthData[key].total++;
+                    monthData[key].sum += r.rating;
+                }
+            });
+
+            const months = Object.keys(monthData).sort();
+            const chartHtml = months.length > 0 ? months.map(m => {
+                const avgMonth = monthData[m].sum / monthData[m].total;
+                const percent = (avgMonth / 5) * 100;
+                return `
+                    <div class="chart-bar">
+                        <span class="label">${m}</span>
+                        <div class="track">
+                            <div class="fill" style="width:${percent}%;"></div>
+                        </div>
+                        <span class="value">${avgMonth.toFixed(1)} ★</span>
+                    </div>
+                `;
+            }).join('') : '<p style="color:var(--text2);font-size:13px;">Belum ada data rating</p>';
+
             container.innerHTML = `
                 <div class="admin-header">
                     <h2>🛡 Panel Admin</h2>
@@ -2280,6 +3308,22 @@
                     <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">Versi APK</div></div>
                 </div>
 
+                <!-- ===== GRAFIK RATING ===== -->
+                <div class="card" style="margin-bottom:14px;">
+                    <h3 style="font-size:16px;font-weight:600;margin-bottom:10px;">📊 Grafik Rating Per Bulan</h3>
+                    <div class="chart-container">
+                        ${chartHtml}
+                    </div>
+                </div>
+
+                <!-- ===== EXPORT DATA ===== -->
+                <div class="admin-bulk-actions">
+                    <span style="font-weight:600;font-size:13px;">Export Data:</span>
+                    <button id="exportCSV" class="btn btn-success btn-sm">📥 CSV</button>
+                    <button id="exportJSON" class="btn btn-success btn-sm">📥 JSON</button>
+                </div>
+
+                <!-- ===== BULK DELETE ===== -->
                 <div class="admin-bulk-actions">
                     <span style="font-weight:600;font-size:13px;">Hapus Berdasarkan:</span>
                     <select id="bulkStarSelect">
@@ -2294,6 +3338,28 @@
                     <span style="font-size:12px;color:var(--text3);margin-left:4px;">(aksi permanen)</span>
                 </div>
 
+                <!-- ===== AUTO DELETE ===== -->
+                <div class="admin-bulk-actions">
+                    <span style="font-weight:600;font-size:13px;">Auto Delete:</span>
+                    <select id="autoDeleteSelect">
+                        <option value="0">Nonaktif</option>
+                        <option value="30">30 hari</option>
+                        <option value="60">60 hari</option>
+                        <option value="90">90 hari</option>
+                        <option value="180">180 hari</option>
+                    </select>
+                    <button id="autoDeleteBtn" class="btn btn-danger btn-sm">Jalankan Auto Delete</button>
+                </div>
+
+                <!-- ===== BANNER ADMIN ===== -->
+                <div class="admin-bulk-actions">
+                    <span style="font-weight:600;font-size:13px;">📢 Banner Pengumuman:</span>
+                    <input type="text" id="bannerTitleInput" placeholder="Judul" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);flex:1;min-width:100px;" />
+                    <input type="text" id="bannerMsgInput" placeholder="Pesan" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);flex:2;min-width:150px;" />
+                    <button id="bannerPublishBtn" class="btn btn-primary btn-sm">📢 Publish</button>
+                    <button id="bannerUnpublishBtn" class="btn btn-outline btn-sm">Sembunyikan</button>
+                </div>
+
                 <div id="adminReviewsList"></div>
             `;
 
@@ -2302,6 +3368,52 @@
                 goToHome();
             });
 
+            // ===== EXPORT CSV =====
+            document.getElementById('exportCSV')?.addEventListener('click', () => {
+                if (allReviews.length === 0) {
+                    showToast('Tidak ada data untuk di-export', true);
+                    return;
+                }
+                const headers = ['Nama', 'Anonim', 'Rating', 'Pesan', 'Versi', 'Tanggal', 'Likes', 'Dislikes'];
+                const rows = allReviews.map(r => [
+                    r.name || 'Pengguna',
+                    r.anonymous ? 'Ya' : 'Tidak',
+                    r.rating,
+                    r.message || '',
+                    r.appVersion || '',
+                    r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '',
+                    r.likes || 0,
+                    r.dislikes || 0
+                ]);
+                const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `reviews_${new Date().toISOString().slice(0,10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('✅ CSV berhasil di-export');
+            });
+
+            // ===== EXPORT JSON =====
+            document.getElementById('exportJSON')?.addEventListener('click', () => {
+                if (allReviews.length === 0) {
+                    showToast('Tidak ada data untuk di-export', true);
+                    return;
+                }
+                const data = JSON.stringify(allReviews, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `reviews_${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast('✅ JSON berhasil di-export');
+            });
+
+            // ===== BULK DELETE =====
             document.getElementById('bulkDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select?.value || 'all';
@@ -2335,14 +3447,84 @@
                     try {
                         await remove(ref(db, `reviews/${id}`));
                         deleted++;
-                    } catch (e) {
-                        // silent
-                    }
+                    } catch (e) {}
                 }
 
                 showToast(`${deleted} ulasan dihapus`);
             });
 
+            // ===== AUTO DELETE =====
+            document.getElementById('autoDeleteBtn')?.addEventListener('click', async () => {
+                const select = document.getElementById('autoDeleteSelect');
+                const days = parseInt(select?.value || '0');
+                if (days === 0) {
+                    showToast('Pilih jumlah hari dulu', true);
+                    return;
+                }
+
+                const now = Date.now();
+                const limit = now - (days * 24 * 60 * 60 * 1000);
+                const toDelete = allReviews.filter(r => (r.timestamp || 0) < limit).map(r => r.id);
+
+                if (toDelete.length === 0) {
+                    showToast(`Tidak ada ulasan yang berusia > ${days} hari`, true);
+                    return;
+                }
+
+                const confirmed = await showConfirm(
+                    'Auto Delete?',
+                    `Hapus ${toDelete.length} ulasan yang berusia > ${days} hari?`,
+                    '⚠️',
+                    'Ya, Hapus'
+                );
+                if (!confirmed) return;
+
+                let deleted = 0;
+                for (const id of toDelete) {
+                    try {
+                        await remove(ref(db, `reviews/${id}`));
+                        deleted++;
+                    } catch (e) {}
+                }
+
+                showToast(`${deleted} ulasan auto-dihapus`);
+            });
+
+            // ===== BANNER PUBLISH =====
+            document.getElementById('bannerPublishBtn')?.addEventListener('click', async () => {
+                const title = document.getElementById('bannerTitleInput').value.trim() || 'Pengumuman';
+                const message = document.getElementById('bannerMsgInput').value.trim();
+                if (!message) {
+                    showToast('Masukkan pesan banner', true);
+                    return;
+                }
+                try {
+                    await set(ref(db, 'banner'), {
+                        active: true,
+                        title: title,
+                        message: message,
+                        icon: '📢',
+                        timestamp: Date.now()
+                    });
+                    showToast('✅ Banner dipublikasikan!');
+                    bannerClosed = false;
+                    loadBanner();
+                } catch (err) {
+                    showToast('❌ Gagal: ' + err.message, true);
+                }
+            });
+
+            document.getElementById('bannerUnpublishBtn')?.addEventListener('click', async () => {
+                try {
+                    await update(ref(db, 'banner'), { active: false });
+                    showToast('✅ Banner disembunyikan');
+                    loadBanner();
+                } catch (err) {
+                    showToast('❌ Gagal: ' + err.message, true);
+                }
+            });
+
+            // ===== ADMIN REVIEW LIST =====
             const adminList = document.getElementById('adminReviewsList');
             if (!adminList) return;
 
@@ -2362,7 +3544,7 @@
                             <span class="stars-display">${starsStr}</span>
                         </div>
                         <div class="msg">${r.message}</div>
-                        <div class="meta">${date}</div>
+                        <div class="meta">${date} • 👍 ${r.likes || 0} • 👎 ${r.dislikes || 0}</div>
                         <button class="btn btn-danger btn-sm admin-delete" data-id="${r.id}" style="margin-top:6px;">Hapus</button>
                     </div>
                 `;
@@ -2392,6 +3574,7 @@
             });
         }
 
+        // ===== AUTH STATE =====
         function updateAuthUI() {
             const section = document.getElementById('authSection');
             if (!section) return;
@@ -2412,21 +3595,31 @@
                 }
 
                 section.innerHTML = `
-                    <div class="user-badge">
+                    <div class="user-badge" id="userBadgeClick">
                         <span>${displayName}</span>
                         ${statusHtml}
                         <button class="logout-btn" id="logoutBtnNav">Logout</button>
                     </div>
                 `;
 
-                document.getElementById('logoutBtnNav')?.addEventListener('click', () => {
+                // Klik user badge buka dashboard
+                document.getElementById('userBadgeClick')?.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('logout-btn')) return;
+                    openDashboard();
+                });
+
+                document.getElementById('logoutBtnNav')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     signOut(auth);
                     goToHome();
                 });
 
                 const resendBtn = document.getElementById('resendVerifyNav');
                 if (resendBtn) {
-                    resendBtn.addEventListener('click', resendVerification);
+                    resendBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        resendVerification();
+                    });
                 }
 
                 if (!verified && !isAdmin && !spamNotifShown) {
@@ -2442,9 +3635,13 @@
             }
 
             checkRatingAuth();
-            renderDownloads();
+            checkFeatureAuth();
         }
 
+        // ===== EXPOSE FUNCTIONS FOR INLINE =====
+        window.__addComment = addComment;
+
+        // ===== AUTH STATE =====
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
@@ -2452,7 +3649,6 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                renderDownloads();
 
                 if (user.emailVerified) {
                     spamNotifShown = true;
@@ -2461,7 +3657,7 @@
 
                 const activePage = document.querySelector('.page.active');
                 if (activePage && activePage.id !== 'page-home') {
-                    goToHome();
+                    // tetap di halaman
                 }
             } else {
                 isAdmin = false;
@@ -2476,13 +3672,25 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                renderDownloads();
                 goToHome();
             }
         });
 
+        // ===== SEARCH =====
+        document.getElementById('searchBtn')?.addEventListener('click', () => renderReviews());
+        document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') renderReviews();
+        });
+        document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            renderReviews();
+        });
+        document.getElementById('sortSelect')?.addEventListener('change', () => renderReviews());
+
+        // ===== INIT =====
         loadReviews();
-        renderDownloads();
+        loadFeatureRequests();
+        loadBanner();
     </script>
 
 </body>
