@@ -22,32 +22,36 @@
 
         :root {
             --bg: #0a0a0a;
-            --bg2: #1a0000;
-            --card: rgba(30, 10, 10, 0.85);
-            --input: rgba(255, 0, 0, 0.05);
-            --border: rgba(255, 0, 0, 0.15);
+            --bg2: #1a0808;
+            --card: rgba(26, 10, 10, 0.88);
+            --input: rgba(214, 90, 98, 0.06);
+            --border: rgba(214, 90, 98, 0.15);
             --text: #f0e0e0;
             --text2: #c0a0a0;
-            --text3: #8a6060;
+            --text3: #8a6a6a;
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            --primary: #cc0000;
-            --primary-hover: #ff1a1a;
-            --primary-dark: #990000;
+            --primary: #d65a62;
+            --primary-hover: #e07078;
+            --primary-dark: #b84a52;
+            --primary-light: #e88a90;
+            --primary-bg: rgba(214, 90, 98, 0.08);
         }
 
         [data-theme="light"] {
-            --bg: #fff5f5;
-            --bg2: #ffe8e8;
-            --card: rgba(255, 240, 240, 0.9);
-            --input: rgba(255, 0, 0, 0.04);
-            --border: rgba(200, 0, 0, 0.15);
-            --text: #1a0000;
-            --text2: #661a1a;
-            --text3: #994d4d;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-            --primary: #cc0000;
-            --primary-hover: #b30000;
-            --primary-dark: #990000;
+            --bg: #faf5f5;
+            --bg2: #f5eeee;
+            --card: rgba(255, 248, 248, 0.92);
+            --input: rgba(214, 90, 98, 0.04);
+            --border: rgba(214, 90, 98, 0.12);
+            --text: #1a0a0a;
+            --text2: #6a4040;
+            --text3: #9a6a6a;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            --primary: #d65a62;
+            --primary-hover: #c44a52;
+            --primary-dark: #b84048;
+            --primary-light: #e88a90;
+            --primary-bg: rgba(214, 90, 98, 0.06);
         }
 
         body {
@@ -139,7 +143,7 @@
         }
         .nav button.active {
             color: var(--primary);
-            background: rgba(204, 0, 0, 0.1);
+            background: var(--primary-bg);
         }
         .nav button.hidden-nav {
             display: none;
@@ -223,8 +227,8 @@
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 12px;
-            background: rgba(204, 0, 0, 0.12);
-            border: 1px solid rgba(204, 0, 0, 0.15);
+            background: var(--primary-bg);
+            border: 1px solid var(--border);
         }
 
         .page {
@@ -488,14 +492,14 @@
             transition: 0.3s;
         }
         .review-item:hover {
-            border-color: rgba(255, 0, 0, 0.2);
+            border-color: var(--primary);
         }
         .review-item.removing {
             animation: slideOut 0.3s ease forwards;
         }
         .review-item.editing {
             border-color: var(--primary);
-            background: rgba(204, 0, 0, 0.05);
+            background: var(--primary-bg);
         }
 
         @keyframes slideIn {
@@ -1008,7 +1012,7 @@
                             <strong style="font-size:15px;">Versi</strong>
                             <div style="color:var(--text2);font-size:14px;">Terkini: <span id="apkVersion">2.4.0</span></div>
                         </div>
-                        <span style="background:rgba(204,0,0,0.1);color:var(--primary);padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
+                        <span style="background:var(--primary-bg);color:var(--primary);padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
                     </div>
                 </div>
             </div>
@@ -2477,8 +2481,6 @@
 
         loadReviews();
         renderDownloads();
-
-        // SEMUA CONSOLE LOG DIHAPUS - AMAN
     </script>
 
 </body>
