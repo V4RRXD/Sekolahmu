@@ -227,7 +227,7 @@
             transform: scale(1.1) rotate(90deg);
         }
 
-        /* BAN OVERLAY */
+        /* ===== BAN OVERLAY - TIDAK BISA DITUTUP ===== */
         .ban-overlay {
             position: fixed;
             top: 0;
@@ -235,15 +235,16 @@
             right: 0;
             bottom: 0;
             z-index: 99999;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
         }
         .ban-overlay.show {
             opacity: 1;
@@ -251,38 +252,60 @@
         }
         .ban-overlay .box {
             background: var(--card);
-            border: 1px solid var(--primary-border);
+            border: 2px solid #f2b8b5;
             border-radius: 24px;
-            padding: 32px 28px 28px;
+            padding: 40px 32px 32px;
             max-width: 440px;
             width: 100%;
-            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9);
+            transform: scale(0.92) translateY(30px);
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
         }
         .ban-overlay.show .box {
             transform: scale(1) translateY(0);
         }
         .ban-overlay .icon {
-            font-size: 56px;
-            margin-bottom: 8px;
+            font-size: 64px;
+            margin-bottom: 10px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
         }
         .ban-overlay h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 6px;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
             color: #f2b8b5;
         }
         .ban-overlay p {
             color: var(--text2);
             font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 4px;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+        .ban-overlay .box-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .ban-overlay .box-actions .btn {
+            min-width: 160px;
+            justify-content: center;
         }
         .ban-overlay .appeal-form {
             margin-top: 16px;
             display: none;
+            width: 100%;
         }
         .ban-overlay .appeal-form.show {
             display: block;
@@ -306,6 +329,7 @@
         }
         .ban-overlay .appeal-form .btn {
             margin-top: 8px;
+            width: 100%;
         }
         .ban-overlay .appeal-status {
             font-size: 13px;
@@ -522,8 +546,17 @@
             background: var(--primary-bg);
             border: 1px solid var(--primary-border);
         }
+        .user-badge .banned-badge {
+            color: #f2b8b5;
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: rgba(242, 184, 181, 0.15);
+            border: 1px solid rgba(242, 184, 181, 0.2);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
 
-        /* PAGES */
         .page {
             display: none;
         }
@@ -542,7 +575,6 @@
             }
         }
 
-        /* CARDS */
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
@@ -569,7 +601,6 @@
             margin-bottom: 12px;
         }
 
-        /* BUTTONS */
         .btn {
             border: none;
             border-radius: 10px;
@@ -1878,19 +1909,24 @@
     <!-- WATERMARK -->
     <div class="watermark"><span>Made By V4RRXD</span></div>
 
-    <!-- BAN OVERLAY -->
+    <!-- ===== BAN OVERLAY - TIDAK BISA DITUTUP (HANYA LOGOUT) ===== -->
     <div class="ban-overlay" id="banOverlay">
         <div class="box">
             <div class="icon">⛔</div>
             <h2>Akun Anda Telah Di-Ban</h2>
             <p>Akun Anda telah di-ban oleh admin karena melanggar kebijakan.</p>
             <p style="font-size:12px;color:var(--text3);margin-top:4px;">Jika Anda merasa ini adalah kesalahan, silakan ajukan appeal.</p>
+
+            <div class="box-actions">
+                <button class="btn btn-primary" id="banAppealBtn">📝 Ajukan Appeal</button>
+                <button class="btn btn-outline" id="banLogoutBtn">🚪 Logout</button>
+            </div>
+
             <div class="appeal-form" id="appealForm">
                 <textarea id="appealMessage" placeholder="Tulis alasan Anda..." maxlength="500"></textarea>
-                <button class="btn btn-primary btn-block" id="submitAppealBtn">Kirim Appeal</button>
+                <button class="btn btn-success btn-block" id="submitAppealBtn">Kirim Appeal</button>
                 <div id="appealStatus" class="appeal-status"></div>
             </div>
-            <button class="btn btn-outline" id="appealBtn" style="margin-top:12px;">📝 Ajukan Appeal</button>
         </div>
     </div>
 
@@ -2202,7 +2238,8 @@
 
     <!-- TOAST -->
     <div id="toast" class="toast"></div>
-        <script type="module">
+
+    <script type="module">
         import { initializeApp } from "firebase/app";
         import {
             getDatabase,
@@ -2306,12 +2343,28 @@
         function showBanOverlay() {
             document.getElementById('banOverlay').classList.add('show');
             isBanned = true;
+            // Sembunyikan semua page
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Cek status appeal
             checkAppealStatus();
         }
 
-        document.getElementById('appealBtn')?.addEventListener('click', () => {
+        function hideBanOverlay() {
+            // TIDAK BISA DITUTUP - hanya bisa logout
+        }
+
+        // Tombol logout di ban overlay
+        document.getElementById('banLogoutBtn')?.addEventListener('click', () => {
+            signOut(auth);
+            document.getElementById('banOverlay').classList.remove('show');
+            isBanned = false;
+            goToHome();
+        });
+
+        // Tombol appeal di ban overlay
+        document.getElementById('banAppealBtn')?.addEventListener('click', () => {
             document.getElementById('appealForm').classList.add('show');
-            document.getElementById('appealBtn').style.display = 'none';
+            document.getElementById('banAppealBtn').style.display = 'none';
         });
 
         document.getElementById('submitAppealBtn')?.addEventListener('click', async () => {
@@ -2347,11 +2400,21 @@
                     document.getElementById('appealStatus').textContent =
                         `✅ Appeal dikirim ${new Date(data.timestamp).toLocaleDateString('id-ID')}. Status: ${data.status || 'Menunggu'}`;
                     document.getElementById('appealForm').classList.add('show');
-                    document.getElementById('appealBtn').style.display = 'none';
+                    document.getElementById('banAppealBtn').style.display = 'none';
                     document.getElementById('submitAppealBtn').disabled = true;
                     document.getElementById('appealMessage').disabled = true;
                 }
             } catch (e) {}
+        }
+
+        // Cek ban dari Firebase
+        async function checkBanStatus(uid) {
+            try {
+                const snap = await get(ref(db, `banned/${uid}`));
+                return !!snap.val();
+            } catch {
+                return false;
+            }
         }
 
         // ===== BANNER =====
@@ -2517,6 +2580,7 @@
 
         // ===== NAVIGATION =====
         function goToPage(page) {
+            if (isBanned) return;
             if (page === currentPage) return;
             currentPage = page;
             document.querySelectorAll('.nav-left > button').forEach(b => {
@@ -2549,20 +2613,29 @@
             if (page === 'bugreport') checkBugAuth();
         }
 
-        function goToHome() { goToPage('home'); }
+        function goToHome() {
+            if (isBanned) return;
+            goToPage('home');
+        }
 
         document.querySelectorAll('.nav-left > button[data-page]').forEach(btn => {
-            btn.addEventListener('click', () => goToPage(btn.dataset.page));
+            btn.addEventListener('click', () => {
+                if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
+                goToPage(btn.dataset.page);
+            });
         });
         document.querySelectorAll('.nav-dropdown-content button[data-page]').forEach(btn => {
-            btn.addEventListener('click', () => goToPage(btn.dataset.page));
+            btn.addEventListener('click', () => {
+                if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
+                goToPage(btn.dataset.page);
+            });
         });
 
         function updateNavVisibility() {
             document.getElementById('adminNavBtn').classList.toggle('hidden-nav', !isAdmin);
         }
 
-        // ===== CHECK ADMIN & BAN =====
+        // ===== CHECK ADMIN =====
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
@@ -2570,16 +2643,9 @@
             } catch { return false; }
         }
 
-        async function checkIsBanned(uid) {
-            try {
-                const snap = await get(ref(db, `banned/${uid}`));
-                return !!snap.val();
-            } catch { return false; }
-        }
-
         // ===== DASHBOARD =====
         function openDashboard() {
-            if (isBanned) return;
+            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
             const modal = document.getElementById('dashboardModal');
             const content = document.getElementById('dashboardContent');
             if (!currentUser) {
@@ -2812,25 +2878,26 @@
         function renderFeatureRequests() {
             const list = document.getElementById('frList');
             if (!list) return;
-            const allRequests = [...featureRequests];
-            if (allRequests.length === 0) { list.innerHTML = '<div class="empty">Belum ada request fitur</div>'; return; }
+            let filtered = featureRequests;
+            if (!isAdmin && currentUser) filtered = featureRequests.filter(f => f.uid === currentUser.uid);
+            if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada request fitur</div>'; return; }
             const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak', replied: '💬 Dibalas' };
             const statusClass = { pending: 'pending', approved: 'approved', rejected: 'rejected', replied: 'replied' };
-            list.innerHTML = allRequests.map(fr => {
+            list.innerHTML = filtered.map(fr => {
                 const hasReply = fr.adminReply && fr.adminReply.trim().length > 0;
                 const status = hasReply && fr.status === 'pending' ? 'replied' : (fr.status || 'pending');
                 const isOwner = currentUser && fr.uid === currentUser.uid;
-                return `<div class="fr-item">
+                return `<div class="fr-item" data-id="${fr.id}">
                     <div class="top"><span class="title">${fr.title}</span><span class="status ${statusClass[status] || 'pending'}">${statusLabel[status] || 'Menunggu'}</span></div>
                     <div class="desc">${fr.description}</div>
                     <div class="meta">oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}${isOwner ? ' • 🔒 Milik Anda' : ''}</div>
                     ${hasReply ? `<div class="admin-reply"><div class="reply-label">💬 Balasan Admin:</div><div class="reply-text">${fr.adminReply}</div><div class="reply-meta">oleh ${fr.adminReplyName || 'Admin'} • ${fr.adminReplyTimestamp ? new Date(fr.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div></div>` : ''}
                     ${isAdmin ? `<div class="admin-reply-form">
                         <input type="text" id="frReply_${fr.id}" placeholder="Balas request..." />
-                        <button class="fr-reply-btn" data-id="${fr.id}">💬 Balas</button>
-                        <button class="btn btn-success btn-sm fr-approve" data-id="${fr.id}">Setujui</button>
-                        <button class="btn btn-danger btn-sm fr-reject" data-id="${fr.id}">Tolak</button>
-                        <button class="btn btn-danger btn-sm fr-delete" data-id="${fr.id}">Hapus</button>
+                        <button class="fr-reply-btn btn btn-primary btn-sm" data-id="${fr.id}">💬 Balas</button>
+                        <button class="fr-approve btn btn-success btn-sm" data-id="${fr.id}">✅ Setujui</button>
+                        <button class="fr-reject btn btn-danger btn-sm" data-id="${fr.id}">❌ Tolak</button>
+                        <button class="fr-delete btn btn-danger btn-sm" data-id="${fr.id}">🗑 Hapus</button>
                     </div>` : ''}
                 </div>`;
             }).join('');
@@ -2938,7 +3005,7 @@
                     'Website';
                 const hasReply = bug.adminReply && bug.adminReply.trim().length > 0;
                 const status = hasReply && bug.status === 'pending' ? 'replied' : (bug.status || 'pending');
-                return `<div class="bug-item">
+                return `<div class="bug-item" data-id="${bug.id}">
                     <div class="top"><span class="title">${bug.name} • ${appLabel}</span><span class="status ${statusClass[status] || 'pending'}">${statusLabel[status] || 'Menunggu'}</span></div>
                     <div class="desc">${bug.description}</div>
                     ${bug.steps ? `<div class="desc" style="font-size:11px;color:var(--text3);margin-top:2px;">Langkah: ${bug.steps}</div>` : ''}
@@ -2946,10 +3013,10 @@
                     ${hasReply ? `<div class="admin-reply"><div class="reply-label">💬 Balasan Admin:</div><div class="reply-text">${bug.adminReply}</div><div class="reply-meta">oleh ${bug.adminReplyName || 'Admin'} • ${bug.adminReplyTimestamp ? new Date(bug.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div></div>` : ''}
                     ${isAdmin ? `<div class="admin-reply-form">
                         <input type="text" id="bugReply_${bug.id}" placeholder="Balas laporan..." />
-                        <button class="bug-reply-btn" data-id="${bug.id}">💬 Balas</button>
-                        <button class="btn btn-success btn-sm bug-resolve" data-id="${bug.id}">Selesai</button>
-                        <button class="btn btn-danger btn-sm bug-reject" data-id="${bug.id}">Tolak</button>
-                        <button class="btn btn-danger btn-sm bug-delete" data-id="${bug.id}">Hapus</button>
+                        <button class="bug-reply-btn btn btn-primary btn-sm" data-id="${bug.id}">💬 Balas</button>
+                        <button class="bug-resolve btn btn-success btn-sm" data-id="${bug.id}">✅ Selesai</button>
+                        <button class="bug-reject btn btn-danger btn-sm" data-id="${bug.id}">❌ Tolak</button>
+                        <button class="bug-delete btn btn-danger btn-sm" data-id="${bug.id}">🗑 Hapus</button>
                     </div>` : ''}
                 </div>`;
             }).join('');
@@ -3664,7 +3731,7 @@
                         status.style.color = 'var(--text2)'; }
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
-                        const banned = await checkIsBanned(userCred.user.uid);
+                        const banned = await checkBanStatus(userCred.user.uid);
                         if (banned) {
                             status.textContent = '⛔ Akun Anda telah di-ban!';
                             status.style.color = '#f2b8b5';
@@ -4021,6 +4088,27 @@
         function updateAuthUI() {
             const section = document.getElementById('authSection');
             if (!section) return;
+
+            if (currentUser && isBanned) {
+                // User BANNED - tampilkan badge BANNED
+                section.innerHTML =
+                    `<div class="user-badge" style="border-color:#f2b8b5;cursor:default;">
+                        <span style="color:#f2b8b5;">${currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna'}</span>
+                        <span class="banned-badge">⛔ BANNED</span>
+                        <button class="logout-btn" id="logoutBtnNav">Logout</button>
+                    </div>`;
+                document.getElementById('logoutBtnNav')?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    signOut(auth);
+                    document.getElementById('banOverlay').classList.remove('show');
+                    isBanned = false;
+                    goToHome();
+                });
+                // Sembunyikan semua page
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                return;
+            }
+
             if (currentUser && !isBanned) {
                 const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna';
                 const verified = currentUser.emailVerified;
@@ -4044,14 +4132,6 @@
                     resendVerification();
                 });
                 if (!verified && !isAdmin && !spamNotifShown) setTimeout(() => showSpamNotification(), 1500);
-            } else if (currentUser && isBanned) {
-                section.innerHTML =
-                    `<div class="user-badge" style="border-color:#f2b8b5;"><span>⛔ Di-Ban</span><button class="logout-btn" id="logoutBtnNav">Logout</button></div>`;
-                document.getElementById('logoutBtnNav')?.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    signOut(auth);
-                    goToHome();
-                });
             } else {
                 section.innerHTML =
                     `<button class="auth-btn" id="loginNavBtn">Login</button>`;
@@ -4104,11 +4184,12 @@
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
-                const banned = await checkIsBanned(user.uid);
+                const banned = await checkBanStatus(user.uid);
                 if (banned) {
                     isBanned = true;
                     showBanOverlay();
                     updateAuthUI();
+                    // Sembunyikan semua page
                     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                     return;
                 } else {
@@ -4148,5 +4229,6 @@
 
         // ===== TIDAK ADA CONSOLE.LOG =====
     </script>
+
 </body>
 </html>
