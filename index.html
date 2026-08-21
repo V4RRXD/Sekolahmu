@@ -33,7 +33,7 @@
         .banner .icon{font-size:20px;flex-shrink:0}.banner .content{flex:1}.banner .content .title{font-weight:700;font-size:13px}.banner .content .message{font-size:12px;opacity:0.9;margin-top:1px}
         .banner .close-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;transition:all var(--transition);flex-shrink:0;display:flex;align-items:center;justify-content:center}
         .banner .close-btn:hover{background:rgba(255,255,255,0.25);transform:scale(1.1) rotate(90deg)}
-        .ban-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:rgba(0,0,0,0.9);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
+        .ban-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:rgba(0,0,0,0.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.6s ease}
         .ban-overlay.show{opacity:1;pointer-events:auto}
         .ban-overlay .box{background:var(--card);border:2px solid #f2b8b5;border-radius:24px;padding:40px 32px 32px;max-width:440px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,0.9);transform:scale(0.92) translateY(30px);transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1);text-align:center}
         .ban-overlay.show .box{transform:scale(1) translateY(0)}
@@ -43,12 +43,12 @@
         .ban-overlay p{color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:6px}
         .ban-overlay .box-actions{margin-top:18px;display:flex;flex-direction:column;gap:10px;align-items:center}
         .ban-overlay .box-actions .btn{min-width:160px;justify-content:center}
-        .ban-overlay .appeal-form{margin-top:16px;display:none;width:100%}
-        .ban-overlay .appeal-form.show{display:block;animation:pageFadeIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        .ban-overlay .appeal-form{margin-top:16px;display:none;width:100%;animation:pageFadeIn 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        .ban-overlay .appeal-form.show{display:block}
         .ban-overlay .appeal-form textarea{width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);font-size:13px;outline:none;resize:vertical;min-height:80px;font-family:inherit}
         .ban-overlay .appeal-form textarea:focus{border-color:var(--primary)}
         .ban-overlay .appeal-form .btn{margin-top:8px;width:100%}
-        .ban-overlay .appeal-status{font-size:13px;color:var(--text2);margin-top:10px}
+        .ban-overlay .appeal-status{font-size:13px;color:var(--text2);margin-top:10px;line-height:1.6}
         .nav{display:flex;flex-wrap:wrap;align-items:center;gap:4px;background:var(--card);backdrop-filter:blur(16px);padding:8px 12px;border-radius:var(--radius);margin-bottom:12px;border:1px solid var(--primary-border);position:sticky;top:0;z-index:40;transition:all var(--transition);box-shadow:var(--shadow);min-height:48px}
         .nav-left{display:flex;gap:3px;flex-wrap:wrap;flex:1}
         .nav-right{display:flex;gap:4px;align-items:center;margin-left:auto}
@@ -77,8 +77,7 @@
         .user-badge .status-unverified{color:#f2b8b5;font-size:10px;padding:1px 6px;border-radius:10px;background:rgba(242,184,181,0.12);border:1px solid rgba(242,184,181,0.15);cursor:pointer}
         .user-badge .admin-badge{color:var(--primary);font-size:10px;padding:1px 6px;border-radius:10px;background:var(--primary-bg);border:1px solid var(--primary-border)}
         .user-badge .banned-badge{color:#f2b8b5;font-size:10px;padding:1px 8px;border-radius:10px;background:rgba(242,184,181,0.15);border:1px solid rgba(242,184,181,0.2);font-weight:700;letter-spacing:0.5px}
-        .page{display:none}
-        .page.active{display:block;animation:pageFadeIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards}
+        .page{display:none}.page.active{display:block;animation:pageFadeIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards}
         @keyframes pageFadeIn{0%{opacity:0;transform:translateY(30px) scale(0.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
         .card{background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--primary-border);border-radius:var(--radius);padding:16px 18px;margin-bottom:12px;box-shadow:var(--shadow);transition:all var(--transition)}
         .card:hover{border-color:rgba(214,90,98,0.25);box-shadow:0 12px 48px rgba(0,0,0,0.4);transform:translateY(-2px)}
@@ -260,22 +259,22 @@
 </head>
 <body>
     <div id="meteor-container"></div>
-    <div class="watermark"><span>Made By V4RRXD</span></div>
+    <div class="watermark"><span>Dibuat Oleh V4RRXD</span></div>
 
     <!-- BAN OVERLAY -->
     <div class="ban-overlay" id="banOverlay">
         <div class="box">
             <div class="icon">⛔</div>
-            <h2>Akun Anda Telah Di-Ban</h2>
-            <p>Akun Anda telah di-ban oleh admin karena melanggar kebijakan.</p>
-            <p style="font-size:12px;color:var(--text3);margin-top:4px;">Jika Anda merasa ini adalah kesalahan, silakan ajukan appeal.</p>
+            <h2>Akun Anda Telah Diblokir</h2>
+            <p>Akun Anda telah diblokir oleh administrator karena melanggar kebijakan yang berlaku.</p>
+            <p style="font-size:12px;color:var(--text3);margin-top:4px;">Jika Anda merasa ini adalah kesalahan, silakan ajukan banding.</p>
             <div class="box-actions">
-                <button class="btn btn-primary" id="banAppealBtn">📝 Ajukan Appeal</button>
-                <button class="btn btn-outline" id="banLogoutBtn">🚪 Logout</button>
+                <button class="btn btn-primary" id="banAppealBtn">📝 Ajukan Banding</button>
+                <button class="btn btn-outline" id="banLogoutBtn">🚪 Keluar</button>
             </div>
             <div class="appeal-form" id="appealForm">
                 <textarea id="appealMessage" placeholder="Tulis alasan Anda..." maxlength="500"></textarea>
-                <button class="btn btn-success btn-block" id="submitAppealBtn">Kirim Appeal</button>
+                <button class="btn btn-success btn-block" id="submitAppealBtn">Kirim Banding</button>
                 <div id="appealStatus" class="appeal-status"></div>
             </div>
         </div>
@@ -302,13 +301,13 @@
                     <div class="nav-dropdown-content" id="reviewDropdownContent">
                         <button data-page="review">✏️ Buat Ulasan</button>
                         <button data-page="reviews">📋 Lihat Ulasan</button>
-                        <button data-page="sortreview">🔀 Sortir Review</button>
+                        <button data-page="sortreview">🔀 Urutkan Ulasan</button>
                     </div>
                 </div>
-                <button data-page="downloads">⬇ Downloads</button>
+                <button data-page="downloads">⬇ Unduhan</button>
                 <button data-page="leaderboard">🏆 Papan Peringkat</button>
-                <button data-page="features">💡 Request Fitur</button>
-                <button data-page="bugreport">🐛 Lapor Bug</button>
+                <button data-page="features">💡 Permintaan Fitur</button>
+                <button data-page="bugreport">🐛 Laporkan Bug</button>
                 <button data-page="admin" id="adminNavBtn" class="hidden-nav">🛡 Admin</button>
             </div>
             <div class="nav-right">
@@ -371,7 +370,7 @@
 
         <!-- PAGE SORT REVIEW -->
         <div id="page-sortreview" class="page">
-            <div class="card"><h2 class="card-title">🔀 Sortir Review</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Urutkan ulasan berdasarkan kriteria tertentu</p>
+            <div class="card"><h2 class="card-title">🔀 Urutkan Ulasan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Urutkan ulasan berdasarkan kriteria tertentu</p>
                 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
                     <select id="sortSelect" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);font-size:13px;flex:1;min-width:120px;">
                         <option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="highest">Rating Tertinggi</option><option value="lowest">Rating Terendah</option><option value="mostLiked">Terbanyak Like</option><option value="mostDisliked">Terbanyak Dislike</option>
@@ -385,7 +384,7 @@
 
         <!-- PAGE DOWNLOADS -->
         <div id="page-downloads" class="page">
-            <div class="card"><h2 class="card-title">⬇ Downloads</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Unduh aplikasi Sekolahmu</p><div id="downloadSection"></div></div>
+            <div class="card"><h2 class="card-title">⬇ Unduhan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Unduh aplikasi Sekolahmu</p><div id="downloadSection"></div></div>
         </div>
 
         <!-- PAGE LEADERBOARD -->
@@ -395,22 +394,22 @@
 
         <!-- PAGE FEATURES -->
         <div id="page-features" class="page">
-            <div class="card"><h2 class="card-title">💡 Request Fitur</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Kirim ide fitur yang Anda inginkan</p>
-                <div id="featureAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk request fitur</p><button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
+            <div class="card"><h2 class="card-title">💡 Permintaan Fitur</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Kirim ide fitur yang Anda inginkan</p>
+                <div id="featureAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk meminta fitur</p><button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
                 <div id="featureForm" style="display:none;">
                     <div class="form-group"><label>Judul Fitur</label><input type="text" id="frTitle" placeholder="Masukkan judul fitur..." maxlength="100" /></div>
                     <div class="form-group"><label>Deskripsi</label><textarea id="frDesc" placeholder="Jelaskan fitur yang Anda inginkan..." maxlength="500"></textarea></div>
-                    <button id="submitFR" class="btn btn-primary btn-block">Kirim Request</button>
+                    <button id="submitFR" class="btn btn-primary btn-block">Kirim Permintaan</button>
                     <div id="frStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
                 </div>
-                <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Request dari Pengguna</h3><div id="frList"></div></div>
+                <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Permintaan dari Pengguna</h3><div id="frList"></div></div>
             </div>
         </div>
 
         <!-- PAGE BUG REPORT -->
         <div id="page-bugreport" class="page">
-            <div class="card"><h2 class="card-title">🐛 Lapor Bug</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Laporkan bug yang Anda temukan di aplikasi Sekolahmu</p>
-                <div id="bugAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk lapor bug</p><button id="gotoLoginBtn4" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
+            <div class="card"><h2 class="card-title">🐛 Laporkan Bug</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Laporkan bug yang Anda temukan di aplikasi Sekolahmu</p>
+                <div id="bugAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk melaporkan bug</p><button id="gotoLoginBtn4" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
                 <div id="bugForm" style="display:none;">
                     <div class="form-group"><label>Jenis Aplikasi</label><select id="bugAppType"><option value="apk">Android APK</option><option value="exe">Windows EXE</option><option value="website">Website</option></select></div>
                     <div class="form-group"><label>Deskripsi Bug</label><textarea id="bugDesc" placeholder="Jelaskan bug yang Anda temukan..." maxlength="500"></textarea></div>
@@ -431,7 +430,7 @@
         <div class="dashboard-modal" id="dashboardModal">
             <div class="box" id="dashboardBox">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <h2 style="font-size:18px;">👤 Dashboard</h2>
+                    <h2 style="font-size:18px;">👤 Dasbor</h2>
                     <button class="btn btn-outline btn-sm" id="dashboardClose">✕ Tutup</button>
                 </div>
                 <div id="dashboardContent"></div>
@@ -443,9 +442,9 @@
     <div class="spam-notification" id="spamNotification">
         <div class="box" id="spamBox">
             <div class="icon">📬</div>
-            <h3>Cek Folder Spam!</h3>
+            <h3>Periksa Folder Spam!</h3>
             <p>Email verifikasi mungkin masuk ke folder <span class="highlight">Spam</span> atau <span class="highlight">Promosi</span>.</p>
-            <p style="font-size:12px;color:var(--text3);">Jika tidak menemukan email verifikasi, coba kirim ulang atau cek kembali.</p>
+            <p style="font-size:12px;color:var(--text3);">Jika tidak menemukan email verifikasi, coba kirim ulang atau periksa kembali.</p>
             <div class="box-actions">
                 <button class="btn btn-primary" id="spamResendBtn">📧 Kirim Ulang Verifikasi</button>
                 <div class="cooldown-text" id="spamCooldown"></div>
@@ -464,7 +463,7 @@
                 <p>Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan.</p>
                 <h2>Langkah 1: Periksa Kotak Masuk</h2>
                 <p>Cari email dari <strong>noreply@sekolahmu-status.firebaseapp.com</strong> dengan subjek "Verify your email".</p>
-                <h2>Langkah 2: Cek Folder Spam</h2>
+                <h2>Langkah 2: Periksa Folder Spam</h2>
                 <p>Jika tidak ditemukan, periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>.</p>
                 <h2>Langkah 3: Buka Tautan</h2>
                 <p>Klik tautan verifikasi yang dikirim ke email Anda.</p>
@@ -541,6 +540,7 @@
             document.getElementById('banOverlay').classList.add('show');
             isBanned = true;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Cek status appeal
             checkAppealStatus();
         }
 
@@ -551,23 +551,38 @@
             goToHome();
         });
 
-        // Tombol Appeal - FIX
+        // ===== TOMBOL APPEAL - PASTIKAN BISA DI KLIK =====
         document.getElementById('banAppealBtn')?.addEventListener('click', function(e) {
             e.stopPropagation();
+            // Cek apakah user sudah login
+            if (!currentUser) {
+                showToast('Silakan login terlebih dahulu untuk mengajukan banding.', true);
+                return;
+            }
             // Cek apakah sudah pernah appeal
             if (appealSent) {
-                showToast('Anda sudah mengirim appeal', true);
+                showToast('Anda sudah mengirim banding sebelumnya.', true);
                 return;
             }
             document.getElementById('appealForm').classList.add('show');
             this.style.display = 'none';
+            document.getElementById('appealMessage').focus();
         });
 
         document.getElementById('submitAppealBtn')?.addEventListener('click', async () => {
-            if (!currentUser) return;
-            if (appealSent) { showToast('Anda sudah mengirim appeal', true); return; }
+            if (!currentUser) {
+                showToast('Silakan login terlebih dahulu.', true);
+                return;
+            }
+            if (appealSent) {
+                showToast('Anda sudah mengirim banding sebelumnya.', true);
+                return;
+            }
             const msg = document.getElementById('appealMessage').value.trim();
-            if (!msg) { showToast('Tulis alasan Anda', true); return; }
+            if (!msg) {
+                showToast('Silakan tulis alasan banding Anda.', true);
+                return;
+            }
             try {
                 await set(ref(db, `appeals/${currentUser.uid}`), {
                     uid: currentUser.uid,
@@ -580,13 +595,15 @@
                     adminReplyTimestamp: null,
                     adminReplyName: null
                 });
-                showToast('✅ Appeal berhasil dikirim!');
+                showToast('✅ Banding berhasil dikirim!');
                 appealSent = true;
-                document.getElementById('appealStatus').textContent = '✅ Appeal dikirim. Menunggu admin.';
+                document.getElementById('appealStatus').textContent = '✅ Banding telah dikirim. Menunggu tanggapan dari administrator.';
                 document.getElementById('submitAppealBtn').disabled = true;
                 document.getElementById('appealMessage').disabled = true;
                 document.getElementById('banAppealBtn').style.display = 'none';
-            } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
+            } catch (err) {
+                showToast('❌ Gagal mengirim banding: ' + err.message, true);
+            }
         });
 
         async function checkAppealStatus() {
@@ -596,24 +613,26 @@
                 const data = snap.val();
                 if (data) {
                     appealSent = true;
-                    const statusText = data.status === 'approved' ? '✅ Disetujui' : data.status === 'rejected' ? '❌ Ditolak' : '⏳ Menunggu';
-                    document.getElementById('appealStatus').textContent = `Appeal: ${statusText}`;
+                    let statusText = '⏳ Menunggu tanggapan admin';
+                    if (data.status === 'approved') statusText = '✅ Banding disetujui! Anda dapat login kembali.';
+                    else if (data.status === 'rejected') statusText = '❌ Banding ditolak. Silakan hubungi administrator.';
+                    document.getElementById('appealStatus').textContent = `Status Banding: ${statusText}`;
                     document.getElementById('appealForm').classList.add('show');
                     document.getElementById('banAppealBtn').style.display = 'none';
                     document.getElementById('submitAppealBtn').disabled = true;
                     document.getElementById('appealMessage').disabled = true;
 
-                    // Jika appeal ditolak, tombol appeal hilang permanen
                     if (data.status === 'rejected') {
                         document.getElementById('banAppealBtn').style.display = 'none';
                     }
-                    // Jika appeal disetujui, unban user
                     if (data.status === 'approved') {
                         await remove(ref(db, `banned/${currentUser.uid}`));
                         document.getElementById('banOverlay').classList.remove('show');
                         isBanned = false;
-                        showToast('✅ Appeal disetujui! Anda bisa login kembali.');
+                        showToast('✅ Banding disetujui! Anda dapat mengakses kembali.');
                         goToHome();
+                        // Update status di UI
+                        updateAuthUI();
                     }
                 }
             } catch (e) {}
@@ -659,7 +678,7 @@
             const el = document.getElementById('spamCooldown');
             const btn = document.getElementById('spamResendBtn');
             if (!el || !btn) return;
-            if (isCooldownActive && resendCooldown > 0) { el.textContent = `⏳ Tunggu ${resendCooldown}s`;
+            if (isCooldownActive && resendCooldown > 0) { el.textContent = `⏳ Tunggu ${resendCooldown} detik`;
                 btn.disabled = true; } else { el.textContent = '';
                 btn.disabled = false; }
         }
@@ -680,17 +699,17 @@
         }
 
         async function resendVerification() {
-            if (isCooldownActive) { showToast('⏳ Tunggu cooldown', true); return; }
-            if (!currentUser) { showToast('❌ Login dulu', true); return; }
-            if (currentUser.emailVerified) { showToast('✅ Sudah terverifikasi!', false);
+            if (isCooldownActive) { showToast('⏳ Tunggu cooldown selesai', true); return; }
+            if (!currentUser) { showToast('❌ Silakan login terlebih dahulu.', true); return; }
+            if (currentUser.emailVerified) { showToast('✅ Email sudah terverifikasi!', false);
                 hideSpamNotification(); return; }
             try { await sendEmailVerification(currentUser);
-                showToast('📧 Email verifikasi dikirim!');
+                showToast('📧 Email verifikasi telah dikirim! Periksa inbox atau folder spam.');
                 startCooldown(); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
         }
 
         async function checkVerified() {
-            if (!currentUser) { showToast('❌ Login dulu', true); return; }
+            if (!currentUser) { showToast('❌ Silakan login terlebih dahulu.', true); return; }
             await currentUser.reload();
             if (auth.currentUser?.emailVerified) {
                 showToast('✅ Email terverifikasi!', false);
@@ -698,7 +717,7 @@
                 spamNotifShown = true;
                 updateAuthUI();
                 goToPage('home');
-            } else { showToast('❌ Email belum terverifikasi', true);
+            } else { showToast('❌ Email belum terverifikasi. Periksa inbox atau folder spam.', true);
                 showSpamNotification(); }
         }
 
@@ -800,13 +819,13 @@
 
         document.querySelectorAll('.nav-left > button[data-page]').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
+                if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
                 goToPage(btn.dataset.page);
             });
         });
         document.querySelectorAll('.nav-dropdown-content button[data-page]').forEach(btn => {
             btn.addEventListener('click', () => {
-                if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
+                if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
                 goToPage(btn.dataset.page);
             });
         });
@@ -821,11 +840,11 @@
 
         // ===== DASHBOARD =====
         function openDashboard() {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
             const modal = document.getElementById('dashboardModal');
             const content = document.getElementById('dashboardContent');
             if (!currentUser) {
-                content.innerHTML = '<p style="color:var(--text2);text-align:center;">Login dulu untuk lihat dashboard</p>';
+                content.innerHTML = '<p style="color:var(--text2);text-align:center;">Silakan login untuk melihat dasbor.</p>';
                 modal.classList.add('show');
                 return;
             }
@@ -853,9 +872,9 @@
                     <div style="background:var(--input);padding:8px;border-radius:8px;"><div style="font-size:18px;font-weight:700;color:#ffd700;">${comments}</div><div style="font-size:9px;color:var(--text2);">💬 Komentar</div></div>
                     <div style="background:var(--input);padding:8px;border-radius:8px;"><div style="font-size:18px;font-weight:700;color:var(--primary);">${highest > 0 ? '⭐'.repeat(highest) : '-'}</div><div style="font-size:9px;color:var(--text2);">Rating Tertinggi</div></div>
                 </div>
-                <div style="margin-top:10px;"><button class="btn btn-outline btn-sm btn-block" id="dashboardLogout">Logout</button>
-                <button class="btn btn-outline btn-sm btn-block" id="dashboardResetPass" style="margin-top:4px;">🔑 Reset Password</button>
-                <button class="btn btn-outline btn-sm btn-block" id="dashboardEditProfile" style="margin-top:4px;">✏️ Edit Profil</button></div>
+                <div style="margin-top:10px;"><button class="btn btn-outline btn-sm btn-block" id="dashboardLogout">Keluar</button>
+                <button class="btn btn-outline btn-sm btn-block" id="dashboardResetPass" style="margin-top:4px;">🔑 Reset Kata Sandi</button>
+                <button class="btn btn-outline btn-sm btn-block" id="dashboardEditProfile" style="margin-top:4px;">✏️ Sunting Profil</button></div>
             `;
             document.getElementById('dashboardLogout')?.addEventListener('click', () => { signOut(auth);
                 modal.classList.remove('show');
@@ -863,14 +882,14 @@
             document.getElementById('dashboardResetPass')?.addEventListener('click', async () => {
                 if (!currentUser) return;
                 try { await sendPasswordResetEmail(auth, currentUser.email);
-                    showToast('📧 Email reset password dikirim!');
+                    showToast('📧 Email reset kata sandi telah dikirim!');
                     modal.classList.remove('show'); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
             });
             document.getElementById('dashboardEditProfile')?.addEventListener('click', () => {
                 const newName = prompt('Masukkan nama baru:', currentUser.displayName || '');
                 if (newName && newName.trim()) {
                     updateProfile(currentUser, { displayName: newName.trim() })
-                        .then(() => { showToast('✅ Profil diperbarui!');
+                        .then(() => { showToast('✅ Profil berhasil diperbarui!');
                             modal.classList.remove('show');
                             updateAuthUI(); })
                         .catch((err) => { showToast('❌ Gagal: ' + err.message, true); });
@@ -898,7 +917,7 @@
             }
             if (!currentUser.emailVerified && !isAdmin) {
                 section.innerHTML =
-                    `<div class="download-locked"><span class="icon">📧</span><p>Verifikasi email dulu untuk mengunduh</p><button class="btn btn-primary btn-sm" id="downloadVerifyBtn" style="margin-top:8px;">Kirim Ulang Verifikasi</button></div>`;
+                    `<div class="download-locked"><span class="icon">📧</span><p>Verifikasi email terlebih dahulu untuk mengunduh</p><button class="btn btn-primary btn-sm" id="downloadVerifyBtn" style="margin-top:8px;">Kirim Ulang Verifikasi</button></div>`;
                 document.getElementById('downloadVerifyBtn')?.addEventListener('click', resendVerification);
                 return;
             }
@@ -910,7 +929,7 @@
                 <div class="coming-soon"><span class="icon">🖥</span><strong style="font-size:15px;">Windows EXE</strong><div style="color:var(--text3);font-size:13px;margin-top:4px;">Dalam tahap pengembangan</div><div style="color:var(--text3);font-size:12px;margin-top:2px;">🚧 Segera hadir</div></div>
             `;
             document.getElementById('downloadApkBtn')?.addEventListener('click', () => {
-                setTimeout(() => { showToast('🎉 Terima kasih sudah menggunakan aplikasi buatan kami! Kalau ada bug, laporkan di kolom Lapor Bug ya! 🙏'); },
+                setTimeout(() => { showToast('🎉 Terima kasih telah menggunakan aplikasi buatan kami! Jika menemukan bug, silakan laporkan di kolom Laporkan Bug. 🙏'); },
                     500);
             });
         }
@@ -967,19 +986,19 @@
         document.getElementById('gotoLoginBtn3')?.addEventListener('click', () => goToPage('admin'));
 
         document.getElementById('submitFR')?.addEventListener('click', async () => {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser) { showToast('Login dulu', true); return; }
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
             const title = document.getElementById('frTitle').value.trim(),
                 desc = document.getElementById('frDesc').value.trim();
-            if (!title) { showToast('Masukkan judul', true); return; }
-            if (!desc) { showToast('Masukkan deskripsi', true); return; }
+            if (!title) { showToast('Masukkan judul fitur.', true); return; }
+            if (!desc) { showToast('Masukkan deskripsi fitur.', true); return; }
             try {
                 const newRef = push(ref(db, 'featureRequests'));
                 await set(newRef, { uid: currentUser.uid, name: currentUser.displayName || currentUser.email?.split(
                         '@')[0] || 'Pengguna', email: currentUser.email, title, description: desc, status: 'pending',
                     timestamp: Date.now(), upvotes: 0, adminReply: null, adminReplyTimestamp: null,
                     adminReplyName: null });
-                showToast('✅ Request fitur berhasil dikirim!');
+                showToast('✅ Permintaan fitur berhasil dikirim!');
                 document.getElementById('frTitle').value = '';
                 document.getElementById('frDesc').value = '';
                 loadFeatureRequests();
@@ -1001,7 +1020,7 @@
             if (!list) return;
             let filtered = featureRequests;
             if (!isAdmin && currentUser) filtered = featureRequests.filter(f => f.uid === currentUser.uid);
-            if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada request fitur</div>'; return; }
+            if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada permintaan fitur</div>'; return; }
             const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak',
             replied: '💬 Dibalas' };
             const statusClass = { pending: 'pending', approved: 'approved', rejected: 'rejected', replied: 'replied' };
@@ -1010,29 +1029,27 @@
                 const hasReply = hasAdminReply(fr);
                 const status = hasReply && fr.status === 'pending' ? 'replied' : (fr.status || 'pending');
                 const isOwner = currentUser && fr.uid === currentUser.uid;
-                // User hanya bisa balas jika admin sudah balas
                 const canUserReply = hasReply && isOwner;
                 return `<div class="fr-item" data-id="${fr.id}">
                     <div class="top"><span class="title">${fr.title}</span><span class="status ${statusClass[status] || 'pending'}">${statusLabel[status] || 'Menunggu'}</span></div>
                     <div class="desc">${fr.description}</div>
                     <div class="meta">oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}${isOwner ? ' • 🔒 Milik Anda' : ''}</div>
                     ${hasReply ? `<div class="admin-reply"><div class="reply-label">💬 Balasan Admin:</div><div class="reply-text">${fr.adminReply}</div><div class="reply-meta">oleh ${fr.adminReplyName || 'Admin'} • ${fr.adminReplyTimestamp ? new Date(fr.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div></div>` : ''}
-                    ${isAdmin ? `<div class="admin-reply-form"><input type="text" id="frReply_${fr.id}" placeholder="Balas request..." /><button class="fr-reply-btn btn btn-primary btn-sm" data-id="${fr.id}">💬 Balas</button><button class="fr-approve btn btn-success btn-sm" data-id="${fr.id}">✅ Setujui</button><button class="fr-reject btn btn-danger btn-sm" data-id="${fr.id}">❌ Tolak</button><button class="fr-delete btn btn-danger btn-sm" data-id="${fr.id}">🗑 Hapus</button></div>` : (isOwner && canUserReply ? `<div class="admin-reply-form"><input type="text" id="frUserReply_${fr.id}" placeholder="Balas admin..." /><button class="fr-user-reply-btn btn btn-primary btn-sm" data-id="${fr.id}">💬 Balas</button></div>` : (isOwner && !canUserReply && hasReply ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;">Menunggu balasan admin berikutnya...</div>` : ''))}
+                    ${isAdmin ? `<div class="admin-reply-form"><input type="text" id="frReply_${fr.id}" placeholder="Balas permintaan..." /><button class="fr-reply-btn btn btn-primary btn-sm" data-id="${fr.id}">💬 Balas</button><button class="fr-approve btn btn-success btn-sm" data-id="${fr.id}">✅ Setujui</button><button class="fr-reject btn btn-danger btn-sm" data-id="${fr.id}">❌ Tolak</button><button class="fr-delete btn btn-danger btn-sm" data-id="${fr.id}">🗑 Hapus</button></div>` : (isOwner && canUserReply ? `<div class="admin-reply-form"><input type="text" id="frUserReply_${fr.id}" placeholder="Balas admin..." /><button class="fr-user-reply-btn btn btn-primary btn-sm" data-id="${fr.id}">💬 Balas</button></div>` : (isOwner && !canUserReply && hasReply ? `<div style="font-size:11px;color:var(--text3);margin-top:4px;">Menunggu balasan admin berikutnya...</div>` : ''))}
                 </div>`;
             }).join('');
 
-            // Admin events
             if (isAdmin) {
                 document.querySelectorAll('.fr-reply-btn').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
                     const input = document.getElementById(`frReply_${id}`);
                     const reply = input?.value.trim();
-                    if (!reply) { showToast('Masukkan balasan', true); return; }
+                    if (!reply) { showToast('Masukkan balasan.', true); return; }
                     try {
                         await update(ref(db, `featureRequests/${id}`), { adminReply: reply,
                             adminReplyTimestamp: Date.now(), adminReplyName: currentUser?.displayName ||
                                 currentUser?.email || 'Admin', status: 'replied' });
-                        showToast('✅ Balasan dikirim!');
+                        showToast('✅ Balasan berhasil dikirim!');
                         input.value = '';
                         loadFeatureRequests();
                     } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
@@ -1040,42 +1057,41 @@
                 document.querySelectorAll('.fr-approve').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
                     try { await update(ref(db, `featureRequests/${id}`), { status: 'approved' });
-                        showToast('✅ Request disetujui');
+                        showToast('✅ Permintaan disetujui');
                         loadFeatureRequests(); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
                 }));
                 document.querySelectorAll('.fr-reject').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
                     try { await update(ref(db, `featureRequests/${id}`), { status: 'rejected' });
-                        showToast('❌ Request ditolak');
+                        showToast('❌ Permintaan ditolak');
                         loadFeatureRequests(); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
                 }));
                 document.querySelectorAll('.fr-delete').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
-                    const confirmed = await showConfirm('Hapus Request?', 'Request ini akan dihapus permanen.',
-                        '🗑️');
+                    const confirmed = await showConfirm('Hapus Permintaan?',
+                        'Permintaan ini akan dihapus secara permanen.', '🗑️');
                     if (!confirmed) return;
                     try { await remove(ref(db, `featureRequests/${id}`));
-                        showToast('Request dihapus');
+                        showToast('Permintaan dihapus');
                         loadFeatureRequests(); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
                 }));
             }
 
-            // User reply to admin
             document.querySelectorAll('.fr-user-reply-btn').forEach(b => b.addEventListener('click', async function() {
                 const id = this.dataset.id;
                 const input = document.getElementById(`frUserReply_${id}`);
                 const reply = input?.value.trim();
-                if (!reply) { showToast('Masukkan balasan', true); return; }
+                if (!reply) { showToast('Masukkan balasan.', true); return; }
                 try {
                     const fr = featureRequests.find(f => f.id === id);
                     const existing = fr.adminReply || '';
                     await update(ref(db, `featureRequests/${id}`), {
-                        adminReply: existing + '\n\n[User]: ' + reply,
+                        adminReply: existing + '\n\n[Pengguna]: ' + reply,
                         adminReplyTimestamp: Date.now(),
-                        adminReplyName: currentUser?.displayName || currentUser?.email || 'User',
+                        adminReplyName: currentUser?.displayName || currentUser?.email || 'Pengguna',
                         status: 'pending'
                     });
-                    showToast('✅ Balasan dikirim!');
+                    showToast('✅ Balasan berhasil dikirim!');
                     input.value = '';
                     loadFeatureRequests();
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
@@ -1094,12 +1110,12 @@
         document.getElementById('gotoLoginBtn4')?.addEventListener('click', () => goToPage('admin'));
 
         document.getElementById('submitBug')?.addEventListener('click', async () => {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser) { showToast('Login dulu', true); return; }
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
             const appType = document.getElementById('bugAppType').value,
                 desc = document.getElementById('bugDesc').value.trim(),
                 steps = document.getElementById('bugSteps').value.trim();
-            if (!desc) { showToast('Masukkan deskripsi bug', true); return; }
+            if (!desc) { showToast('Masukkan deskripsi bug.', true); return; }
             try {
                 const newRef = push(ref(db, 'bugReports'));
                 await set(newRef, { uid: currentUser.uid, name: currentUser.displayName || currentUser.email?.split(
@@ -1155,12 +1171,12 @@
                     const id = this.dataset.id;
                     const input = document.getElementById(`bugReply_${id}`);
                     const reply = input?.value.trim();
-                    if (!reply) { showToast('Masukkan balasan', true); return; }
+                    if (!reply) { showToast('Masukkan balasan.', true); return; }
                     try {
                         await update(ref(db, `bugReports/${id}`), { adminReply: reply,
                             adminReplyTimestamp: Date.now(), adminReplyName: currentUser?.displayName ||
                                 currentUser?.email || 'Admin', status: 'replied' });
-                        showToast('✅ Balasan dikirim!');
+                        showToast('✅ Balasan berhasil dikirim!');
                         input.value = '';
                         loadBugReports();
                     } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
@@ -1179,8 +1195,8 @@
                 }));
                 document.querySelectorAll('.bug-delete').forEach(b => b.addEventListener('click', async function() {
                     const id = this.dataset.id;
-                    const confirmed = await showConfirm('Hapus Laporan?', 'Laporan bug ini akan dihapus permanen.',
-                        '🗑️');
+                    const confirmed = await showConfirm('Hapus Laporan?',
+                        'Laporan bug ini akan dihapus secara permanen.', '🗑️');
                     if (!confirmed) return;
                     try { await remove(ref(db, `bugReports/${id}`));
                         showToast('Laporan dihapus');
@@ -1188,22 +1204,21 @@
                 }));
             }
 
-            // User reply to admin
             document.querySelectorAll('.bug-user-reply-btn').forEach(b => b.addEventListener('click', async function() {
                 const id = this.dataset.id;
                 const input = document.getElementById(`bugUserReply_${id}`);
                 const reply = input?.value.trim();
-                if (!reply) { showToast('Masukkan balasan', true); return; }
+                if (!reply) { showToast('Masukkan balasan.', true); return; }
                 try {
                     const bug = bugReports.find(b => b.id === id);
                     const existing = bug.adminReply || '';
                     await update(ref(db, `bugReports/${id}`), {
-                        adminReply: existing + '\n\n[User]: ' + reply,
+                        adminReply: existing + '\n\n[Pengguna]: ' + reply,
                         adminReplyTimestamp: Date.now(),
-                        adminReplyName: currentUser?.displayName || currentUser?.email || 'User',
+                        adminReplyName: currentUser?.displayName || currentUser?.email || 'Pengguna',
                         status: 'pending'
                     });
-                    showToast('✅ Balasan dikirim!');
+                    showToast('✅ Balasan berhasil dikirim!');
                     input.value = '';
                     loadBugReports();
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
@@ -1220,7 +1235,7 @@
                     form.style.display = 'none';
                     req.style.display = 'block';
                     req.innerHTML =
-                        `<div style="padding:16px 0;"><div style="font-size:36px;">📧</div><p style="color:var(--text2);font-size:13px;">Verifikasi email dulu untuk memberi penilaian</p><p style="color:var(--text3);font-size:12px;">Cek inbox atau folder spam</p><button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:8px;">Kirim Ulang Verifikasi</button></div>`;
+                        `<div style="padding:16px 0;"><div style="font-size:36px;">📧</div><p style="color:var(--text2);font-size:13px;">Verifikasi email terlebih dahulu untuk memberi penilaian</p><p style="color:var(--text3);font-size:12px;">Periksa inbox atau folder spam</p><button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:8px;">Kirim Ulang Verifikasi</button></div>`;
                     document.getElementById('resendVerifyBtn')?.addEventListener('click', resendVerification);
                     return;
                 }
@@ -1259,7 +1274,7 @@
                 document.getElementById('deleteMyReviewBtn').style.display = 'none';
                 const info = document.createElement('p');
                 info.style.cssText = 'color:var(--text3);font-size:12px;margin-top:4px;';
-                info.textContent = '📧 Verifikasi email untuk sunting/hapus ulasan';
+                info.textContent = '📧 Verifikasi email untuk menyunting atau menghapus ulasan';
                 alreadyDiv.appendChild(info);
             } else {
                 userHasReviewed = false;
@@ -1274,7 +1289,7 @@
             const el = document.getElementById('reviewCooldown'),
                 btn = document.getElementById('submitReview');
             if (!el || !btn) return;
-            if (reviewCooldown > 0) { el.textContent = `⏳ Tunggu ${reviewCooldown} detik sebelum kirim ulang`;
+            if (reviewCooldown > 0) { el.textContent = `⏳ Tunggu ${reviewCooldown} detik sebelum mengirim ulang`;
                 el.classList.add('show');
                 btn.disabled = true; } else { el.textContent = '';
                 el.classList.remove('show');
@@ -1312,8 +1327,8 @@
 
         // ===== LIKE/DISLIKE =====
         async function toggleLike(reviewId, type) {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser) { showToast('Login dulu', true); return; }
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
             const snap = await get(ref(db, `reviews/${reviewId}`));
             const data = snap.val();
             if (!data) return;
@@ -1342,44 +1357,46 @@
 
         // ===== COMMENTS =====
         async function addComment(reviewId, parentId = null) {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser) { showToast('Login dulu', true); return; }
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
             const inputId = parentId ? `commentInput_${reviewId}_${parentId}` : `commentInput_${reviewId}`;
             const input = document.getElementById(inputId);
             if (!input) return;
             const msg = input.value.trim();
-            if (!msg) { showToast('Tulis komentar dulu', true); return; }
+            if (!msg) { showToast('Tulis komentar terlebih dahulu.', true); return; }
             if (commentCooldown > 0) { showToast(`⏳ Tunggu ${commentCooldown} detik`, true); return; }
             try {
                 const newRef = push(ref(db, `reviews/${reviewId}/comments`));
                 await set(newRef, { uid: currentUser.uid, name: currentUser.displayName || currentUser.email?.split(
                         '@')[0] || 'Pengguna', message: msg, timestamp: Date.now(), parentId: parentId || null });
                 input.value = '';
-                showToast('💬 Komentar ditambahkan');
+                showToast('💬 Komentar berhasil ditambahkan!');
                 startCommentCooldown();
-            } catch (err) { showToast('Gagal: ' + err.message, true); }
+            } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
         }
 
         // ===== DELETE MY REVIEW =====
         async function deleteMyReview(id) {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email dulu!', true);
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email terlebih dahulu.',
+                    true);
                 showSpamNotification(); return; }
-            const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan Anda akan dihapus permanen.', '🗑️');
+            const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan Anda akan dihapus secara permanen.', '🗑️');
             if (!confirmed) return;
             try { await remove(ref(db, `reviews/${id}`));
-                showToast('Ulasan Anda dihapus');
+                showToast('Ulasan Anda telah dihapus');
                 userHasReviewed = false;
                 userReviewId = null;
                 document.getElementById('alreadyReviewed').style.display = 'none';
-                document.getElementById('reviewForm').style.display = 'block'; } catch (err) { showToast('Gagal hapus',
+                document.getElementById('reviewForm').style.display = 'block'; } catch (err) { showToast('Gagal menghapus',
                     true); }
         }
 
         // ===== EDIT REVIEW =====
         function startEditingReview(id) {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email dulu!', true);
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email terlebih dahulu.',
+                    true);
                 showSpamNotification(); return; }
             const review = allReviews.find(r => r.id === id);
             if (!review) return;
@@ -1404,11 +1421,11 @@
             item.appendChild(editDiv);
             editDiv.querySelector('.save-edit').addEventListener('click', async () => {
                 const newMsg = editDiv.querySelector('textarea').value.trim();
-                if (!newMsg) { showToast('Pesan tidak boleh kosong', true); return; }
+                if (!newMsg) { showToast('Pesan tidak boleh kosong.', true); return; }
                 try { await update(ref(db, `reviews/${review.id}`), { message: newMsg, timestamp: Date
                         .now() });
-                    showToast('Ulasan diperbarui');
-                    cancelEdit(item); } catch (err) { showToast('Gagal perbarui', true); }
+                    showToast('Ulasan berhasil diperbarui!');
+                    cancelEdit(item); } catch (err) { showToast('❌ Gagal memperbarui: ' + err.message, true); }
             });
             editDiv.querySelector('.cancel-edit').addEventListener('click', () => { cancelEdit(item); });
             setTimeout(() => editDiv.querySelector('textarea').focus(), 100);
@@ -1428,7 +1445,7 @@
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
-                if (userHasReviewed) { showToast('Anda sudah memberi penilaian', true); return; }
+                if (userHasReviewed) { showToast('Anda sudah memberi penilaian.', true); return; }
                 const val = parseInt(el.dataset.value);
                 if (selectedRating === val) {
                     selectedRating = 0;
@@ -1509,18 +1526,18 @@
 
         // ===== SUBMIT REVIEW =====
         document.getElementById('submitReview')?.addEventListener('click', async () => {
-            if (isBanned) { showToast('⛔ Akun di-ban!', true); return; }
-            if (isSubmitting || !currentUser) { if (!currentUser) showToast('Login dulu', true); return; }
-            if (!currentUser.emailVerified && !isAdmin) { showToast('⚠️ Verifikasi email dulu!', true);
+            if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
+            if (isSubmitting || !currentUser) { if (!currentUser) showToast('Silakan login terlebih dahulu.', true); return; }
+            if (!currentUser.emailVerified && !isAdmin) { showToast('⚠️ Verifikasi email terlebih dahulu.', true);
                 showSpamNotification(); return; }
-            if (userHasReviewed) { showToast('Anda sudah memberi penilaian', true); return; }
-            if (reviewCooldown > 0) { showToast(`⏳ Tunggu ${reviewCooldown} detik`, true); return; }
+            if (userHasReviewed) { showToast('Anda sudah memberi penilaian.', true); return; }
+            if (reviewCooldown > 0) { showToast(`⏳ Tunggu ${reviewCooldown} detik.`, true); return; }
 
             const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna';
             const message = document.getElementById('reviewMessage')?.value.trim() || '';
             const anonymous = anonCheckbox?.checked || false;
             const rating = selectedRating;
-            if (rating === 0) { showToast('Pilih penilaian dulu', true); return; }
+            if (rating === 0) { showToast('Pilih penilaian terlebih dahulu.', true); return; }
 
             isSubmitting = true;
             const statusEl = document.getElementById('reviewStatus');
@@ -1546,7 +1563,7 @@
                 startReviewCooldown();
             } catch (err) {
                 if (statusEl) statusEl.textContent = 'Gagal: ' + err.message;
-                showToast('Gagal kirim ulasan', true);
+                showToast('❌ Gagal mengirim ulasan: ' + err.message, true);
             }
             isSubmitting = false;
             document.getElementById('submitReview').disabled = false;
@@ -1606,7 +1623,7 @@
             filtered = [...filtered].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             if (filtered.length === 0) {
-                list.innerHTML = '<div class="empty">Tidak ada ulasan yang cocok</div>';
+                list.innerHTML = '<div class="empty">Tidak ada ulasan yang cocok.</div>';
                 if (stats) stats.innerHTML = '';
                 if (loadMoreContainer) loadMoreContainer.innerHTML = '';
                 return;
@@ -1650,7 +1667,7 @@
                 else if (isAdmin) actions =
                     `<div class="actions"><button class="btn btn-danger btn-sm delete-review" data-id="${r.id}">🗑 Hapus</button></div>`;
                 else if (isOwner && !currentUser?.emailVerified) actions =
-                    `<div class="actions"><span style="font-size:11px;color:var(--text3);">📧 Verifikasi untuk sunting/hapus</span></div>`;
+                    `<div class="actions"><span style="font-size:11px;color:var(--text3);">📧 Verifikasi untuk menyunting atau menghapus</span></div>`;
 
                 const comments = r.comments ? Object.values(r.comments) : [];
                 const topC = comments.filter(c => !c.parentId),
@@ -1696,21 +1713,22 @@
                     review = allReviews.find(r => r.id === id),
                     isOwner = currentUser && review && review.uid === currentUser.uid;
                 const confirmed = await showConfirm(isOwner ? 'Hapus Ulasan Anda?' : 'Hapus Ulasan?',
-                    isOwner ? 'Ulasan Anda akan dihapus permanen.' : 'Ulasan ini akan dihapus permanen.',
-                    '🗑️');
+                    isOwner ? 'Ulasan Anda akan dihapus secara permanen.' :
+                    'Ulasan ini akan dihapus secara permanen.', '🗑️');
                 if (!confirmed) return;
                 const item = this.closest('.review-item');
                 if (item) item.classList.add('removing');
                 try {
                     await remove(ref(db, `reviews/${id}`));
-                    showToast(isOwner ? 'Ulasan Anda dihapus' : 'Ulasan dihapus');
+                    showToast(isOwner ? 'Ulasan Anda telah dihapus' : 'Ulasan telah dihapus');
                     if (isOwner) {
                         userHasReviewed = false;
                         userReviewId = null;
                         document.getElementById('alreadyReviewed').style.display = 'none';
                         document.getElementById('reviewForm').style.display = 'block';
                     }
-                } catch (err) { showToast('Gagal hapus', true); if (item) item.classList.remove('removing'); }
+                } catch (err) { showToast('❌ Gagal menghapus: ' + err.message, true); if (item) item.classList
+                        .remove('removing'); }
             }));
             document.querySelectorAll('.edit-review').forEach(b => b.addEventListener('click', function() {
                 const id = this.dataset.id,
@@ -1723,7 +1741,7 @@
             if (loadMoreContainer) {
                 if (displayedReviews < filtered.length) {
                     loadMoreContainer.innerHTML =
-                        `<button class="load-more-btn" id="loadMoreBtn">📥 Load More (${filtered.length - displayedReviews} tersisa)</button>`;
+                        `<button class="load-more-btn" id="loadMoreBtn">📥 Muat Lebih Banyak (${filtered.length - displayedReviews} tersisa)</button>`;
                     document.getElementById('loadMoreBtn')?.addEventListener('click', () => renderReviews(true));
                 } else { loadMoreContainer.innerHTML = ''; }
             }
@@ -1820,9 +1838,9 @@
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
                         const banned = await checkBanStatus(userCred.user.uid);
                         if (banned) {
-                            status.textContent = '⛔ Akun Anda telah di-ban!';
+                            status.textContent = '⛔ Akun Anda telah diblokir!';
                             status.style.color = '#f2b8b5';
-                            await signOut(auth);
+                            // Jangan logout, tetap login tapi tampilkan ban overlay
                             showBanOverlay();
                             return;
                         }
@@ -1835,9 +1853,9 @@
                             return;
                         }
                         if (!userCred.user.emailVerified) {
-                            if (status) { status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
+                            if (status) { status.textContent = '⚠️ Verifikasi email terlebih dahulu! Periksa inbox atau spam.';
                                 status.style.color = '#f2b8b5'; }
-                            showToast('⚠️ Verifikasi email dulu!', true);
+                            showToast('⚠️ Verifikasi email terlebih dahulu!', true);
                             showSpamNotification();
                             goToHome();
                             return;
@@ -1849,7 +1867,7 @@
                     } catch (err) {
                         if (status) { status.textContent = err.message;
                             status.style.color = '#f2b8b5'; }
-                        showToast('Login gagal', true);
+                        showToast('❌ Login gagal: ' + err.message, true);
                     }
                 });
                 document.getElementById('registerBtn')?.addEventListener('click', async () => {
@@ -1865,7 +1883,7 @@
                     try {
                         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                         await sendEmailVerification(userCred.user);
-                        if (status) { status.textContent = '✅ Verifikasi email dikirim! Cek inbox/spam';
+                        if (status) { status.textContent = '✅ Verifikasi email telah dikirim! Periksa inbox atau spam.';
                             status.style.color = '#6fcf97'; }
                         showToast('📧 Cek email untuk verifikasi');
                         showSpamNotification();
@@ -1873,7 +1891,7 @@
                     } catch (err) {
                         if (status) { status.textContent = err.message;
                             status.style.color = '#f2b8b5'; }
-                        showToast('Daftar gagal', true);
+                        showToast('❌ Pendaftaran gagal: ' + err.message, true);
                     }
                 });
                 document.getElementById('loginPassword')?.addEventListener('keydown', (e) => {
@@ -1894,7 +1912,7 @@
         function renderAdminDashboard(container) {
             if (!isAdmin) {
                 container.innerHTML =
-                    `<div style="text-align:center;padding:16px 0;"><div style="font-size:36px;">🔒</div><h3 style="font-size:16px;">Bukan Admin</h3><p style="color:var(--text2);font-size:13px;">Akun ini tidak memiliki akses admin</p><button id="logoutBtn" class="btn btn-outline" style="margin-top:10px;">Logout</button></div>`;
+                    `<div style="text-align:center;padding:16px 0;"><div style="font-size:36px;">🔒</div><h3 style="font-size:16px;">Bukan Admin</h3><p style="color:var(--text2);font-size:13px;">Akun ini tidak memiliki akses administrator.</p><button id="logoutBtn" class="btn btn-outline" style="margin-top:10px;">Keluar</button></div>`;
                 document.getElementById('logoutBtn')?.addEventListener('click', () => { signOut(auth);
                     goToHome(); });
                 return;
@@ -1917,7 +1935,7 @@
                 const avgM = monthData[m].sum / monthData[m].total,
                     pct = (avgM / 5) * 100;
                 return `<div class="chart-bar" style="animation-delay:${i*50}ms;"><span class="label">${m}</span><div class="track"><div class="fill" style="width:${pct}%;"></div></div><span class="value">${avgM.toFixed(1)} ★</span></div>`;
-            }).join('') : '<p style="color:var(--text2);font-size:12px;">Belum ada data rating</p>';
+            }).join('') : '<p style="color:var(--text2);font-size:12px;">Belum ada data rating.</p>';
 
             const sc = [0, 0, 0, 0, 0];
             allReviews.forEach(r => { if (r.rating >= 1 && r.rating <= 5) sc[r.rating - 1]++; });
@@ -1936,23 +1954,23 @@
             if (!conic) conic = 'var(--primary) 0deg 360deg';
             const pieHtml = totalRev > 0 ?
                 `<div class="pie-container"><div class="pie" style="background:conic-gradient(${conic});"></div><div class="pie-legend">${sc.map((c,i) => `<div class="item"><div class="color" style="background:${pieColors[i]};"></div><span>${pieLabels[i]} (${c})</span></div>`).join('')}</div></div>` :
-                '<p style="color:var(--text2);font-size:12px;text-align:center;">Belum ada data rating</p>';
+                '<p style="color:var(--text2);font-size:12px;text-align:center;">Belum ada data rating.</p>';
 
             container.innerHTML =
-                `<div class="admin-header"><h2 style="font-size:18px;">🛡 Panel Admin</h2><button id="logoutBtn" class="btn btn-outline btn-sm">Logout</button></div>
+                `<div class="admin-header"><h2 style="font-size:18px;">🛡 Panel Admin</h2><button id="logoutBtn" class="btn btn-outline btn-sm">Keluar</button></div>
                 <div class="admin-stats"><div class="stat"><div class="num">${total}</div><div class="lbl">Total Ulasan</div></div><div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">⭐ Penilaian</div></div><div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">Versi APK</div></div></div>
                 <div style="margin-bottom:10px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:6px;">📊 Grafik Rating Per Bulan</h3><div class="chart-container">${chartHtml}</div></div>
                 <div style="margin-bottom:10px;"><h3 style="font-size:14px;font-weight:600;margin-bottom:6px;">🥧 Distribusi Rating</h3><div class="chart-container">${pieHtml}</div></div>
                 <div class="admin-bulk-actions" style="flex-wrap:wrap;"><span style="font-weight:600;font-size:12px;">📋 Lihat Data:</span>
-                    <select id="adminDataSelect" style="flex:1;min-width:150px;"><option value="reviews">Ulasan</option><option value="bugs">Laporan Bug</option><option value="features">Request Fitur</option><option value="appeals">Appeal</option><option value="logs">Log Aktivitas</option></select>
+                    <select id="adminDataSelect" style="flex:1;min-width:150px;"><option value="reviews">Ulasan</option><option value="bugs">Laporan Bug</option><option value="features">Permintaan Fitur</option><option value="appeals">Banding</option><option value="logs">Log Aktivitas</option></select>
                     <button id="adminDataViewBtn" class="btn btn-primary btn-sm">Tampilkan</button>
                 </div>
                 <div id="adminDataContainer"></div>
-                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">Export Data:</span><button id="exportCSV" class="btn btn-success btn-sm">📥 CSV</button><button id="exportJSON" class="btn btn-success btn-sm">📥 JSON</button></div>
+                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">Ekspor Data:</span><button id="exportCSV" class="btn btn-success btn-sm">📥 CSV</button><button id="exportJSON" class="btn btn-success btn-sm">📥 JSON</button></div>
                 <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">Hapus Berdasarkan:</span><select id="bulkStarSelect"><option value="all">Semua Ulasan</option><option value="5">5 Bintang</option><option value="4">4 Bintang</option><option value="3">3 Bintang</option><option value="2">2 Bintang</option><option value="1">1 Bintang</option></select><button id="bulkDeleteBtn" class="btn btn-danger btn-sm">Hapus</button><span style="font-size:10px;color:var(--text3);">(permanen)</span></div>
-                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">Auto Delete:</span><select id="autoDeleteSelect"><option value="0">Nonaktif</option><option value="30">30 hari</option><option value="60">60 hari</option><option value="90">90 hari</option></select><button id="autoDeleteBtn" class="btn btn-danger btn-sm">Jalankan</button></div>
-                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">📢 Banner:</span><input type="text" id="bannerTitleInput" placeholder="Judul" style="min-width:60px;flex:1;" /><input type="text" id="bannerMsgInput" placeholder="Pesan" style="min-width:80px;flex:2;" /><button id="bannerPublishBtn" class="btn btn-primary btn-sm">Publish</button><button id="bannerUnpublishBtn" class="btn btn-outline btn-sm">Sembunyikan</button></div>
-                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">⛔ Ban User:</span><input type="text" id="banUserInput" placeholder="UID user" style="min-width:100px;flex:1;" /><button id="banUserBtn" class="btn btn-danger btn-sm">Ban</button><button id="unbanUserBtn" class="btn btn-success btn-sm">Unban</button></div>
+                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">Hapus Otomatis:</span><select id="autoDeleteSelect"><option value="0">Nonaktif</option><option value="30">30 hari</option><option value="60">60 hari</option><option value="90">90 hari</option></select><button id="autoDeleteBtn" class="btn btn-danger btn-sm">Jalankan</button></div>
+                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">📢 Banner:</span><input type="text" id="bannerTitleInput" placeholder="Judul" style="min-width:60px;flex:1;" /><input type="text" id="bannerMsgInput" placeholder="Pesan" style="min-width:80px;flex:2;" /><button id="bannerPublishBtn" class="btn btn-primary btn-sm">Publikasikan</button><button id="bannerUnpublishBtn" class="btn btn-outline btn-sm">Sembunyikan</button></div>
+                <div class="admin-bulk-actions"><span style="font-weight:600;font-size:12px;">⛔ Blokir Pengguna:</span><input type="text" id="banUserInput" placeholder="UID pengguna" style="min-width:100px;flex:1;" /><button id="banUserBtn" class="btn btn-danger btn-sm">Blokir</button><button id="unbanUserBtn" class="btn btn-success btn-sm">Buka Blokir</button></div>
                 <div id="adminReviewsList"></div>`;
 
             document.getElementById('logoutBtn')?.addEventListener('click', () => { signOut(auth);
@@ -1971,17 +1989,17 @@
                         `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">🐛 Laporan Bug (${bugReports.length})</h4>${bugReports.length === 0 ? '<p style="color:var(--text3);font-size:12px;">Belum ada laporan bug</p>' : bugReports.slice(0,20).map(b => `<div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${b.status === 'resolved' ? '#6fcf97' : b.status === 'rejected' ? '#f2b8b5' : b.status === 'replied' ? '#5dade2' : '#ffc107'};"><strong>${b.name}</strong> • ${b.appType === 'apk' ? 'Android' : b.appType === 'exe' ? 'Windows' : 'Website'}<span style="color:var(--text3);font-size:10px;display:block;">${b.description}</span><span style="color:var(--text3);font-size:10px;">Status: ${b.status || 'pending'}${b.adminReply ? ' • 💬 Dibalas' : ''}</span></div>`).join('')}${bugReports.length > 20 ? `<p style="color:var(--text3);font-size:11px;margin-top:4px;">+ ${bugReports.length - 20} laporan lainnya...</p>` : ''}`;
                 } else if (val === 'features') {
                     cont.innerHTML =
-                        `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">💡 Request Fitur (${featureRequests.length})</h4>${featureRequests.length === 0 ? '<p style="color:var(--text3);font-size:12px;">Belum ada request fitur</p>' : featureRequests.slice(0,20).map(f => `<div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${f.status === 'approved' ? '#6fcf97' : f.status === 'rejected' ? '#f2b8b5' : f.status === 'replied' ? '#5dade2' : '#ffc107'};"><strong>${f.title}</strong> • oleh ${f.name}<span style="color:var(--text3);font-size:10px;display:block;">${f.description}</span><span style="color:var(--text3);font-size:10px;">Status: ${f.status || 'pending'}${f.adminReply ? ' • 💬 Dibalas' : ''}</span></div>`).join('')}${featureRequests.length > 20 ? `<p style="color:var(--text3);font-size:11px;margin-top:4px;">+ ${featureRequests.length - 20} request lainnya...</p>` : ''}`;
+                        `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">💡 Permintaan Fitur (${featureRequests.length})</h4>${featureRequests.length === 0 ? '<p style="color:var(--text3);font-size:12px;">Belum ada permintaan fitur</p>' : featureRequests.slice(0,20).map(f => `<div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${f.status === 'approved' ? '#6fcf97' : f.status === 'rejected' ? '#f2b8b5' : f.status === 'replied' ? '#5dade2' : '#ffc107'};"><strong>${f.title}</strong> • oleh ${f.name}<span style="color:var(--text3);font-size:10px;display:block;">${f.description}</span><span style="color:var(--text3);font-size:10px;">Status: ${f.status || 'pending'}${f.adminReply ? ' • 💬 Dibalas' : ''}</span></div>`).join('')}${featureRequests.length > 20 ? `<p style="color:var(--text3);font-size:11px;margin-top:4px;">+ ${featureRequests.length - 20} permintaan lainnya...</p>` : ''}`;
                 } else if (val === 'appeals') {
                     get(ref(db, 'appeals')).then(snap => {
                         const appeals = snap.val();
-                        let html = `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">📝 Data Appeal</h4>`;
+                        let html = `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">📝 Data Banding</h4>`;
                         if (appeals) {
                             const arr = Object.values(appeals);
                             html += arr.map(a =>
                                 `<div style="background:var(--input);padding:8px 12px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${a.status === 'approved' ? '#6fcf97' : a.status === 'rejected' ? '#f2b8b5' : '#ffc107'};"><strong>${a.name}</strong> (${a.email})<div style="font-size:11px;color:var(--text2);margin-top:2px;">${a.message}</div><div style="font-size:10px;color:var(--text3);margin-top:2px;">Status: ${a.status || 'Menunggu'}</div><div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;"><button class="btn btn-success btn-sm appeal-approve-admin" data-uid="${a.uid}">Setujui</button><button class="btn btn-danger btn-sm appeal-reject-admin" data-uid="${a.uid}">Tolak</button></div></div>`
                                 ).join('');
-                        } else { html += '<p style="color:var(--text3);font-size:12px;">Belum ada appeal</p>'; }
+                        } else { html += '<p style="color:var(--text3);font-size:12px;">Belum ada banding</p>'; }
                         cont.innerHTML = html;
                         document.querySelectorAll('.appeal-approve-admin').forEach(b => b.addEventListener('click',
                             async function() {
@@ -1989,7 +2007,7 @@
                                 try {
                                     await update(ref(db, `appeals/${uid}`), { status: 'approved' });
                                     await remove(ref(db, `banned/${uid}`));
-                                    showToast('✅ Appeal disetujui, user di-unban');
+                                    showToast('✅ Banding disetujui, pengguna dibuka blokirnya.');
                                     renderAdmin();
                                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
                             }));
@@ -1998,7 +2016,7 @@
                                 const uid = this.dataset.uid;
                                 try {
                                     await update(ref(db, `appeals/${uid}`), { status: 'rejected' });
-                                    showToast('❌ Appeal ditolak');
+                                    showToast('❌ Banding ditolak.');
                                     renderAdmin();
                                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
                             }));
@@ -2007,7 +2025,8 @@
                 } else if (val === 'logs') {
                     get(ref(db, 'adminLogs')).then(snap => {
                         const logs = snap.val();
-                        let html = `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">📜 Log Aktivitas Admin</h4>`;
+                        let html =
+                            `<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">📜 Log Aktivitas Admin</h4>`;
                         if (logs) {
                             const arr = Object.values(logs).sort((a, b) => (b.timestamp || 0) - (a
                                 .timestamp || 0));
@@ -2026,7 +2045,7 @@
 
             // EXPORT
             document.getElementById('exportCSV')?.addEventListener('click', () => {
-                if (allReviews.length === 0) { showToast('Tidak ada data', true); return; }
+                if (allReviews.length === 0) { showToast('Tidak ada data untuk diekspor.', true); return; }
                 const headers = ['Nama', 'Anonim', 'Rating', 'Pesan', 'Versi', 'Tanggal', 'Likes', 'Dislikes'];
                 const rows = allReviews.map(r => [r.name || 'Pengguna', r.anonymous ? 'Ya' : 'Tidak', r.rating, r
                         .message || '', r.appVersion || '', r.timestamp ? new Date(r.timestamp)
@@ -2037,22 +2056,22 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `reviews_${new Date().toISOString().slice(0,10)}.csv`;
+                a.download = `ulasan_${new Date().toISOString().slice(0,10)}.csv`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('✅ CSV di-export');
+                showToast('✅ CSV berhasil diekspor.');
             });
             document.getElementById('exportJSON')?.addEventListener('click', () => {
-                if (allReviews.length === 0) { showToast('Tidak ada data', true); return; }
+                if (allReviews.length === 0) { showToast('Tidak ada data untuk diekspor.', true); return; }
                 const data = JSON.stringify(allReviews, null, 2);
                 const blob = new Blob([data], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `reviews_${new Date().toISOString().slice(0,10)}.json`;
+                a.download = `ulasan_${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('✅ JSON di-export');
+                showToast('✅ JSON berhasil diekspor.');
             });
 
             // BULK DELETE
@@ -2064,43 +2083,44 @@
                     label = `SEMUA ulasan (${toDelete.length})`; } else { const star = parseInt(filter);
                     toDelete = allReviews.filter(r => r.rating === star).map(r => r.id);
                     label = `${filter} bintang (${toDelete.length} ulasan)`; }
-                if (toDelete.length === 0) { showToast('Tidak ada ulasan', true); return; }
+                if (toDelete.length === 0) { showToast('Tidak ada ulasan untuk dihapus.', true); return; }
                 const confirmed = await showConfirm('Hapus Ulasan?', `Hapus ${label} secara permanen?`, '⚠️',
                     'Ya, Hapus Semua');
                 if (!confirmed) return;
                 let deleted = 0;
                 for (const id of toDelete) { try { await remove(ref(db, `reviews/${id}`));
                         deleted++; } catch (e) {} }
-                showToast(`${deleted} ulasan dihapus`);
+                showToast(`${deleted} ulasan berhasil dihapus.`);
                 await logAdminActivity(`Menghapus ${deleted} ulasan (filter: ${filter})`);
             });
 
             // AUTO DELETE
             document.getElementById('autoDeleteBtn')?.addEventListener('click', async () => {
                 const days = parseInt(document.getElementById('autoDeleteSelect').value);
-                if (days === 0) { showToast('Pilih jumlah hari', true); return; }
+                if (days === 0) { showToast('Pilih jumlah hari terlebih dahulu.', true); return; }
                 const limit = Date.now() - (days * 24 * 60 * 60 * 1000);
                 const toDelete = allReviews.filter(r => (r.timestamp || 0) < limit).map(r => r.id);
-                if (toDelete.length === 0) { showToast(`Tidak ada ulasan > ${days} hari`, true); return; }
-                const confirmed = await showConfirm('Auto Delete?',
-                    `Hapus ${toDelete.length} ulasan > ${days} hari?`, '⚠️', 'Ya, Hapus');
+                if (toDelete.length === 0) { showToast(`Tidak ada ulasan yang berusia lebih dari ${days} hari.`,
+                    true); return; }
+                const confirmed = await showConfirm('Hapus Otomatis?',
+                    `Hapus ${toDelete.length} ulasan yang berusia lebih dari ${days} hari?`, '⚠️', 'Ya, Hapus');
                 if (!confirmed) return;
                 let deleted = 0;
                 for (const id of toDelete) { try { await remove(ref(db, `reviews/${id}`));
                         deleted++; } catch (e) {} }
-                showToast(`${deleted} ulasan auto-dihapus`);
-                await logAdminActivity(`Auto delete ${deleted} ulasan (>${days} hari)`);
+                showToast(`${deleted} ulasan berhasil dihapus otomatis.`);
+                await logAdminActivity(`Hapus otomatis ${deleted} ulasan (>${days} hari)`);
             });
 
             // BANNER
             document.getElementById('bannerPublishBtn')?.addEventListener('click', async () => {
                 const title = document.getElementById('bannerTitleInput').value.trim() || 'Pengumuman';
                 const msg = document.getElementById('bannerMsgInput').value.trim();
-                if (!msg) { showToast('Masukkan pesan', true); return; }
+                if (!msg) { showToast('Masukkan pesan banner.', true); return; }
                 try {
                     await set(ref(db, 'banner'), { active: true, title, message: msg, icon: '📢',
                         timestamp: Date.now() });
-                    showToast('✅ Banner dipublikasikan!');
+                    showToast('✅ Banner berhasil dipublikasikan!');
                     bannerClosed = false;
                     loadBanner();
                     await logAdminActivity(`Mempublikasikan banner: ${title}`);
@@ -2108,7 +2128,7 @@
             });
             document.getElementById('bannerUnpublishBtn')?.addEventListener('click', async () => {
                 try { await update(ref(db, 'banner'), { active: false });
-                    showToast('✅ Banner disembunyikan');
+                    showToast('✅ Banner berhasil disembunyikan.');
                     loadBanner();
                     await logAdminActivity('Menyembunyikan banner'); } catch (err) { showToast('❌ Gagal: ' + err
                         .message, true); }
@@ -2117,20 +2137,20 @@
             // BAN
             document.getElementById('banUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
-                if (!uid) { showToast('Masukkan UID user', true); return; }
+                if (!uid) { showToast('Masukkan UID pengguna.', true); return; }
                 try {
-                    await set(ref(db, `banned/${uid}`), { reason: 'Diban oleh admin', timestamp: Date.now() });
-                    showToast(`✅ User ${uid} di-ban`);
-                    await logAdminActivity(`Memban user: ${uid}`);
+                    await set(ref(db, `banned/${uid}`), { reason: 'Diblokir oleh admin', timestamp: Date.now() });
+                    showToast(`✅ Pengguna ${uid} berhasil diblokir.`);
+                    await logAdminActivity(`Memblokir pengguna: ${uid}`);
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
             });
             document.getElementById('unbanUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
-                if (!uid) { showToast('Masukkan UID user', true); return; }
+                if (!uid) { showToast('Masukkan UID pengguna.', true); return; }
                 try { await remove(ref(db, `banned/${uid}`));
-                    showToast(`✅ User ${uid} di-unban`);
-                    await logAdminActivity(`Unban user: ${uid}`); } catch (err) { showToast('❌ Gagal: ' + err
-                        .message, true); }
+                    showToast(`✅ Pengguna ${uid} berhasil dibuka blokirnya.`);
+                    await logAdminActivity(`Membuka blokir pengguna: ${uid}`); } catch (err) { showToast('❌ Gagal: ' +
+                        err.message, true); }
             });
 
             // ADMIN REVIEW LIST
@@ -2142,15 +2162,15 @@
                 ).join('');
             document.querySelectorAll('.admin-delete').forEach(b => b.addEventListener('click', async function() {
                 const id = this.dataset.id;
-                const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan ini akan dihapus permanen.',
+                const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan ini akan dihapus secara permanen.',
                     '🗑️');
                 if (!confirmed) return;
                 const item = this.closest('.review-item');
                 if (item) item.classList.add('removing');
                 try { await remove(ref(db, `reviews/${id}`));
-                    showToast('Ulasan dihapus');
-                    await logAdminActivity(`Menghapus ulasan: ${id}`); } catch (err) { showToast('Gagal hapus',
-                        true); if (item) item.classList.remove('removing'); }
+                    showToast('Ulasan berhasil dihapus.');
+                    await logAdminActivity(`Menghapus ulasan: ${id}`); } catch (err) { showToast('❌ Gagal menghapus: ' +
+                        err.message, true); if (item) item.classList.remove('removing'); }
             }));
         }
 
@@ -2168,11 +2188,12 @@
             if (!section) return;
 
             if (currentUser && isBanned) {
+                // User BANNED - tetap login, badge BANNED
                 section.innerHTML =
                     `<div class="user-badge" style="border-color:#f2b8b5;cursor:default;">
                         <span style="color:#f2b8b5;">${currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna'}</span>
-                        <span class="banned-badge">⛔ BANNED</span>
-                        <button class="logout-btn" id="logoutBtnNav">Logout</button>
+                        <span class="banned-badge">⛔ DIBLOKIR</span>
+                        <button class="logout-btn" id="logoutBtnNav">Keluar</button>
                     </div>`;
                 document.getElementById('logoutBtnNav')?.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -2193,7 +2214,7 @@
                 else if (verified) statusHtml = `<span class="status-verified">Terverifikasi</span>`;
                 else statusHtml = `<span class="status-unverified" id="resendVerifyNav">Belum Verifikasi</span>`;
                 section.innerHTML =
-                    `<div class="user-badge" id="userBadgeClick"><span>${name}</span>${statusHtml}<button class="logout-btn" id="logoutBtnNav">Logout</button></div>`;
+                    `<div class="user-badge" id="userBadgeClick"><span>${name}</span>${statusHtml}<button class="logout-btn" id="logoutBtnNav">Keluar</button></div>`;
                 document.getElementById('userBadgeClick')?.addEventListener('click', (e) => {
                     if (e.target.classList.contains('logout-btn')) return;
                     openDashboard();
@@ -2250,7 +2271,7 @@
                     loadFeatureRequests();
                     loadBugReports();
                     loadBanner();
-                    setTimeout(() => { showToast('✅ Dimuat ulang!'); }, 500);
+                    setTimeout(() => { showToast('✅ Berhasil dimuat ulang!'); }, 500);
                 }
             }
         });
