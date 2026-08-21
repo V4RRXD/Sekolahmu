@@ -35,6 +35,7 @@
             --primary-dark: #b84a52;
             --primary-light: #e88a90;
             --primary-bg: rgba(214, 90, 98, 0.08);
+            --primary-border: rgba(214, 90, 98, 0.15);
         }
 
         [data-theme="light"] {
@@ -52,6 +53,7 @@
             --primary-dark: #b84048;
             --primary-light: #e88a90;
             --primary-bg: rgba(214, 90, 98, 0.06);
+            --primary-border: rgba(214, 90, 98, 0.12);
         }
 
         body {
@@ -94,7 +96,7 @@
             padding: 4px 16px;
             border-radius: 20px;
             backdrop-filter: blur(4px);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             font-size: 11px;
             opacity: 0.35;
         }
@@ -109,7 +111,7 @@
             padding: 10px 16px;
             border-radius: 16px;
             margin-bottom: 16px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             position: sticky;
             top: 8px;
             z-index: 50;
@@ -138,7 +140,7 @@
             transition: 0.2s;
         }
         .nav button:hover {
-            background: var(--input);
+            background: var(--primary-bg);
             color: var(--text);
         }
         .nav button.active {
@@ -151,7 +153,7 @@
 
         .theme-toggle {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             color: var(--text);
             padding: 6px 12px;
             border-radius: 10px;
@@ -160,7 +162,7 @@
             transition: 0.2s;
         }
         .theme-toggle:hover {
-            background: var(--border);
+            background: var(--primary-border);
         }
 
         .auth-btn {
@@ -186,7 +188,7 @@
             background: var(--input);
             padding: 5px 12px 5px 16px;
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             font-size: 13px;
             color: var(--text);
         }
@@ -228,7 +230,7 @@
             padding: 2px 8px;
             border-radius: 12px;
             background: var(--primary-bg);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
         }
 
         .page {
@@ -253,7 +255,7 @@
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 20px;
             padding: 20px 22px;
             margin-bottom: 14px;
@@ -309,10 +311,10 @@
         .btn-outline {
             background: transparent;
             color: var(--text);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
         }
         .btn-outline:hover {
-            background: var(--input);
+            background: var(--primary-bg);
         }
         .btn-sm {
             padding: 4px 12px;
@@ -329,7 +331,7 @@
 
         .download-box {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 14px;
             padding: 18px 20px;
             margin-bottom: 12px;
@@ -348,7 +350,7 @@
         }
         .coming-soon {
             background: var(--input);
-            border: 1px dashed var(--border);
+            border: 1px dashed var(--primary-border);
             border-radius: 14px;
             padding: 24px;
             text-align: center;
@@ -361,7 +363,7 @@
         }
         .download-locked {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 14px;
             padding: 16px 20px;
             text-align: center;
@@ -412,7 +414,7 @@
             width: 100%;
             padding: 10px 14px;
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             background: var(--input);
             color: var(--text);
             font-size: 14px;
@@ -484,7 +486,7 @@
 
         .review-item {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 14px;
             padding: 14px 18px;
             margin-bottom: 10px;
@@ -541,7 +543,7 @@
             color: var(--text2);
             padding: 1px 10px;
             border-radius: 20px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             margin-left: 4px;
         }
         .review-item .stars-display {
@@ -566,7 +568,7 @@
             width: 100%;
             padding: 8px 12px;
             border-radius: 10px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             background: var(--input);
             color: var(--text);
             font-size: 14px;
@@ -604,7 +606,7 @@
         }
         .admin-stats .stat {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 12px;
             padding: 14px;
             text-align: center;
@@ -635,12 +637,12 @@
             padding: 14px;
             background: var(--input);
             border-radius: 12px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
         }
         .admin-bulk-actions select {
             padding: 6px 12px;
             border-radius: 8px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             background: var(--bg);
             color: var(--text);
             font-size: 13px;
@@ -654,7 +656,7 @@
             display: flex;
             border-radius: 12px;
             overflow: hidden;
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             margin-bottom: 16px;
         }
         .auth-tabs button {
@@ -673,7 +675,7 @@
             color: #fff;
         }
         .auth-tabs button:hover:not(.active) {
-            background: var(--border);
+            background: var(--primary-border);
         }
         .auth-form {
             display: none;
@@ -707,7 +709,7 @@
 
         .spam-notification .box {
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 24px;
             padding: 32px 28px 28px;
             max-width: 440px;
@@ -812,7 +814,7 @@
         }
         .guide-content .note {
             background: var(--input);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 12px;
             padding: 14px 18px;
             margin: 12px 0;
@@ -825,7 +827,7 @@
         }
         .guide-content hr {
             border: none;
-            border-top: 1px solid var(--border);
+            border-top: 1px solid var(--primary-border);
             margin: 16px 0;
         }
 
@@ -836,7 +838,7 @@
             transform: translateX(-50%) translateY(20px);
             background: var(--card);
             backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             padding: 10px 22px;
             border-radius: 12px;
             font-size: 14px;
@@ -880,7 +882,7 @@
         }
         .confirm-dialog {
             background: var(--card);
-            border: 1px solid var(--border);
+            border: 1px solid var(--primary-border);
             border-radius: 20px;
             padding: 28px 24px 22px;
             max-width: 400px;
@@ -1006,7 +1008,7 @@
             <div class="card">
                 <h1 class="card-title">Sekolahmu</h1>
                 <p style="color:var(--text2);font-size:15px;margin-bottom:14px;">Aplikasi SMM untuk Android</p>
-                <div style="background:var(--input);border:1px solid var(--border);border-radius:14px;padding:16px 18px;">
+                <div style="background:var(--input);border:1px solid var(--primary-border);border-radius:14px;padding:16px 18px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                         <div>
                             <strong style="font-size:15px;">Versi</strong>
@@ -1022,8 +1024,8 @@
                     Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.
                 </p>
                 <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Android</span>
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Windows (Segera)</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--primary-border);">Android</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--primary-border);">Windows (Segera)</span>
                 </div>
             </div>
         </div>
@@ -1040,7 +1042,7 @@
                 </div>
 
                 <div id="ratingForm" style="display:none;">
-                    <div id="alreadyReviewed" style="display:none;text-align:center;padding:20px;background:var(--input);border-radius:12px;border:1px solid var(--border);margin-bottom:14px;">
+                    <div id="alreadyReviewed" style="display:none;text-align:center;padding:20px;background:var(--input);border-radius:12px;border:1px solid var(--primary-border);margin-bottom:14px;">
                         <div style="font-size:32px;">✅</div>
                         <p style="color:var(--text2);">Kamu sudah memberi penilaian!</p>
                         <p style="color:var(--text3);font-size:13px;">Terima kasih atas tanggapan kamu 🙏</p>
@@ -1945,7 +1947,7 @@
 
             if (stats) {
                 stats.innerHTML = `
-                    <div style="display:flex;gap:14px;flex-wrap:wrap;background:var(--input);padding:12px 16px;border-radius:12px;border:1px solid var(--border);">
+                    <div style="display:flex;gap:14px;flex-wrap:wrap;background:var(--input);padding:12px 16px;border-radius:12px;border:1px solid var(--primary-border);">
                         <div style="display:flex;align-items:center;gap:6px;">
                             <span style="font-size:26px;font-weight:700;color:#ffd700;">${avg.toFixed(1)}</span>
                             <span style="color:#ffd700;font-size:18px;">★</span>
@@ -1953,7 +1955,7 @@
                         </div>
                         <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px;align-items:center;">
                             ${[5,4,3,2,1].map(n => `
-                                <span style="background:var(--input);padding:2px 10px;border-radius:20px;border:1px solid var(--border);display:flex;align-items:center;gap:4px;">
+                                <span style="background:var(--input);padding:2px 10px;border-radius:20px;border:1px solid var(--primary-border);display:flex;align-items:center;gap:4px;">
                                     <span style="color:#ffd700;">${'★'.repeat(n)}</span>
                                     <span style="color:var(--text2);">${starsCount[n-1]}</span>
                                 </span>
