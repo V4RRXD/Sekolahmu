@@ -37,6 +37,7 @@
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --radius: 16px;
             --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            --meteor-color: #d65a62;
         }
 
         [data-theme="light"] {
@@ -53,6 +54,7 @@
             --primary-hover: #c44a52;
             --primary-bg: rgba(214, 90, 98, 0.06);
             --primary-border: rgba(214, 90, 98, 0.12);
+            --meteor-color: #d65a62;
         }
 
         body {
@@ -64,6 +66,77 @@
             transition: background var(--transition), color var(--transition);
             position: relative;
             overflow-x: hidden;
+        }
+
+        /* ============================================================
+           METEOR BACKGROUND
+           ============================================================ */
+        #meteor-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .meteor {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--meteor-color);
+            border-radius: 50%;
+            animation: meteorFall linear infinite;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+
+        .meteor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(to right, var(--meteor-color), transparent);
+            transform: rotate(-45deg);
+            transform-origin: left center;
+            opacity: 0.6;
+        }
+
+        .meteor::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 1px;
+            background: linear-gradient(to right, rgba(214, 90, 98, 0.3), transparent);
+            transform: rotate(-45deg);
+            transform-origin: left center;
+            opacity: 0.3;
+        }
+
+        @keyframes meteorFall {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            20% {
+                opacity: 1;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0.2);
+                opacity: 0;
+            }
         }
 
         .container {
@@ -99,6 +172,9 @@
             opacity: 0.35;
         }
 
+        /* ============================================================
+           BANNER
+           ============================================================ */
         .banner-container {
             position: relative;
             z-index: 45;
@@ -140,22 +216,18 @@
             font-size: 20px;
             flex-shrink: 0;
         }
-
         .banner .content {
             flex: 1;
         }
-
         .banner .content .title {
             font-weight: 700;
             font-size: 13px;
         }
-
         .banner .content .message {
             font-size: 12px;
             opacity: 0.9;
             margin-top: 1px;
         }
-
         .banner .close-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
@@ -171,12 +243,14 @@
             align-items: center;
             justify-content: center;
         }
-
         .banner .close-btn:hover {
             background: rgba(255, 255, 255, 0.25);
             transform: scale(1.1) rotate(90deg);
         }
 
+        /* ============================================================
+           NAVBAR
+           ============================================================ */
         .nav {
             display: flex;
             flex-wrap: wrap;
@@ -242,20 +316,16 @@
             color: var(--text);
             transform: translateY(-1px);
         }
-
         .nav button.active {
             color: var(--primary);
             background: var(--primary-bg);
         }
-
         .nav button.active::after {
             transform: translateX(-50%) scaleX(1);
         }
-
         .nav button:active {
             transform: scale(0.94);
         }
-
         .nav button.hidden-nav {
             display: none;
         }
@@ -295,7 +365,6 @@
         .nav-dropdown-content.show {
             display: block;
         }
-
         .nav-dropdown-content button {
             display: block;
             width: 100%;
@@ -305,11 +374,9 @@
             border-radius: 0;
             white-space: nowrap;
         }
-
         .nav-dropdown-content button:hover {
             background: var(--primary-bg);
         }
-
         .nav-dropdown-content button.active {
             color: var(--primary);
             background: var(--primary-bg);
@@ -325,7 +392,6 @@
             font-size: 14px;
             transition: all var(--transition);
         }
-
         .theme-toggle:hover {
             background: var(--primary-border);
             transform: scale(1.05) rotate(10deg);
@@ -342,7 +408,6 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-
         .auth-btn:hover {
             background: var(--primary-hover);
             transform: scale(0.97);
@@ -361,13 +426,11 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-
         .user-badge:hover {
             background: var(--primary-bg);
             border-color: var(--primary);
             transform: scale(1.02);
         }
-
         .user-badge .logout-btn {
             background: none;
             border: none;
@@ -378,12 +441,10 @@
             border-radius: 4px;
             transition: all var(--transition);
         }
-
         .user-badge .logout-btn:hover {
             background: rgba(242, 184, 181, 0.15);
             transform: scale(1.05);
         }
-
         .user-badge .status-verified {
             color: #6fcf97;
             font-size: 10px;
@@ -392,7 +453,6 @@
             background: rgba(111, 207, 151, 0.12);
             border: 1px solid rgba(111, 207, 151, 0.15);
         }
-
         .user-badge .status-unverified {
             color: #f2b8b5;
             font-size: 10px;
@@ -402,12 +462,10 @@
             border: 1px solid rgba(242, 184, 181, 0.15);
             cursor: pointer;
         }
-
         .user-badge .status-unverified:hover {
             background: rgba(242, 184, 181, 0.2);
             transform: scale(1.05);
         }
-
         .user-badge .admin-badge {
             color: var(--primary);
             font-size: 10px;
@@ -417,10 +475,12 @@
             border: 1px solid var(--primary-border);
         }
 
+        /* ============================================================
+           PAGES
+           ============================================================ */
         .page {
             display: none;
         }
-
         .page.active {
             display: block;
             animation: pageFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -447,19 +507,16 @@
             box-shadow: var(--shadow);
             transition: all var(--transition);
         }
-
         .card:hover {
             border-color: rgba(214, 90, 98, 0.25);
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
             transform: translateY(-2px);
         }
-
         .card-title {
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-
         .card-subtitle {
             font-size: 13px;
             color: var(--text2);
@@ -481,7 +538,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .btn::after {
             content: '';
             position: absolute;
@@ -492,76 +548,66 @@
             transition: opacity 0.4s;
             pointer-events: none;
         }
-
         .btn:hover::after {
             opacity: 1;
         }
-
         .btn:active {
             transform: scale(0.94);
         }
-
         .btn-primary {
             background: var(--primary);
             color: #fff;
         }
-
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-2px) scale(1.01);
             box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
         }
-
         .btn-danger {
             background: rgba(242, 184, 181, 0.15);
             color: #f2b8b5;
             border: 1px solid rgba(242, 184, 181, 0.15);
         }
-
         .btn-danger:hover {
             background: rgba(242, 184, 181, 0.25);
             transform: translateY(-2px);
         }
-
         .btn-success {
             background: rgba(111, 207, 151, 0.15);
             color: #6fcf97;
             border: 1px solid rgba(111, 207, 151, 0.15);
         }
-
         .btn-success:hover {
             background: rgba(111, 207, 151, 0.25);
             transform: translateY(-2px);
         }
-
         .btn-outline {
             background: transparent;
             color: var(--text);
             border: 1px solid var(--primary-border);
         }
-
         .btn-outline:hover {
             background: var(--primary-bg);
             transform: translateY(-2px);
         }
-
         .btn-sm {
             padding: 3px 10px;
             font-size: 11px;
             border-radius: 6px;
         }
-
         .btn-block {
             width: 100%;
             justify-content: center;
         }
-
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
+        /* ============================================================
+           STARS
+           ============================================================ */
         .stars {
             display: flex;
             gap: 6px;
@@ -572,7 +618,6 @@
             justify-content: center;
             padding: 4px 0;
         }
-
         .stars span {
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             color: #48454e;
@@ -581,17 +626,14 @@
             cursor: pointer;
             position: relative;
         }
-
         .stars span.active {
             color: #ffd700;
             transform: scale(1.15);
         }
-
         .stars span:hover {
             transform: scale(1.25) rotate(-8deg);
             color: #ffd700;
         }
-
         .stars span.bounce {
             animation: starBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
@@ -610,10 +652,12 @@
             }
         }
 
+        /* ============================================================
+           FORM
+           ============================================================ */
         .form-group {
             margin-bottom: 10px;
         }
-
         .form-group label {
             display: block;
             font-size: 12px;
@@ -621,7 +665,6 @@
             margin-bottom: 3px;
             color: var(--text2);
         }
-
         .form-group input,
         .form-group textarea,
         .form-group select {
@@ -636,7 +679,6 @@
             transition: all var(--transition);
             font-family: inherit;
         }
-
         .form-group input:focus,
         .form-group textarea:focus,
         .form-group select:focus {
@@ -644,12 +686,10 @@
             box-shadow: 0 0 0 3px var(--primary-bg);
             transform: scale(1.01);
         }
-
         .form-group textarea {
             min-height: 60px;
             resize: vertical;
         }
-
         .checkbox-wrap {
             display: flex;
             align-items: center;
@@ -659,11 +699,9 @@
             font-size: 13px;
             transition: all var(--transition);
         }
-
         .checkbox-wrap:hover {
             color: var(--text);
         }
-
         .checkbox-wrap input[type="checkbox"] {
             width: 17px;
             height: 17px;
@@ -671,11 +709,13 @@
             cursor: pointer;
             transition: all var(--transition);
         }
-
         .checkbox-wrap input[type="checkbox"]:checked {
             transform: scale(1.1);
         }
 
+        /* ============================================================
+           REVIEW ITEMS
+           ============================================================ */
         .review-item {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -685,21 +725,29 @@
             transition: all var(--transition);
             will-change: transform, box-shadow, border-color;
         }
-
         .review-item:hover {
             border-color: rgba(214, 90, 98, 0.25);
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
         }
-
         .review-item.removing {
             animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
-
         .review-item.editing {
             border-color: var(--primary);
             background: var(--primary-bg);
             box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        @keyframes slideOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-16px) scale(0.94);
+            }
         }
 
         .review-item .top {
@@ -709,13 +757,11 @@
             flex-wrap: wrap;
             gap: 4px;
         }
-
         .review-item .name {
             font-weight: 600;
             font-size: 13px;
             color: var(--text);
         }
-
         .review-item .name .badge-anon {
             font-size: 9px;
             background: var(--input);
@@ -725,7 +771,6 @@
             border: 1px solid var(--primary-border);
             margin-left: 4px;
         }
-
         .review-item .name .badge-best {
             font-size: 9px;
             background: #ffd700;
@@ -735,13 +780,11 @@
             font-weight: 700;
             margin-left: 4px;
         }
-
         .review-item .stars-display {
             color: #ffd700;
             font-size: 13px;
             letter-spacing: 1px;
         }
-
         .review-item .msg {
             color: var(--text2);
             font-size: 13px;
@@ -749,7 +792,6 @@
             line-height: 1.5;
             word-wrap: break-word;
         }
-
         .review-item .msg .read-more-btn {
             color: var(--primary);
             cursor: pointer;
@@ -760,12 +802,10 @@
             padding: 0 4px;
             transition: color var(--transition);
         }
-
         .review-item .msg .read-more-btn:hover {
             color: var(--primary-hover);
             text-decoration: underline;
         }
-
         .review-item .meta {
             color: var(--text3);
             font-size: 10px;
@@ -775,7 +815,6 @@
             flex-wrap: wrap;
             align-items: center;
         }
-
         .review-item .actions {
             display: flex;
             gap: 4px;
@@ -789,7 +828,6 @@
             align-items: center;
             margin-top: 4px;
         }
-
         .like-dislike button {
             background: none;
             border: none;
@@ -803,17 +841,14 @@
             gap: 3px;
             color: var(--text2);
         }
-
         .like-dislike button:hover {
             background: var(--primary-bg);
             transform: scale(1.08);
         }
-
         .like-dislike button.liked {
             color: #6fcf97;
             animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-
         .like-dislike button.disliked {
             color: #f2b8b5;
             animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -837,12 +872,14 @@
             min-width: 14px;
         }
 
+        /* ============================================================
+           COMMENTS
+           ============================================================ */
         .comments-section {
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px solid var(--primary-border);
         }
-
         .comments-section .comment {
             background: var(--input);
             border-radius: 8px;
@@ -850,24 +887,20 @@
             margin-bottom: 4px;
             animation: commentSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-
         .comments-section .comment.nested {
             margin-left: 20px;
             border-left: 2px solid var(--primary);
         }
-
         .comments-section .comment .cname {
             font-weight: 600;
             font-size: 11px;
             color: var(--text);
         }
-
         .comments-section .comment .cmsg {
             font-size: 12px;
             color: var(--text2);
             margin-top: 1px;
         }
-
         .comments-section .comment .cmeta {
             font-size: 9px;
             color: var(--text3);
@@ -876,7 +909,6 @@
             align-items: center;
             margin-top: 2px;
         }
-
         .comments-section .comment .cmeta .reply-btn {
             background: none;
             border: none;
@@ -887,7 +919,6 @@
             padding: 0 4px;
             transition: color var(--transition);
         }
-
         .comments-section .comment .cmeta .reply-btn:hover {
             color: var(--primary-hover);
             text-decoration: underline;
@@ -909,7 +940,6 @@
             gap: 6px;
             margin-top: 6px;
         }
-
         .comments-section .comment-form input {
             flex: 1;
             padding: 6px 10px;
@@ -921,12 +951,10 @@
             outline: none;
             transition: all var(--transition);
         }
-
         .comments-section .comment-form input:focus {
             border-color: var(--primary);
             transform: scale(1.01);
         }
-
         .comments-section .comment-form button {
             padding: 6px 14px;
             border-radius: 8px;
@@ -938,25 +966,25 @@
             transition: all var(--transition);
             font-size: 12px;
         }
-
         .comments-section .comment-form button:hover {
             background: var(--primary-hover);
             transform: scale(1.04);
         }
-
         .comments-section .comment-form button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
+        /* ============================================================
+           ADMIN
+           ============================================================ */
         .admin-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
             gap: 8px;
             margin-bottom: 12px;
         }
-
         .admin-stats .stat {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -965,19 +993,16 @@
             text-align: center;
             transition: all var(--transition);
         }
-
         .admin-stats .stat:hover {
             transform: translateY(-3px);
             border-color: rgba(214, 90, 98, 0.25);
             box-shadow: 0 4px 16px rgba(214, 90, 98, 0.06);
         }
-
         .admin-stats .stat .num {
             font-size: 20px;
             font-weight: 700;
             color: var(--primary);
         }
-
         .admin-stats .stat .lbl {
             font-size: 10px;
             color: var(--text2);
@@ -1002,7 +1027,6 @@
             border: 1px solid var(--primary-border);
             align-items: center;
         }
-
         .admin-bulk-actions select {
             padding: 4px 10px;
             border-radius: 6px;
@@ -1011,7 +1035,6 @@
             color: var(--text);
             font-size: 12px;
         }
-
         .admin-bulk-actions input {
             padding: 4px 10px;
             border-radius: 6px;
@@ -1022,11 +1045,13 @@
             outline: none;
             min-width: 80px;
         }
-
         .admin-bulk-actions input:focus {
             border-color: var(--primary);
         }
 
+        /* ============================================================
+           BADGE / LEADERBOARD
+           ============================================================ */
         .badge-item {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -1040,33 +1065,31 @@
             gap: 6px;
             transition: all var(--transition);
         }
-
         .badge-item:hover {
             border-color: rgba(214, 90, 98, 0.25);
             transform: translateX(4px);
         }
-
         .badge-item .rank {
             font-size: 18px;
             font-weight: 700;
             color: #ffd700;
             min-width: 28px;
         }
-
         .badge-item .bname {
             font-weight: 600;
             font-size: 13px;
         }
-
         .badge-item .bcount {
             font-size: 12px;
             color: var(--text2);
         }
-
         .badge-item .bbadge {
             font-size: 18px;
         }
 
+        /* ============================================================
+           FEATURE REQUEST & BUG REPORT (dengan reply admin)
+           ============================================================ */
         .fr-item,
         .bug-item {
             background: var(--input);
@@ -1076,7 +1099,6 @@
             margin-bottom: 6px;
             transition: all var(--transition);
         }
-
         .fr-item:hover,
         .bug-item:hover {
             border-color: rgba(214, 90, 98, 0.25);
@@ -1090,72 +1112,133 @@
             align-items: center;
             flex-wrap: wrap;
         }
-
         .fr-item .title,
         .bug-item .title {
             font-weight: 600;
             font-size: 13px;
             color: var(--text);
         }
-
         .fr-item .desc,
         .bug-item .desc {
             font-size: 12px;
             color: var(--text2);
             margin-top: 3px;
         }
-
         .fr-item .meta,
         .bug-item .meta {
             font-size: 10px;
             color: var(--text3);
             margin-top: 4px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
         }
-
-        .fr-item .status {
-            padding: 1px 10px;
-            border-radius: 16px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        .fr-item .status.pending {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
-        }
-
-        .fr-item .status.approved {
-            background: rgba(111, 207, 151, 0.15);
-            color: #6fcf97;
-        }
-
-        .fr-item .status.rejected {
-            background: rgba(242, 184, 181, 0.15);
-            color: #f2b8b5;
-        }
-
+        .fr-item .status,
         .bug-item .status {
             padding: 1px 10px;
             border-radius: 16px;
             font-size: 10px;
             font-weight: 600;
         }
+        .fr-item .status.pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+        .fr-item .status.approved {
+            background: rgba(111, 207, 151, 0.15);
+            color: #6fcf97;
+        }
+        .fr-item .status.rejected {
+            background: rgba(242, 184, 181, 0.15);
+            color: #f2b8b5;
+        }
+        .fr-item .status.replied {
+            background: rgba(52, 152, 219, 0.15);
+            color: #5dade2;
+        }
 
         .bug-item .status.pending {
             background: rgba(255, 193, 7, 0.15);
             color: #ffc107;
         }
-
         .bug-item .status.resolved {
             background: rgba(111, 207, 151, 0.15);
             color: #6fcf97;
         }
-
         .bug-item .status.rejected {
             background: rgba(242, 184, 181, 0.15);
             color: #f2b8b5;
         }
+        .bug-item .status.replied {
+            background: rgba(52, 152, 219, 0.15);
+            color: #5dade2;
+        }
 
+        /* Admin reply section */
+        .admin-reply {
+            background: var(--primary-bg);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-top: 6px;
+            border-left: 3px solid var(--primary);
+        }
+        .admin-reply .reply-text {
+            font-size: 12px;
+            color: var(--text2);
+            margin-top: 2px;
+        }
+        .admin-reply .reply-meta {
+            font-size: 10px;
+            color: var(--text3);
+            margin-top: 2px;
+        }
+        .admin-reply .reply-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .admin-reply-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .admin-reply-form input {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+            transition: all var(--transition);
+            min-width: 120px;
+        }
+        .admin-reply-form input:focus {
+            border-color: var(--primary);
+        }
+        .admin-reply-form button {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 12px;
+        }
+        .admin-reply-form button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.04);
+        }
+
+        /* ============================================================
+           CHART
+           ============================================================ */
         .chart-container {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -1163,7 +1246,6 @@
             padding: 12px 14px;
             margin-bottom: 10px;
         }
-
         .chart-bar {
             display: flex;
             align-items: center;
@@ -1189,7 +1271,6 @@
             min-width: 50px;
             color: var(--text2);
         }
-
         .chart-bar .track {
             flex: 1;
             height: 16px;
@@ -1198,7 +1279,6 @@
             overflow: hidden;
             position: relative;
         }
-
         .chart-bar .fill {
             height: 100%;
             background: var(--primary);
@@ -1206,7 +1286,6 @@
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 2px;
         }
-
         .chart-bar .value {
             font-size: 11px;
             min-width: 28px;
@@ -1222,7 +1301,6 @@
             justify-content: center;
             padding: 10px 0;
         }
-
         .pie {
             width: 140px;
             height: 140px;
@@ -1230,13 +1308,11 @@
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
         }
-
         .pie-legend {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-
         .pie-legend .item {
             display: flex;
             align-items: center;
@@ -1244,20 +1320,21 @@
             font-size: 12px;
             color: var(--text2);
         }
-
         .pie-legend .color {
             width: 14px;
             height: 14px;
             border-radius: 4px;
         }
 
+        /* ============================================================
+           SEARCH & SORT
+           ============================================================ */
         .search-sort-container {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
-
         .search-sort-container input {
             flex: 1;
             padding: 6px 12px;
@@ -1270,13 +1347,11 @@
             transition: all var(--transition);
             min-width: 120px;
         }
-
         .search-sort-container input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-bg);
             transform: scale(1.01);
         }
-
         .search-sort-container select {
             padding: 6px 10px;
             border-radius: 8px;
@@ -1287,11 +1362,9 @@
             outline: none;
             transition: all var(--transition);
         }
-
         .search-sort-container select:focus {
             border-color: var(--primary);
         }
-
         .search-sort-container button {
             padding: 6px 12px;
             border-radius: 8px;
@@ -1303,17 +1376,18 @@
             transition: all var(--transition);
             font-size: 12px;
         }
-
         .search-sort-container button:hover {
             background: var(--primary-hover);
             transform: scale(1.04);
         }
 
+        /* ============================================================
+           AUTH
+           ============================================================ */
         .auth-container {
             max-width: 380px;
             margin: 0 auto;
         }
-
         .auth-tabs {
             display: flex;
             border-radius: 10px;
@@ -1321,7 +1395,6 @@
             border: 1px solid var(--primary-border);
             margin-bottom: 12px;
         }
-
         .auth-tabs button {
             flex: 1;
             padding: 8px;
@@ -1333,33 +1406,26 @@
             font-size: 13px;
             transition: all var(--transition);
         }
-
         .auth-tabs button:hover {
             background: var(--primary-border);
         }
-
         .auth-tabs button.active {
             background: var(--primary);
             color: #fff;
         }
-
         .auth-form {
             display: none;
         }
-
         .auth-form.active {
             display: block;
             animation: pageFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-
         .password-wrap {
             position: relative;
         }
-
         .password-wrap input {
             padding-right: 40px;
         }
-
         .password-toggle {
             position: absolute;
             right: 8px;
@@ -1373,12 +1439,14 @@
             padding: 4px;
             transition: all var(--transition);
         }
-
         .password-toggle:hover {
             color: var(--text);
             transform: translateY(-50%) scale(1.1);
         }
 
+        /* ============================================================
+           MODALS
+           ============================================================ */
         .spam-notification,
         .guide-notification,
         .dashboard-modal {
@@ -1398,7 +1466,6 @@
             pointer-events: none;
             transition: opacity 0.4s ease;
         }
-
         .spam-notification.show,
         .guide-notification.show,
         .dashboard-modal.show {
@@ -1421,7 +1488,6 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-
         .spam-notification.show .box,
         .guide-notification.show .box,
         .dashboard-modal.show .box {
@@ -1434,7 +1500,6 @@
             text-align: center;
             margin-bottom: 4px;
         }
-
         .spam-notification h3,
         .guide-notification h3 {
             font-size: 18px;
@@ -1442,7 +1507,6 @@
             text-align: center;
             margin-bottom: 4px;
         }
-
         .spam-notification p,
         .guide-notification p {
             color: var(--text2);
@@ -1451,12 +1515,10 @@
             line-height: 1.6;
             margin-bottom: 4px;
         }
-
         .spam-notification .highlight {
             color: #ffd700;
             font-weight: 600;
         }
-
         .spam-notification .box-actions {
             display: flex;
             flex-direction: column;
@@ -1464,17 +1526,14 @@
             align-items: center;
             margin-top: 14px;
         }
-
         .spam-notification .box-actions .btn {
             min-width: 100px;
             justify-content: center;
         }
-
         .spam-notification .box-actions .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
         .spam-notification .box-actions .guide-link {
             font-size: 11px;
             color: var(--text3);
@@ -1485,11 +1544,9 @@
             border: none;
             font-family: inherit;
         }
-
         .spam-notification .box-actions .guide-link:hover {
             color: var(--text);
         }
-
         .spam-notification .cooldown-text {
             font-size: 11px;
             color: var(--text3);
@@ -1497,6 +1554,9 @@
             margin-top: 2px;
         }
 
+        /* ============================================================
+           TOAST
+           ============================================================ */
         .toast {
             position: fixed;
             bottom: 70px;
@@ -1517,19 +1577,14 @@
             max-width: 90%;
             text-align: center;
         }
-
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0) scale(1);
         }
 
-        .empty {
-            color: var(--text3);
-            text-align: center;
-            padding: 24px 12px;
-            font-size: 13px;
-        }
-
+        /* ============================================================
+           CONFIRM
+           ============================================================ */
         .confirm-overlay {
             position: fixed;
             inset: 0;
@@ -1544,7 +1599,6 @@
             transition: opacity 0.3s ease;
             padding: 20px;
         }
-
         .confirm-overlay.show {
             opacity: 1;
             pointer-events: auto;
@@ -1561,23 +1615,19 @@
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-
         .confirm-overlay.show .confirm-dialog {
             transform: scale(1) translateY(0);
         }
-
         .confirm-dialog .icon {
             font-size: 36px;
             text-align: center;
             margin-bottom: 6px;
         }
-
         .confirm-dialog h3 {
             font-size: 16px;
             text-align: center;
             margin-bottom: 4px;
         }
-
         .confirm-dialog p {
             color: var(--text2);
             font-size: 13px;
@@ -1585,18 +1635,19 @@
             margin-bottom: 14px;
             line-height: 1.5;
         }
-
         .confirm-dialog .actions {
             display: flex;
             gap: 8px;
             justify-content: center;
         }
-
         .confirm-dialog .actions .btn {
             min-width: 70px;
             justify-content: center;
         }
 
+        /* ============================================================
+           DOWNLOAD
+           ============================================================ */
         .download-locked {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -1606,7 +1657,6 @@
             color: var(--text2);
             font-size: 13px;
         }
-
         .download-locked .icon {
             font-size: 24px;
             display: block;
@@ -1620,7 +1670,6 @@
             padding: 14px 16px;
             margin-bottom: 10px;
         }
-
         .download-box .row {
             display: flex;
             justify-content: space-between;
@@ -1628,7 +1677,6 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-
         .download-box .info .ver,
         .download-box .info .sz {
             color: var(--text2);
@@ -1643,7 +1691,6 @@
             text-align: center;
             color: var(--text2);
         }
-
         .coming-soon .icon {
             font-size: 32px;
             display: block;
@@ -1658,7 +1705,6 @@
             opacity: 0;
             transition: opacity var(--transition);
         }
-
         .cooldown-indicator.show {
             opacity: 1;
         }
@@ -1671,7 +1717,6 @@
             animation: skeletonPulse 1.2s ease-in-out infinite;
             min-height: 80px;
         }
-
         .skeleton .line {
             height: 12px;
             background: var(--border);
@@ -1679,11 +1724,9 @@
             margin-bottom: 6px;
             width: 100%;
         }
-
         .skeleton .line.short {
             width: 60%;
         }
-
         .skeleton .line.medium {
             width: 80%;
         }
@@ -1712,19 +1755,27 @@
             font-weight: 600;
             text-align: center;
         }
-
         .load-more-btn:hover {
             background: var(--primary-bg);
             border-color: rgba(214, 90, 98, 0.25);
             transform: translateY(-2px);
         }
-
         .load-more-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
         }
 
+        .empty {
+            color: var(--text3);
+            text-align: center;
+            padding: 24px 12px;
+            font-size: 13px;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 600px) {
             body {
                 padding: 8px;
@@ -1831,6 +1882,9 @@
                 width: 100px;
                 height: 100px;
             }
+            .admin-reply-form {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1850,6 +1904,11 @@
     </style>
 </head>
 <body>
+
+    <!-- ============================================================
+    METEOR BACKGROUND
+    ============================================================ -->
+    <div id="meteor-container"></div>
 
     <!-- WATERMARK -->
     <div class="watermark"><span>Made By V4RRXD</span></div>
@@ -1894,7 +1953,9 @@
             </div>
         </nav>
 
-        <!-- PAGE HOME -->
+        <!-- ============================================================
+        PAGE HOME
+        ============================================================ -->
         <div id="page-home" class="page active">
             <div class="card">
                 <h1 class="card-title">Sekolahmu</h1>
@@ -1926,7 +1987,9 @@
             </div>
         </div>
 
-        <!-- PAGE REVIEW (BUAT) -->
+        <!-- ============================================================
+        PAGE REVIEW (BUAT)
+        ============================================================ -->
         <div id="page-review" class="page">
             <div class="card">
                 <h2 class="card-title">✏️ Buat Ulasan</h2>
@@ -1978,7 +2041,9 @@
             </div>
         </div>
 
-        <!-- PAGE REVIEWS (LIHAT) -->
+        <!-- ============================================================
+        PAGE REVIEWS (LIHAT)
+        ============================================================ -->
         <div id="page-reviews" class="page">
             <div class="card">
                 <h2 class="card-title">📋 Semua Ulasan</h2>
@@ -2003,7 +2068,9 @@
             </div>
         </div>
 
-        <!-- PAGE SORT REVIEW -->
+        <!-- ============================================================
+        PAGE SORT REVIEW
+        ============================================================ -->
         <div id="page-sortreview" class="page">
             <div class="card">
                 <h2 class="card-title">🔀 Sortir Review</h2>
@@ -2026,7 +2093,9 @@
             </div>
         </div>
 
-        <!-- PAGE DOWNLOADS -->
+        <!-- ============================================================
+        PAGE DOWNLOADS
+        ============================================================ -->
         <div id="page-downloads" class="page">
             <div class="card">
                 <h2 class="card-title">⬇ Downloads</h2>
@@ -2035,7 +2104,9 @@
             </div>
         </div>
 
-        <!-- PAGE LEADERBOARD -->
+        <!-- ============================================================
+        PAGE LEADERBOARD
+        ============================================================ -->
         <div id="page-leaderboard" class="page">
             <div class="card">
                 <h2 class="card-title">🏆 Papan Peringkat</h2>
@@ -2044,7 +2115,9 @@
             </div>
         </div>
 
-        <!-- PAGE FEATURE REQUESTS -->
+        <!-- ============================================================
+        PAGE FEATURE REQUESTS
+        ============================================================ -->
         <div id="page-features" class="page">
             <div class="card">
                 <h2 class="card-title">💡 Request Fitur</h2>
@@ -2075,7 +2148,9 @@
             </div>
         </div>
 
-        <!-- PAGE BUG REPORT -->
+        <!-- ============================================================
+        PAGE BUG REPORT
+        ============================================================ -->
         <div id="page-bugreport" class="page">
             <div class="card">
                 <h2 class="card-title">🐛 Lapor Bug</h2>
@@ -2114,14 +2189,18 @@
             </div>
         </div>
 
-        <!-- PAGE ADMIN -->
+        <!-- ============================================================
+        PAGE ADMIN
+        ============================================================ -->
         <div id="page-admin" class="page">
             <div class="card">
                 <div id="adminContent"></div>
             </div>
         </div>
 
-        <!-- DASHBOARD MODAL -->
+        <!-- ============================================================
+        DASHBOARD MODAL
+        ============================================================ -->
         <div class="dashboard-modal" id="dashboardModal">
             <div class="box" id="dashboardBox">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -2134,7 +2213,9 @@
 
     </div>
 
-    <!-- SPAM NOTIFICATION -->
+    <!-- ============================================================
+    SPAM NOTIFICATION
+    ============================================================ -->
     <div class="spam-notification" id="spamNotification">
         <div class="box" id="spamBox">
             <div class="icon">📬</div>
@@ -2155,7 +2236,9 @@
         </div>
     </div>
 
-    <!-- GUIDE NOTIFICATION -->
+    <!-- ============================================================
+    GUIDE NOTIFICATION
+    ============================================================ -->
     <div class="guide-notification" id="guideNotification">
         <div class="box" id="guideBox">
             <div class="guide-content">
@@ -2176,7 +2259,9 @@
         </div>
     </div>
 
-    <!-- CONFIRM OVERLAY -->
+    <!-- ============================================================
+    CONFIRM OVERLAY
+    ============================================================ -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
             <div class="icon" id="confirmIcon">⚠️</div>
@@ -2189,7 +2274,9 @@
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- ============================================================
+    TOAST
+    ============================================================ -->
     <div id="toast" class="toast"></div>
 
     <script type="module">
@@ -2231,7 +2318,9 @@
 
         const ADMIN_UID = "3JIwxiDLKoOp8T1LIuaCpB0fqYA2";
 
+        // ============================================================
         // STATE
+        // ============================================================
         let selectedRating = 0;
         let currentUser = null;
         let isAdmin = false;
@@ -2269,7 +2358,43 @@
             el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
 
-        // ===== BANNER =====
+        // ============================================================
+        // METEOR BACKGROUND
+        // ============================================================
+        function initMeteors() {
+            const container = document.getElementById('meteor-container');
+            const count = 8;
+            for (let i = 0; i < count; i++) {
+                const meteor = document.createElement('div');
+                meteor.className = 'meteor';
+                const size = 2 + Math.random() * 3;
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 30;
+                const dx = 200 + Math.random() * 400;
+                const dy = 300 + Math.random() * 500;
+                const duration = 6 + Math.random() * 10;
+                const delay = Math.random() * 15;
+
+                meteor.style.width = size + 'px';
+                meteor.style.height = size + 'px';
+                meteor.style.left = startX + '%';
+                meteor.style.top = startY + '%';
+                meteor.style.setProperty('--dx', dx + 'px');
+                meteor.style.setProperty('--dy', dy + 'px');
+                meteor.style.animationDuration = duration + 's';
+                meteor.style.animationDelay = delay + 's';
+
+                // Trail
+                meteor.style.boxShadow = `0 0 6px 2px var(--meteor-color)`;
+
+                container.appendChild(meteor);
+            }
+        }
+        initMeteors();
+
+        // ============================================================
+        // BANNER
+        // ============================================================
         function loadBanner() {
             const bannerRef = ref(db, 'banner');
             onValue(bannerRef, (snap) => {
@@ -2296,7 +2421,9 @@
             bannerClosed = true;
         }
 
-        // ===== SPAM =====
+        // ============================================================
+        // SPAM
+        // ============================================================
         function showSpamNotification() {
             if (spamNotifShown) return;
             if (currentUser && currentUser.emailVerified) return;
@@ -2417,7 +2544,9 @@
         document.getElementById('spamGuideBtn')?.addEventListener('click', showGuideNotification);
         document.getElementById('guideBackBtn')?.addEventListener('click', hideGuideNotification);
 
-        // ===== CONFIRM =====
+        // ============================================================
+        // CONFIRM
+        // ============================================================
         let confirmResolve = null;
 
         function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
@@ -2450,7 +2579,9 @@
             }
         });
 
-        // ===== THEME =====
+        // ============================================================
+        // THEME
+        // ============================================================
         const themeToggle = $('#themeToggle');
         themeToggle.addEventListener('click', () => {
             isDarkMode = !isDarkMode;
@@ -2464,7 +2595,9 @@
             themeToggle.textContent = '☀️';
         }
 
-        // ===== DROPDOWN =====
+        // ============================================================
+        // DROPDOWN
+        // ============================================================
         const dropdownBtn = document.getElementById('reviewDropdownBtn');
         const dropdownContent = document.getElementById('reviewDropdownContent');
 
@@ -2481,7 +2614,9 @@
             e.stopPropagation();
         });
 
-        // ===== NAVIGATION =====
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
         function goToPage(page) {
             if (page === currentPage) return;
 
@@ -2558,7 +2693,9 @@
             }
         }
 
-        // ===== CHECK ADMIN =====
+        // ============================================================
+        // CHECK ADMIN & BAN
+        // ============================================================
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
@@ -2569,7 +2706,6 @@
             }
         }
 
-        // ===== CHECK BAN =====
         async function checkIsBanned(uid) {
             try {
                 const snap = await get(ref(db, `banned/${uid}`));
@@ -2579,7 +2715,9 @@
             }
         }
 
-        // ===== DASHBOARD =====
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
         function openDashboard() {
             const modal = document.getElementById('dashboardModal');
             const content = document.getElementById('dashboardContent');
@@ -2607,7 +2745,6 @@
             });
 
             const isVerified = currentUser.emailVerified || isAdmin;
-            const verifiedText = isVerified ? 'Terverifikasi' : 'Belum Verifikasi';
             const verifiedClass = isVerified ? 'status-verified' : 'status-unverified';
 
             content.innerHTML = `
@@ -2703,7 +2840,9 @@
             }
         });
 
-        // ===== DOWNLOADS =====
+        // ============================================================
+        // DOWNLOADS
+        // ============================================================
         function renderDownloads() {
             const section = document.getElementById('downloadSection');
             if (!section) return;
@@ -2765,7 +2904,9 @@
             });
         }
 
-        // ===== HOME REVIEWS =====
+        // ============================================================
+        // HOME REVIEWS
+        // ============================================================
         function renderHomeReviews() {
             const list = document.getElementById('homeReviewsList');
             if (!list) return;
@@ -2800,7 +2941,9 @@
             }).join('');
         }
 
-        // ===== LEADERBOARD =====
+        // ============================================================
+        // LEADERBOARD
+        // ============================================================
         function renderLeaderboard() {
             const list = document.getElementById('leaderboardList');
             if (!list) return;
@@ -2845,7 +2988,9 @@
             }).join('');
         }
 
-        // ===== FEATURE REQUEST =====
+        // ============================================================
+        // FEATURE REQUEST
+        // ============================================================
         function checkFeatureAuth() {
             const form = document.getElementById('featureForm');
             const req = document.getElementById('featureAuthRequired');
@@ -2891,7 +3036,10 @@
                     description: desc,
                     status: 'pending',
                     timestamp: Date.now(),
-                    upvotes: 0
+                    upvotes: 0,
+                    adminReply: null,
+                    adminReplyTimestamp: null,
+                    adminReplyName: null
                 });
 
                 showToast('✅ Request fitur berhasil dikirim!');
@@ -2922,28 +3070,58 @@
             const list = document.getElementById('frList');
             if (!list) return;
 
-            if (featureRequests.length === 0) {
+            // Filter untuk user biasa (hanya miliknya), admin lihat semua
+            let filtered = featureRequests;
+            if (!isAdmin && currentUser) {
+                filtered = featureRequests.filter(f => f.uid === currentUser.uid);
+            }
+
+            if (filtered.length === 0) {
                 list.innerHTML = '<div class="empty">Belum ada request fitur</div>';
                 return;
             }
 
-            list.innerHTML = featureRequests.map((fr, index) => {
-                const statusLabel = {
-                    pending: '⏳ Menunggu',
-                    approved: '✅ Disetujui',
-                    rejected: '❌ Ditolak'
-                };
-                const statusClass = fr.status || 'pending';
+            const statusLabel = {
+                pending: '⏳ Menunggu',
+                approved: '✅ Disetujui',
+                rejected: '❌ Ditolak',
+                replied: '💬 Dibalas'
+            };
+            const statusClass = {
+                pending: 'pending',
+                approved: 'approved',
+                rejected: 'rejected',
+                replied: 'replied'
+            };
+
+            list.innerHTML = filtered.map((fr, index) => {
+                const hasReply = fr.adminReply && fr.adminReply.trim().length > 0;
+                const status = hasReply && fr.status === 'pending' ? 'replied' : (fr.status || 'pending');
+
                 return `
                     <div class="fr-item">
                         <div class="top">
                             <span class="title">${fr.title}</span>
-                            <span class="status ${statusClass}">${statusLabel[statusClass] || 'Menunggu'}</span>
+                            <span class="status ${statusClass[status] || 'pending'}">${statusLabel[status] || 'Menunggu'}</span>
                         </div>
                         <div class="desc">${fr.description}</div>
-                        <div class="meta">oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}</div>
+                        <div class="meta">
+                            oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}
+                            ${fr.upvotes ? `• 👍 ${fr.upvotes}` : ''}
+                        </div>
+
+                        ${hasReply ? `
+                            <div class="admin-reply">
+                                <div class="reply-label">💬 Balasan Admin:</div>
+                                <div class="reply-text">${fr.adminReply}</div>
+                                <div class="reply-meta">oleh ${fr.adminReplyName || 'Admin'} • ${fr.adminReplyTimestamp ? new Date(fr.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div>
+                            </div>
+                        ` : ''}
+
                         ${isAdmin ? `
-                            <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
+                            <div class="admin-reply-form">
+                                <input type="text" id="frReply_${fr.id}" placeholder="Balas request..." />
+                                <button class="fr-reply-btn" data-id="${fr.id}">💬 Balas</button>
                                 <button class="btn btn-success btn-sm fr-approve" data-id="${fr.id}">Setujui</button>
                                 <button class="btn btn-danger btn-sm fr-reject" data-id="${fr.id}">Tolak</button>
                                 <button class="btn btn-danger btn-sm fr-delete" data-id="${fr.id}">Hapus</button>
@@ -2954,12 +3132,39 @@
             }).join('');
 
             if (isAdmin) {
+                // FR Reply
+                document.querySelectorAll('.fr-reply-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const input = document.getElementById(`frReply_${id}`);
+                        const reply = input?.value.trim();
+                        if (!reply) {
+                            showToast('Masukkan balasan', true);
+                            return;
+                        }
+                        try {
+                            await update(ref(db, `featureRequests/${id}`), {
+                                adminReply: reply,
+                                adminReplyTimestamp: Date.now(),
+                                adminReplyName: currentUser?.displayName || currentUser?.email || 'Admin',
+                                status: 'replied'
+                            });
+                            showToast('✅ Balasan dikirim!');
+                            input.value = '';
+                            loadFeatureRequests();
+                        } catch (err) {
+                            showToast('❌ Gagal: ' + err.message, true);
+                        }
+                    });
+                });
+
                 document.querySelectorAll('.fr-approve').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
                         try {
                             await update(ref(db, `featureRequests/${id}`), { status: 'approved' });
                             showToast('✅ Request disetujui');
+                            loadFeatureRequests();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -2971,6 +3176,7 @@
                         try {
                             await update(ref(db, `featureRequests/${id}`), { status: 'rejected' });
                             showToast('❌ Request ditolak');
+                            loadFeatureRequests();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -2984,6 +3190,7 @@
                         try {
                             await remove(ref(db, `featureRequests/${id}`));
                             showToast('Request dihapus');
+                            loadFeatureRequests();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -2992,7 +3199,9 @@
             }
         }
 
-        // ===== BUG REPORT =====
+        // ============================================================
+        // BUG REPORT
+        // ============================================================
         function checkBugAuth() {
             const form = document.getElementById('bugForm');
             const req = document.getElementById('bugAuthRequired');
@@ -3035,7 +3244,10 @@
                     description: desc,
                     steps: steps || 'Tidak ada langkah',
                     status: 'pending',
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
+                    adminReply: null,
+                    adminReplyTimestamp: null,
+                    adminReplyName: null
                 });
 
                 showToast('✅ Laporan bug berhasil dikirim!');
@@ -3079,27 +3291,43 @@
             const statusLabel = {
                 pending: '⏳ Menunggu',
                 resolved: '✅ Selesai',
-                rejected: '❌ Ditolak'
+                rejected: '❌ Ditolak',
+                replied: '💬 Dibalas'
             };
             const statusClass = {
                 pending: 'pending',
                 resolved: 'resolved',
-                rejected: 'rejected'
+                rejected: 'rejected',
+                replied: 'replied'
             };
 
             list.innerHTML = filtered.map((bug, index) => {
                 const appLabel = bug.appType === 'apk' ? 'Android APK' : bug.appType === 'exe' ? 'Windows EXE' : 'Website';
+                const hasReply = bug.adminReply && bug.adminReply.trim().length > 0;
+                const status = hasReply && bug.status === 'pending' ? 'replied' : (bug.status || 'pending');
+
                 return `
                     <div class="bug-item">
                         <div class="top">
                             <span class="title">${bug.name} • ${appLabel}</span>
-                            <span class="status ${statusClass[bug.status] || 'pending'}">${statusLabel[bug.status] || 'Menunggu'}</span>
+                            <span class="status ${statusClass[status] || 'pending'}">${statusLabel[status] || 'Menunggu'}</span>
                         </div>
                         <div class="desc">${bug.description}</div>
                         ${bug.steps ? `<div class="desc" style="font-size:11px;color:var(--text3);margin-top:2px;">Langkah: ${bug.steps}</div>` : ''}
                         <div class="meta">${bug.timestamp ? new Date(bug.timestamp).toLocaleDateString('id-ID') : ''}</div>
+
+                        ${hasReply ? `
+                            <div class="admin-reply">
+                                <div class="reply-label">💬 Balasan Admin:</div>
+                                <div class="reply-text">${bug.adminReply}</div>
+                                <div class="reply-meta">oleh ${bug.adminReplyName || 'Admin'} • ${bug.adminReplyTimestamp ? new Date(bug.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div>
+                            </div>
+                        ` : ''}
+
                         ${isAdmin ? `
-                            <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
+                            <div class="admin-reply-form">
+                                <input type="text" id="bugReply_${bug.id}" placeholder="Balas laporan..." />
+                                <button class="bug-reply-btn" data-id="${bug.id}">💬 Balas</button>
                                 <button class="btn btn-success btn-sm bug-resolve" data-id="${bug.id}">Selesai</button>
                                 <button class="btn btn-danger btn-sm bug-reject" data-id="${bug.id}">Tolak</button>
                                 <button class="btn btn-danger btn-sm bug-delete" data-id="${bug.id}">Hapus</button>
@@ -3110,12 +3338,39 @@
             }).join('');
 
             if (isAdmin) {
+                // Bug Reply
+                document.querySelectorAll('.bug-reply-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const id = btn.dataset.id;
+                        const input = document.getElementById(`bugReply_${id}`);
+                        const reply = input?.value.trim();
+                        if (!reply) {
+                            showToast('Masukkan balasan', true);
+                            return;
+                        }
+                        try {
+                            await update(ref(db, `bugReports/${id}`), {
+                                adminReply: reply,
+                                adminReplyTimestamp: Date.now(),
+                                adminReplyName: currentUser?.displayName || currentUser?.email || 'Admin',
+                                status: 'replied'
+                            });
+                            showToast('✅ Balasan dikirim!');
+                            input.value = '';
+                            loadBugReports();
+                        } catch (err) {
+                            showToast('❌ Gagal: ' + err.message, true);
+                        }
+                    });
+                });
+
                 document.querySelectorAll('.bug-resolve').forEach(btn => {
                     btn.addEventListener('click', async () => {
                         const id = btn.dataset.id;
                         try {
                             await update(ref(db, `bugReports/${id}`), { status: 'resolved' });
                             showToast('✅ Bug ditandai selesai');
+                            loadBugReports();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -3127,6 +3382,7 @@
                         try {
                             await update(ref(db, `bugReports/${id}`), { status: 'rejected' });
                             showToast('❌ Bug ditolak');
+                            loadBugReports();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -3140,6 +3396,7 @@
                         try {
                             await remove(ref(db, `bugReports/${id}`));
                             showToast('Laporan dihapus');
+                            loadBugReports();
                         } catch (err) {
                             showToast('❌ Gagal: ' + err.message, true);
                         }
@@ -3148,7 +3405,9 @@
             }
         }
 
-        // ===== RATING AUTH =====
+        // ============================================================
+        // RATING AUTH
+        // ============================================================
         function checkRatingAuth() {
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
@@ -3221,7 +3480,9 @@
             }
         }
 
-        // ===== COOLDOWN REVIEW =====
+        // ============================================================
+        // COOLDOWN REVIEW
+        // ============================================================
         function updateReviewCooldown() {
             const el = document.getElementById('reviewCooldown');
             const btn = document.getElementById('submitReview');
@@ -3255,7 +3516,9 @@
             }, 1000);
         }
 
-        // ===== COOLDOWN COMMENT =====
+        // ============================================================
+        // COOLDOWN COMMENT
+        // ============================================================
         function updateCommentCooldown() {
             const buttons = document.querySelectorAll('.comment-form button');
             if (commentCooldown > 0) {
@@ -3282,7 +3545,9 @@
             }, 1000);
         }
 
-        // ===== LIKE/DISLIKE =====
+        // ============================================================
+        // LIKE/DISLIKE
+        // ============================================================
         async function toggleLike(reviewId, type) {
             if (!currentUser) {
                 showToast('Login dulu', true);
@@ -3335,7 +3600,9 @@
             }
         }
 
-        // ===== COMMENTS =====
+        // ============================================================
+        // COMMENTS
+        // ============================================================
         async function addComment(reviewId, parentId = null) {
             if (!currentUser) {
                 showToast('Login dulu', true);
@@ -3374,7 +3641,9 @@
             }
         }
 
-        // ===== DELETE MY REVIEW =====
+        // ============================================================
+        // DELETE MY REVIEW
+        // ============================================================
         async function deleteMyReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -3399,7 +3668,9 @@
             }
         }
 
-        // ===== EDIT REVIEW =====
+        // ============================================================
+        // EDIT REVIEW
+        // ============================================================
         function startEditingReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -3473,7 +3744,9 @@
             if (actionsEl) actionsEl.style.display = '';
         }
 
-        // ===== STARS =====
+        // ============================================================
+        // STARS
+        // ============================================================
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
@@ -3529,10 +3802,14 @@
             });
         });
 
-        // ===== ANONYM =====
+        // ============================================================
+        // ANONYM
+        // ============================================================
         const anonCheckbox = $('#reviewAnonymous');
 
-        // ===== AUTO-SAVE DRAFT =====
+        // ============================================================
+        // AUTO-SAVE DRAFT
+        // ============================================================
         document.getElementById('reviewMessage')?.addEventListener('input', () => {
             const msg = document.getElementById('reviewMessage').value;
             const rating = selectedRating;
@@ -3561,7 +3838,9 @@
             } catch (e) { /* silent */ }
         }
 
-        // ===== LOAD UPDATE =====
+        // ============================================================
+        // LOAD UPDATE
+        // ============================================================
         function loadUpdateData() {
             const updRef = ref(db, 'update');
             onValue(updRef, (snap) => {
@@ -3577,7 +3856,9 @@
         }
         loadUpdateData();
 
-        // ===== SUBMIT REVIEW =====
+        // ============================================================
+        // SUBMIT REVIEW
+        // ============================================================
         const submitBtn = document.getElementById('submitReview');
         if (submitBtn) {
             submitBtn.addEventListener('click', async () => {
@@ -3664,7 +3945,9 @@
             });
         }
 
-        // ===== LOAD REVIEWS =====
+        // ============================================================
+        // LOAD REVIEWS
+        // ============================================================
         function loadReviews() {
             const reviewsRef = ref(db, 'reviews');
             onValue(reviewsRef, (snap) => {
@@ -3708,7 +3991,9 @@
             });
         }
 
-        // ===== RENDER REVIEWS =====
+        // ============================================================
+        // RENDER REVIEWS
+        // ============================================================
         function renderReviews(loadMore = false) {
             const list = document.getElementById('reviewsList');
             const stats = document.getElementById('reviewsStats');
@@ -3996,7 +4281,9 @@
             }
         }
 
-        // ===== SORT REVIEW =====
+        // ============================================================
+        // SORT REVIEW
+        // ============================================================
         function renderSortReview() {
             const list = document.getElementById('sortResultList');
             const stats = document.getElementById('sortResultStats');
@@ -4082,7 +4369,9 @@
 
         document.getElementById('sortApplyBtn')?.addEventListener('click', renderSortReview);
 
-        // ===== ADMIN =====
+        // ============================================================
+        // ADMIN
+        // ============================================================
         function renderAdmin() {
             const container = document.getElementById('adminContent');
             if (!container) return;
@@ -4176,7 +4465,6 @@
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
 
-                        // Cek banned
                         const isBanned = await checkIsBanned(userCred.user.uid);
                         if (isBanned) {
                             status.textContent = '⛔ Akun kamu telah di-ban!';
@@ -4392,7 +4680,7 @@
                     </div>
                 </div>
 
-                <!-- Admin Dropdown untuk pilih data yang mau dilihat -->
+                <!-- Admin Dropdown -->
                 <div class="admin-bulk-actions" style="flex-wrap:wrap;">
                     <span style="font-weight:600;font-size:12px;">📋 Lihat Data:</span>
                     <select id="adminDataSelect" style="flex:1;min-width:150px;">
@@ -4405,7 +4693,7 @@
                 </div>
 
                 <div id="adminDataContainer">
-                    <!-- Konten akan diisi oleh JS -->
+                    <!-- Konten diisi oleh JS -->
                 </div>
 
                 <div class="admin-bulk-actions">
@@ -4462,7 +4750,7 @@
                 goToHome();
             });
 
-            // ===== ADMIN DATA VIEW (Dropdown) =====
+            // ===== ADMIN DATA VIEW =====
             document.getElementById('adminDataViewBtn')?.addEventListener('click', () => {
                 const select = document.getElementById('adminDataSelect');
                 const value = select.value;
@@ -4486,10 +4774,10 @@
                         <h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">🐛 Laporan Bug (${bugReports.length})</h4>
                         ${bugReports.length === 0 ? '<p style="color:var(--text3);font-size:12px;">Belum ada laporan bug</p>' :
                         bugReports.slice(0, 20).map(b => `
-                            <div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${b.status === 'resolved' ? '#6fcf97' : b.status === 'rejected' ? '#f2b8b5' : '#ffc107'};">
+                            <div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${b.status === 'resolved' ? '#6fcf97' : b.status === 'rejected' ? '#f2b8b5' : b.status === 'replied' ? '#5dade2' : '#ffc107'};">
                                 <strong>${b.name}</strong> • ${b.appType === 'apk' ? 'Android' : b.appType === 'exe' ? 'Windows' : 'Website'}
                                 <span style="color:var(--text3);font-size:10px;display:block;">${b.description}</span>
-                                <span style="color:var(--text3);font-size:10px;">Status: ${b.status || 'pending'}</span>
+                                <span style="color:var(--text3);font-size:10px;">Status: ${b.status || 'pending'}${b.adminReply ? ' • 💬 Dibalas' : ''}</span>
                             </div>
                         `).join('')}
                         ${bugReports.length > 20 ? `<p style="color:var(--text3);font-size:11px;margin-top:4px;">+ ${bugReports.length - 20} laporan lainnya...</p>` : ''}
@@ -4499,16 +4787,15 @@
                         <h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">💡 Request Fitur (${featureRequests.length})</h4>
                         ${featureRequests.length === 0 ? '<p style="color:var(--text3);font-size:12px;">Belum ada request fitur</p>' :
                         featureRequests.slice(0, 20).map(f => `
-                            <div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${f.status === 'approved' ? '#6fcf97' : f.status === 'rejected' ? '#f2b8b5' : '#ffc107'};">
+                            <div style="background:var(--input);padding:6px 10px;border-radius:6px;margin-bottom:4px;font-size:12px;border-left:3px solid ${f.status === 'approved' ? '#6fcf97' : f.status === 'rejected' ? '#f2b8b5' : f.status === 'replied' ? '#5dade2' : '#ffc107'};">
                                 <strong>${f.title}</strong> • oleh ${f.name}
                                 <span style="color:var(--text3);font-size:10px;display:block;">${f.description}</span>
-                                <span style="color:var(--text3);font-size:10px;">Status: ${f.status || 'pending'}</span>
+                                <span style="color:var(--text3);font-size:10px;">Status: ${f.status || 'pending'}${f.adminReply ? ' • 💬 Dibalas' : ''}</span>
                             </div>
                         `).join('')}
                         ${featureRequests.length > 20 ? `<p style="color:var(--text3);font-size:11px;margin-top:4px;">+ ${featureRequests.length - 20} request lainnya...</p>` : ''}
                     `;
                 } else if (value === 'logs') {
-                    // Ambil log dari Firebase
                     get(ref(db, 'adminLogs')).then(snap => {
                         const logs = snap.val();
                         let logHtml = '<h4 style="font-size:14px;font-weight:600;margin-bottom:8px;">📜 Log Aktivitas Admin</h4>';
@@ -4526,14 +4813,12 @@
                         }
                         container.innerHTML = logHtml;
                     });
-                    return;
                 }
             });
 
-            // Trigger default view
             document.getElementById('adminDataViewBtn')?.click();
 
-            // ===== EXPORT CSV =====
+            // ===== EXPORT =====
             document.getElementById('exportCSV')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
                     showToast('Tidak ada data', true);
@@ -4561,7 +4846,6 @@
                 showToast('✅ CSV di-export');
             });
 
-            // ===== EXPORT JSON =====
             document.getElementById('exportJSON')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
                     showToast('Tidak ada data', true);
@@ -4683,7 +4967,7 @@
                 }
             });
 
-            // ===== BAN USER =====
+            // ===== BAN =====
             document.getElementById('banUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
                 if (!uid) {
@@ -4760,7 +5044,9 @@
             });
         }
 
-        // ===== ADMIN LOG ACTIVITY =====
+        // ============================================================
+        // ADMIN LOG
+        // ============================================================
         async function logAdminActivity(action) {
             try {
                 const logRef = ref(db, 'adminLogs');
@@ -4774,7 +5060,9 @@
             } catch (e) { /* silent */ }
         }
 
-        // ===== AUTH STATE =====
+        // ============================================================
+        // AUTH STATE
+        // ============================================================
         function updateAuthUI() {
             const section = document.getElementById('authSection');
             if (!section) return;
@@ -4838,7 +5126,9 @@
             checkBugAuth();
         }
 
-        // ===== SEARCH & FILTER =====
+        // ============================================================
+        // SEARCH & FILTER
+        // ============================================================
         document.getElementById('searchBtn')?.addEventListener('click', () => {
             displayedReviews = 0;
             renderReviews();
@@ -4860,7 +5150,9 @@
             renderReviews();
         });
 
-        // ===== PULL TO REFRESH =====
+        // ============================================================
+        // PULL TO REFRESH
+        // ============================================================
         let pullStartY = 0;
         let isPulling = false;
 
@@ -4892,11 +5184,12 @@
             isPulling = false;
         });
 
-        // ===== AUTH STATE =====
+        // ============================================================
+        // AUTH STATE
+        // ============================================================
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
-                // Cek banned
                 const isBanned = await checkIsBanned(user.uid);
                 if (isBanned) {
                     showToast('⛔ Akun kamu telah di-ban!', true);
@@ -4930,7 +5223,9 @@
             }
         });
 
-        // ===== INIT =====
+        // ============================================================
+        // INIT
+        // ============================================================
         loadReviews();
         loadFeatureRequests();
         loadBugReports();
@@ -4939,7 +5234,9 @@
         renderDownloads();
         loadDraft();
 
-        // ===== TIDAK ADA CONSOLE.LOG =====
+        // ============================================================
+        // TIDAK ADA CONSOLE.LOG
+        // ============================================================
     </script>
 
 </body>
