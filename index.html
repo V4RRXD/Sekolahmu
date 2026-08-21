@@ -260,8 +260,7 @@
             animation: pulse 2s ease-in-out infinite;
         }
         @keyframes pulse {
-            0%,
-            100% {
+            0%, 100% {
                 transform: scale(1);
             }
             50% {
@@ -325,6 +324,51 @@
             color: var(--text2);
             margin-top: 10px;
             line-height: 1.6;
+        }
+        .ban-overlay .user-reply-form {
+            margin-top: 12px;
+            display: none;
+            width: 100%;
+        }
+        .ban-overlay .user-reply-form.show {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .ban-overlay .user-reply-form textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        .ban-overlay .user-reply-form textarea:focus {
+            border-color: var(--primary);
+        }
+        .ban-overlay .user-reply-form button {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 12px;
+        }
+        .ban-overlay .user-reply-form button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.04);
+        }
+        .ban-overlay .user-reply-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         .nav {
             display: flex;
@@ -1686,8 +1730,7 @@
             width: 80%;
         }
         @keyframes skeletonPulse {
-            0%,
-            100% {
+            0%, 100% {
                 opacity: 0.6;
             }
             50% {
@@ -1872,6 +1915,11 @@
                 <textarea id="appealMessage" placeholder="Tulis alasan Anda..." maxlength="500"></textarea>
                 <button class="btn btn-success btn-block" id="submitAppealBtn">Kirim Banding</button>
                 <div id="appealStatus" class="appeal-status"></div>
+                <!-- USER REPLY TO ADMIN (muncul saat admin sudah membalas) -->
+                <div class="user-reply-form" id="userReplyForm">
+                    <textarea id="userReplyMessage" placeholder="Balas admin..." maxlength="500"></textarea>
+                    <button class="btn btn-primary btn-block" id="submitUserReplyBtn">Kirim Balasan</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2096,7 +2144,7 @@
         const auth = getAuth(app);
         const ADMIN_UID = "3JIwxiDLKoOp8T1LIuaCpB0fqYA2";
 
-        let selectedRating = 0, currentUser = null, isAdmin = false, allReviews = [], updateData = {}, isSubmitting = false, isDarkMode = true, userHasReviewed = false, userReviewId = null, spamNotifShown = false, resendCooldown = 0, resendTimer = null, isCooldownActive = false, featureRequests = [], bugReports = [], bannerClosed = false, currentPage = 'home', pageAnimated = {}, reviewCooldown = 0, reviewCooldownTimer = null, commentCooldown = 0, commentCooldownTimer = null, displayedReviews = 0, REVIEWS_PER_PAGE = 10, isBanned = false, appealSent = false, appeals = [];
+        let selectedRating = 0, currentUser = null, isAdmin = false, allReviews = [], updateData = {}, isSubmitting = false, isDarkMode = true, userHasReviewed = false, userReviewId = null, spamNotifShown = false, resendCooldown = 0, resendTimer = null, isCooldownActive = false, featureRequests = [], bugReports = [], bannerClosed = false, currentPage = 'home', pageAnimated = {}, reviewCooldown = 0, reviewCooldownTimer = null, commentCooldown = 0, commentCooldownTimer = null, displayedReviews = 0, REVIEWS_PER_PAGE = 10, isBanned = false, appealSent = false, appeals = [], userCanReply = false;
 
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
@@ -2136,7 +2184,6 @@
             document.getElementById('banOverlay').classList.add('show');
             isBanned = true;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            // Cek status appeal realtime
             listenAppealStatus();
         }
 
@@ -2151,7 +2198,6 @@
             e.stopPropagation();
             if (!currentUser) { showToast('Silakan login terlebih dahulu untuk mengajukan banding.', true); return; }
             if (appealSent) {
-                // Cek status terbaru
                 checkAppealStatus();
                 return;
             }
@@ -2175,7 +2221,8 @@
                     timestamp: Date.now(),
                     adminReply: null,
                     adminReplyTimestamp: null,
-                    adminReplyName: null
+                    adminReplyName: null,
+                    userReplies: []
                 });
                 showToast('✅ Banding berhasil dikirim!');
                 appealSent = true;
@@ -2183,12 +2230,34 @@
                 document.getElementById('submitAppealBtn').disabled = true;
                 document.getElementById('appealMessage').disabled = true;
                 document.getElementById('banAppealBtn').style.display = 'none';
-                // Reload appeals
                 loadAppeals();
             } catch (err) { showToast('❌ Gagal mengirim banding: ' + err.message, true); }
         });
 
-        // LISTEN APPEAL STATUS REAL TIME
+        // ===== USER REPLY TO ADMIN =====
+        document.getElementById('submitUserReplyBtn')?.addEventListener('click', async () => {
+            if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
+            const msg = document.getElementById('userReplyMessage').value.trim();
+            if (!msg) { showToast('Tulis balasan Anda.', true); return; }
+            try {
+                const appealRef = ref(db, `appeals/${currentUser.uid}`);
+                const snap = await get(appealRef);
+                const data = snap.val();
+                const userReplies = data?.userReplies || [];
+                userReplies.push({
+                    message: msg,
+                    timestamp: Date.now(),
+                    name: currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna'
+                });
+                await update(appealRef, { userReplies: userReplies });
+                showToast('✅ Balasan berhasil dikirim!');
+                document.getElementById('userReplyMessage').value = '';
+                // Form tetap terlihat (tidak dihilangkan)
+                loadAppeals();
+                listenAppealStatus();
+            } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
+        });
+
         function listenAppealStatus() {
             if (!currentUser) return;
             const appealRef = ref(db, `appeals/${currentUser.uid}`);
@@ -2198,11 +2267,11 @@
                     appealSent = true;
                     let statusText = '⏳ Menunggu tanggapan admin';
                     let statusColor = '#ffc107';
+                    userCanReply = false;
 
                     if (data.status === 'approved') {
                         statusText = '✅ Banding disetujui! Anda dapat login kembali.';
                         statusColor = '#6fcf97';
-                        // Unban user
                         remove(ref(db, `banned/${currentUser.uid}`)).then(() => {
                             document.getElementById('banOverlay').classList.remove('show');
                             isBanned = false;
@@ -2214,9 +2283,11 @@
                         statusText = '❌ Banding ditolak. Silakan hubungi administrator.';
                         statusColor = '#f2b8b5';
                         document.getElementById('banAppealBtn').style.display = 'none';
-                    } else if (data.status === 'replied') {
-                        statusText = '💬 Admin telah membalas banding Anda. Periksa balasan.';
+                    } else if (data.status === 'replied' || data.adminReply) {
+                        statusText = '💬 Admin telah membalas banding Anda. Anda dapat membalas.';
                         statusColor = '#5dade2';
+                        userCanReply = true;
+                        document.getElementById('userReplyForm').classList.add('show');
                     }
 
                     const statusEl = document.getElementById('appealStatus');
@@ -2230,19 +2301,55 @@
                     document.getElementById('submitAppealBtn').disabled = true;
                     document.getElementById('appealMessage').disabled = true;
 
-                    // Tampilkan balasan admin jika ada
+                    // Tampilkan balasan admin
+                    let replyHtml = '';
                     if (data.adminReply) {
-                        const replyHtml = document.createElement('div');
-                        replyHtml.className = 'admin-reply';
-                        replyHtml.style.marginTop = '10px';
-                        replyHtml.innerHTML = `
-                            <div class="reply-label">💬 Balasan Admin:</div>
-                            <div class="reply-text">${data.adminReply}</div>
-                            <div class="reply-meta">oleh ${data.adminReplyName || 'Admin'} • ${data.adminReplyTimestamp ? new Date(data.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div>
+                        replyHtml = `
+                            <div class="admin-reply" style="margin-top:10px;">
+                                <div class="reply-label">💬 Balasan Admin:</div>
+                                <div class="reply-text">${data.adminReply}</div>
+                                <div class="reply-meta">oleh ${data.adminReplyName || 'Admin'} • ${data.adminReplyTimestamp ? new Date(data.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div>
+                            </div>
                         `;
-                        const form = document.getElementById('appealForm');
-                        if (form && !form.querySelector('.admin-reply')) {
-                            form.appendChild(replyHtml);
+                    }
+
+                    // Tampilkan balasan user sebelumnya
+                    let userRepliesHtml = '';
+                    if (data.userReplies && data.userReplies.length > 0) {
+                        userRepliesHtml = data.userReplies.map(r => `
+                            <div style="background:var(--input);border-radius:6px;padding:6px 10px;margin-top:4px;border-left:2px solid var(--primary);">
+                                <div style="font-size:11px;font-weight:600;color:var(--text);">${r.name || 'Pengguna'}</div>
+                                <div style="font-size:12px;color:var(--text2);">${r.message}</div>
+                                <div style="font-size:9px;color:var(--text3);">${r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : ''}</div>
+                            </div>
+                        `).join('');
+                    }
+
+                    const form = document.getElementById('appealForm');
+                    // Hapus old admin reply
+                    const oldReply = form.querySelector('.admin-reply');
+                    if (oldReply) oldReply.remove();
+
+                    // Hapus old user replies
+                    const oldUserReplies = form.querySelector('.user-replies-container');
+                    if (oldUserReplies) oldUserReplies.remove();
+
+                    // Insert admin reply
+                    if (replyHtml) {
+                        const div = document.createElement('div');
+                        div.innerHTML = replyHtml;
+                        form.insertBefore(div.firstElementChild, document.getElementById('userReplyForm'));
+                    }
+
+                    // Insert user replies
+                    if (userRepliesHtml) {
+                        const container = document.createElement('div');
+                        container.className = 'user-replies-container';
+                        container.style.marginTop = '8px';
+                        container.innerHTML = `<div style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px;">Balasan Anda:</div>${userRepliesHtml}`;
+                        const replyForm = document.getElementById('userReplyForm');
+                        if (replyForm) {
+                            form.insertBefore(container, replyForm);
                         }
                     }
                 }
@@ -2268,8 +2375,9 @@
                     } else if (data.status === 'rejected') {
                         statusText = '❌ Banding ditolak. Silakan hubungi administrator.';
                         document.getElementById('banAppealBtn').style.display = 'none';
-                    } else if (data.status === 'replied') {
+                    } else if (data.status === 'replied' || data.adminReply) {
                         statusText = '💬 Admin telah membalas banding Anda.';
+                        document.getElementById('userReplyForm').classList.add('show');
                     }
                     document.getElementById('appealStatus').textContent = `Status Banding: ${statusText}`;
                     document.getElementById('appealForm').classList.add('show');
@@ -2290,7 +2398,6 @@
                 appeals = [];
                 if (data) Object.keys(data).forEach(k => appeals.push({ id: k, ...data[k] }));
                 appeals.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                // Re-render admin jika sedang di halaman admin
                 if (document.getElementById('page-admin').classList.contains('active')) {
                     renderAdmin();
                 }
@@ -2664,7 +2771,6 @@
                 if (data) Object.keys(data).forEach(k => featureRequests.push({ id: k, ...data[k] }));
                 featureRequests.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 renderFeatureRequests();
-                // Re-render admin jika di halaman admin
                 if (document.getElementById('page-admin').classList.contains('active')) {
                     renderAdmin();
                 }
@@ -2674,7 +2780,6 @@
         function renderFeatureRequests() {
             const list = document.getElementById('frList');
             if (!list) return;
-            // User: hanya miliknya sendiri, Admin: lihat semua
             let filtered = featureRequests;
             if (!isAdmin && currentUser) filtered = featureRequests.filter(f => f.uid === currentUser.uid);
             if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada permintaan fitur</div>'; return; }
@@ -2793,7 +2898,6 @@
                 if (data) Object.keys(data).forEach(k => bugReports.push({ id: k, ...data[k] }));
                 bugReports.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 renderBugReports();
-                // Re-render admin jika di halaman admin
                 if (document.getElementById('page-admin').classList.contains('active')) {
                     renderAdmin();
                 }
@@ -2803,7 +2907,6 @@
         function renderBugReports() {
             const list = document.getElementById('bugList');
             if (!list) return;
-            // User: hanya miliknya sendiri, Admin: lihat semua
             let filtered = bugReports;
             if (!isAdmin && currentUser) filtered = bugReports.filter(b => b.uid === currentUser.uid);
             if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada laporan bug</div>'; return; }
@@ -3618,7 +3721,7 @@
                 '<p style="color:var(--text2);font-size:12px;text-align:center;">Belum ada data rating.</p>';
 
             // APPEALS SECTION - REALTIME
-            const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak' };
+            const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak', replied: '💬 Dibalas' };
             let appealsHtml = '';
             if (appeals.length > 0) {
                 appealsHtml = appeals.map(a => `
@@ -3627,6 +3730,7 @@
                         <div style="font-size:11px;color:var(--text2);margin-top:2px;">${a.message}</div>
                         <div style="font-size:10px;color:var(--text3);margin-top:2px;">Status: ${statusLabel[a.status] || 'Menunggu'}</div>
                         ${a.adminReply ? `<div class="admin-reply" style="margin-top:4px;"><div class="reply-label">💬 Balasan Admin:</div><div class="reply-text">${a.adminReply}</div><div class="reply-meta">oleh ${a.adminReplyName || 'Admin'} • ${a.adminReplyTimestamp ? new Date(a.adminReplyTimestamp).toLocaleDateString('id-ID') : ''}</div></div>` : ''}
+                        ${a.userReplies && a.userReplies.length > 0 ? a.userReplies.map(r => `<div style="background:var(--input);border-radius:4px;padding:4px 8px;margin-top:2px;font-size:11px;border-left:2px solid var(--primary);"><strong>${r.name || 'Pengguna'}</strong>: ${r.message} <span style="color:var(--text3);font-size:9px;">${r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : ''}</span></div>`).join('') : ''}
                         <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
                             <button class="btn btn-success btn-sm appeal-approve-admin" data-uid="${a.uid}">✅ Setujui</button>
                             <button class="btn btn-danger btn-sm appeal-reject-admin" data-uid="${a.uid}">❌ Tolak</button>
@@ -3671,7 +3775,6 @@
                 goToHome(); });
 
             // ===== APPEAL EVENTS =====
-            // Approve
             document.querySelectorAll('.appeal-approve-admin').forEach(b => b.addEventListener('click', async function() {
                 const uid = this.dataset.uid;
                 try {
@@ -3679,7 +3782,6 @@
                     await remove(ref(db, `banned/${uid}`));
                     showToast('✅ Banding disetujui, pengguna dibuka blokirnya.');
                     loadAppeals();
-                    // Update UI for that user if they're logged in
                     if (currentUser && currentUser.uid === uid) {
                         document.getElementById('banOverlay').classList.remove('show');
                         isBanned = false;
@@ -3689,14 +3791,12 @@
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
             }));
 
-            // Reject
             document.querySelectorAll('.appeal-reject-admin').forEach(b => b.addEventListener('click', async function() {
                 const uid = this.dataset.uid;
                 try {
                     await update(ref(db, `appeals/${uid}`), { status: 'rejected' });
                     showToast('❌ Banding ditolak.');
                     loadAppeals();
-                    // Update UI for that user
                     if (currentUser && currentUser.uid === uid) {
                         document.getElementById('appealStatus').textContent = 'Status Banding: ❌ Ditolak';
                         document.getElementById('appealStatus').style.color = '#f2b8b5';
@@ -3705,7 +3805,6 @@
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
             }));
 
-            // Reply toggle
             document.querySelectorAll('.appeal-reply-btn').forEach(b => b.addEventListener('click', function() {
                 const uid = this.dataset.uid;
                 const form = document.getElementById(`appealReplyForm_${uid}`);
@@ -3713,7 +3812,6 @@
                     form.querySelector('input')?.focus(); }
             }));
 
-            // Reply submit
             document.querySelectorAll('.appeal-reply-submit').forEach(b => b.addEventListener('click', async function() {
                 const uid = this.dataset.uid;
                 const input = document.getElementById(`appealReplyInput_${uid}`);
@@ -3729,7 +3827,6 @@
                     showToast('✅ Balasan berhasil dikirim!');
                     input.value = '';
                     loadAppeals();
-                    // Update UI for user
                     if (currentUser && currentUser.uid === uid) {
                         document.getElementById('appealStatus').textContent =
                         '💬 Admin telah membalas banding Anda.';
@@ -4028,7 +4125,6 @@
                 renderAdmin();
                 if (user.emailVerified) { spamNotifShown = true;
                     hideSpamNotification(); }
-                // Start listening to appeal status
                 listenAppealStatus();
             } else {
                 isAdmin = false;
