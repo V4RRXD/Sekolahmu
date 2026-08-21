@@ -14,6 +14,151 @@
         }
     </script>
     <style>
+        /* ===== ADBLOCK OVERLAY ===== */
+        #adblock-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999999;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            flex-direction: column;
+            animation: adblockFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        #adblock-overlay.show {
+            display: flex;
+        }
+        @keyframes adblockFadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        #adblock-overlay .box {
+            background: var(--card);
+            border: 2px solid #f2b8b5;
+            border-radius: 24px;
+            padding: 40px 32px 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #adblock-overlay .icon {
+            font-size: 72px;
+            margin-bottom: 10px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        #adblock-overlay h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #f2b8b5;
+        }
+        #adblock-overlay p {
+            color: var(--text2);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        #adblock-overlay .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        #adblock-overlay .btn-adblock {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 12px;
+            background: var(--primary);
+            color: #fff;
+        }
+        #adblock-overlay .btn-adblock:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
+        }
+        #adblock-overlay .btn-adblock:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        #adblock-overlay .btn-adblock-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--primary-border);
+            margin-top: 8px;
+        }
+        #adblock-overlay .btn-adblock-outline:hover {
+            background: var(--primary-bg);
+            transform: translateY(-2px);
+        }
+        #adblock-overlay .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #adblock-overlay .dns-warning {
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #ffc107;
+            text-align: left;
+        }
+        #adblock-overlay .dns-warning strong {
+            color: #ffd700;
+        }
+        #adblock-overlay .check-status {
+            font-size: 13px;
+            color: var(--text3);
+            margin-top: 8px;
+            min-height: 24px;
+        }
+        #adblock-overlay .check-status.success {
+            color: #6fcf97;
+        }
+        #adblock-overlay .check-status.error {
+            color: #f2b8b5;
+        }
+        /* ===== STYLE DASAR ===== */
         * {
             margin: 0;
             padding: 0;
@@ -84,16 +229,8 @@
             margin: 0 auto;
             display: block;
         }
-        #ad-top {
-            margin-top: -4px;
-            margin-bottom: 6px;
-            min-height: 50px;
-        }
-        #ad-bottom {
-            margin-top: 8px;
-            margin-bottom: 4px;
-            min-height: 50px;
-        }
+        #ad-top { margin-top: -4px; margin-bottom: 6px; min-height: 50px; }
+        #ad-bottom { margin-top: 8px; margin-bottom: 4px; min-height: 50px; }
         #sticky-banner {
             display: none;
             position: fixed;
@@ -127,46 +264,26 @@
             gap: 12px;
             align-items: flex-start;
         }
-        .sidebar-left,
-        .sidebar-right {
+        .sidebar-left, .sidebar-right {
             flex: 0 0 160px;
             min-height: 100px;
             position: sticky;
             top: 80px;
             display: none;
         }
-        .content-center {
-            flex: 1;
-            min-width: 0;
-        }
-        .ad-hidden {
-            display: none !important;
-        }
+        .content-center { flex: 1; min-width: 0; }
+        .ad-hidden { display: none !important; }
         @media (min-width: 1025px) {
-            .sidebar-left,
-            .sidebar-right {
-                display: block !important;
-            }
-            #sticky-banner {
-                display: none !important;
-            }
+            .sidebar-left, .sidebar-right { display: block !important; }
+            #sticky-banner { display: none !important; }
         }
         @media (max-width: 1024px) {
-            .sidebar-left,
-            .sidebar-right {
-                display: none !important;
-            }
-            .main-layout {
-                display: block;
-            }
+            .sidebar-left, .sidebar-right { display: none !important; }
+            .main-layout { display: block; }
         }
         @media (max-width: 768px) {
-            #sticky-banner {
-                display: block !important;
-            }
-            body {
-                padding-bottom: 70px;
-            }
+            #sticky-banner { display: block !important; }
+            body { padding-bottom: 70px; }
         }
         /* ===== BANNER NOTIFIKASI ===== */
         .banner-container {
@@ -188,35 +305,15 @@
             position: relative;
             overflow: hidden;
         }
-        .banner.show {
-            display: flex;
-        }
+        .banner.show { display: flex; }
         @keyframes bannerSlideDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-24px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(-24px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .banner .icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        .banner .content {
-            flex: 1;
-        }
-        .banner .content .title {
-            font-weight: 700;
-            font-size: 13px;
-        }
-        .banner .content .message {
-            font-size: 12px;
-            opacity: 0.9;
-            margin-top: 1px;
-        }
+        .banner .icon { font-size: 20px; flex-shrink: 0; }
+        .banner .content { flex: 1; }
+        .banner .content .title { font-weight: 700; font-size: 13px; }
+        .banner .content .message { font-size: 12px; opacity: 0.9; margin-top: 1px; }
         .banner .close-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
@@ -304,9 +401,7 @@
         .nav button.active::after {
             transform: translateX(-50%) scaleX(1);
         }
-        .nav button.hidden-nav {
-            display: none;
-        }
+        .nav button.hidden-nav { display: none; }
         .nav-dropdown {
             position: relative;
             display: inline-block;
@@ -327,18 +422,10 @@
             animation: dropdownFade 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
         @keyframes dropdownFade {
-            0% {
-                opacity: 0;
-                transform: translateY(-10px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-        .nav-dropdown-content.show {
-            display: block;
-        }
+        .nav-dropdown-content.show { display: block; }
         .nav-dropdown-content button {
             display: block;
             width: 100%;
@@ -348,9 +435,7 @@
             border-radius: 0;
             white-space: nowrap;
         }
-        .nav-dropdown-content button:hover {
-            background: var(--primary-bg);
-        }
+        .nav-dropdown-content button:hover { background: var(--primary-bg); }
         .nav-dropdown-content button.active {
             color: var(--primary);
             background: var(--primary-bg);
@@ -385,27 +470,15 @@
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
             transform: translateY(-2px);
         }
-        .card-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .page {
-            display: none;
-        }
+        .card-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .page { display: none; }
         .page.active {
             display: block;
             animation: pageFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
         @keyframes pageFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         .empty {
             color: var(--text3);
@@ -426,10 +499,7 @@
             gap: 4px;
             text-decoration: none;
         }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
+        .btn-primary { background: var(--primary); color: #fff; }
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-2px) scale(1.01);
@@ -450,19 +520,9 @@
             color: var(--text);
             border: 1px solid var(--primary-border);
         }
-        .btn-outline:hover {
-            background: var(--primary-bg);
-            transform: translateY(-2px);
-        }
-        .btn-sm {
-            padding: 3px 10px;
-            font-size: 11px;
-            border-radius: 6px;
-        }
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
+        .btn-outline:hover { background: var(--primary-bg); transform: translateY(-2px); }
+        .btn-sm { padding: 3px 10px; font-size: 11px; border-radius: 6px; }
+        .btn-block { width: 100%; justify-content: center; }
         .auth-btn {
             background: var(--primary);
             color: #fff;
@@ -644,9 +704,7 @@
             flex-wrap: wrap;
             margin-top: 4px;
         }
-        .form-group {
-            margin-bottom: 10px;
-        }
+        .form-group { margin-bottom: 10px; }
         .form-group label {
             display: block;
             font-size: 12px;
@@ -684,9 +742,7 @@
             font-size: 13px;
             transition: all var(--transition);
         }
-        .checkbox-wrap:hover {
-            color: var(--text);
-        }
+        .checkbox-wrap:hover { color: var(--text); }
         .checkbox-wrap input[type="checkbox"] {
             width: 17px;
             height: 17px;
@@ -707,18 +763,13 @@
             text-align: center;
             transition: all var(--transition);
         }
-        .admin-stats .stat:hover {
-            transform: translateY(-3px);
-        }
+        .admin-stats .stat:hover { transform: translateY(-3px); }
         .admin-stats .stat .num {
             font-size: 20px;
             font-weight: 700;
             color: var(--primary);
         }
-        .admin-stats .stat .lbl {
-            font-size: 10px;
-            color: var(--text2);
-        }
+        .admin-stats .stat .lbl { font-size: 10px; color: var(--text2); }
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -755,9 +806,7 @@
             outline: none;
             min-width: 80px;
         }
-        .admin-bulk-actions input:focus {
-            border-color: var(--primary);
-        }
+        .admin-bulk-actions input:focus { border-color: var(--primary); }
         .badge-item {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -781,14 +830,8 @@
             color: #ffd700;
             min-width: 28px;
         }
-        .badge-item .bname {
-            font-weight: 600;
-            font-size: 13px;
-        }
-        .badge-item .bcount {
-            font-size: 12px;
-            color: var(--text2);
-        }
+        .badge-item .bname { font-weight: 600; font-size: 13px; }
+        .badge-item .bcount { font-size: 12px; color: var(--text2); }
         .fr-item {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -807,16 +850,8 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        .fr-item .title {
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text);
-        }
-        .fr-item .desc {
-            font-size: 12px;
-            color: var(--text2);
-            margin-top: 3px;
-        }
+        .fr-item .title { font-weight: 600; font-size: 13px; color: var(--text); }
+        .fr-item .desc { font-size: 12px; color: var(--text2); margin-top: 3px; }
         .fr-item .meta {
             font-size: 10px;
             color: var(--text3);
@@ -866,16 +901,8 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        .bug-item .title {
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text);
-        }
-        .bug-item .desc {
-            font-size: 12px;
-            color: var(--text2);
-            margin-top: 3px;
-        }
+        .bug-item .title { font-weight: 600; font-size: 13px; color: var(--text); }
+        .bug-item .desc { font-size: 12px; color: var(--text2); margin-top: 3px; }
         .bug-item .meta {
             font-size: 10px;
             color: var(--text3);
@@ -914,21 +941,9 @@
             margin-top: 6px;
             border-left: 3px solid var(--primary);
         }
-        .admin-reply .reply-text {
-            font-size: 12px;
-            color: var(--text2);
-            margin-top: 2px;
-        }
-        .admin-reply .reply-meta {
-            font-size: 10px;
-            color: var(--text3);
-            margin-top: 2px;
-        }
-        .admin-reply .reply-label {
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--primary);
-        }
+        .admin-reply .reply-text { font-size: 12px; color: var(--text2); margin-top: 2px; }
+        .admin-reply .reply-meta { font-size: 10px; color: var(--text3); margin-top: 2px; }
+        .admin-reply .reply-label { font-size: 10px; font-weight: 600; color: var(--primary); }
         .admin-reply-form {
             display: flex;
             gap: 6px;
@@ -947,9 +962,7 @@
             transition: all var(--transition);
             min-width: 120px;
         }
-        .admin-reply-form input:focus {
-            border-color: var(--primary);
-        }
+        .admin-reply-form input:focus { border-color: var(--primary); }
         .admin-reply-form button {
             padding: 6px 14px;
             border-radius: 8px;
@@ -965,10 +978,11 @@
             background: var(--primary-hover);
             transform: scale(1.04);
         }
-        .auth-container {
-            max-width: 380px;
-            margin: 0 auto;
+        .admin-reply-form button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
+        .auth-container { max-width: 380px; margin: 0 auto; }
         .auth-tabs {
             display: flex;
             border-radius: 10px;
@@ -987,26 +1001,15 @@
             font-size: 13px;
             transition: all var(--transition);
         }
-        .auth-tabs button:hover {
-            background: var(--primary-border);
-        }
-        .auth-tabs button.active {
-            background: var(--primary);
-            color: #fff;
-        }
-        .auth-form {
-            display: none;
-        }
+        .auth-tabs button:hover { background: var(--primary-border); }
+        .auth-tabs button.active { background: var(--primary); color: #fff; }
+        .auth-form { display: none; }
         .auth-form.active {
             display: block;
             animation: pageFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .password-wrap {
-            position: relative;
-        }
-        .password-wrap input {
-            padding-right: 40px;
-        }
+        .password-wrap { position: relative; }
+        .password-wrap input { padding-right: 40px; }
         .password-toggle {
             position: absolute;
             right: 8px;
@@ -1058,22 +1061,11 @@
             transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             text-align: center;
         }
-        .ban-overlay.show .box {
-            transform: scale(1) translateY(0);
-        }
+        .ban-overlay.show .box { transform: scale(1) translateY(0); }
         .ban-overlay .icon {
             font-size: 64px;
             margin-bottom: 10px;
             animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
         }
         .ban-overlay h2 {
             font-size: 24px;
@@ -1094,19 +1086,14 @@
             gap: 10px;
             align-items: center;
         }
-        .ban-overlay .box-actions .btn {
-            min-width: 160px;
-            justify-content: center;
-        }
+        .ban-overlay .box-actions .btn { min-width: 160px; justify-content: center; }
         .ban-overlay .appeal-form {
             margin-top: 16px;
             display: none;
             width: 100%;
             animation: pageFadeIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
-        .ban-overlay .appeal-form.show {
-            display: block;
-        }
+        .ban-overlay .appeal-form.show { display: block; }
         .ban-overlay .appeal-form textarea {
             width: 100%;
             padding: 10px 14px;
@@ -1120,13 +1107,8 @@
             min-height: 80px;
             font-family: inherit;
         }
-        .ban-overlay .appeal-form textarea:focus {
-            border-color: var(--primary);
-        }
-        .ban-overlay .appeal-form .btn {
-            margin-top: 8px;
-            width: 100%;
-        }
+        .ban-overlay .appeal-form textarea:focus { border-color: var(--primary); }
+        .ban-overlay .appeal-form .btn { margin-top: 8px; width: 100%; }
         .ban-overlay .appeal-status {
             font-size: 13px;
             color: var(--text2);
@@ -1156,9 +1138,7 @@
             min-height: 60px;
             font-family: inherit;
         }
-        .ban-overlay .user-reply-form textarea:focus {
-            border-color: var(--primary);
-        }
+        .ban-overlay .user-reply-form textarea:focus { border-color: var(--primary); }
         .ban-overlay .user-reply-form button {
             padding: 6px 14px;
             border-radius: 8px;
@@ -1212,9 +1192,7 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        .spam-notification.show .box {
-            transform: scale(1) translateY(0);
-        }
+        .spam-notification.show .box { transform: scale(1) translateY(0); }
         .spam-notification .icon {
             font-size: 48px;
             text-align: center;
@@ -1233,10 +1211,7 @@
             line-height: 1.6;
             margin-bottom: 4px;
         }
-        .spam-notification .highlight {
-            color: #ffd700;
-            font-weight: 600;
-        }
+        .spam-notification .highlight { color: #ffd700; font-weight: 600; }
         .spam-notification .box-actions {
             display: flex;
             flex-direction: column;
@@ -1244,10 +1219,7 @@
             align-items: center;
             margin-top: 14px;
         }
-        .spam-notification .box-actions .btn {
-            min-width: 100px;
-            justify-content: center;
-        }
+        .spam-notification .box-actions .btn { min-width: 100px; justify-content: center; }
         .spam-notification .box-actions .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -1262,9 +1234,7 @@
             border: none;
             font-family: inherit;
         }
-        .spam-notification .box-actions .guide-link:hover {
-            color: var(--text);
-        }
+        .spam-notification .box-actions .guide-link:hover { color: var(--text); }
         .spam-notification .cooldown-text {
             font-size: 11px;
             color: var(--text3);
@@ -1305,16 +1275,9 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        .guide-notification.show .box {
-            transform: scale(1) translateY(0);
-        }
-        .guide-notification .guide-content h1 {
-            font-size: 20px;
-        }
-        .guide-notification .guide-content h2 {
-            font-size: 16px;
-            margin-top: 12px;
-        }
+        .guide-notification.show .box { transform: scale(1) translateY(0); }
+        .guide-notification .guide-content h1 { font-size: 20px; }
+        .guide-notification .guide-content h2 { font-size: 16px; margin-top: 12px; }
         .guide-notification .guide-content p {
             color: var(--text2);
             font-size: 13px;
@@ -1361,9 +1324,7 @@
             max-height: 90vh;
             overflow-y: auto;
         }
-        .dashboard-modal.show .box {
-            transform: scale(1) translateY(0);
-        }
+        .dashboard-modal.show .box { transform: scale(1) translateY(0); }
         .confirm-overlay {
             position: fixed;
             inset: 0;
@@ -1393,9 +1354,7 @@
             transform: scale(0.9) translateY(20px);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .confirm-overlay.show .confirm-dialog {
-            transform: scale(1) translateY(0);
-        }
+        .confirm-overlay.show .confirm-dialog { transform: scale(1) translateY(0); }
         .confirm-dialog .icon {
             font-size: 36px;
             text-align: center;
@@ -1418,10 +1377,7 @@
             gap: 8px;
             justify-content: center;
         }
-        .confirm-dialog .actions .btn {
-            min-width: 70px;
-            justify-content: center;
-        }
+        .confirm-dialog .actions .btn { min-width: 70px; justify-content: center; }
         .download-locked {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -1431,11 +1387,7 @@
             color: var(--text2);
             font-size: 13px;
         }
-        .download-locked .icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 4px;
-        }
+        .download-locked .icon { font-size: 24px; display: block; margin-bottom: 4px; }
         .download-box {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -1463,11 +1415,7 @@
             text-align: center;
             color: var(--text2);
         }
-        .coming-soon .icon {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 4px;
-        }
+        .coming-soon .icon { font-size: 32px; display: block; margin-bottom: 4px; }
         .cooldown-indicator {
             font-size: 11px;
             color: var(--text3);
@@ -1476,9 +1424,7 @@
             opacity: 0;
             transition: opacity var(--transition);
         }
-        .cooldown-indicator.show {
-            opacity: 1;
-        }
+        .cooldown-indicator.show { opacity: 1; }
         .search-sort-container {
             display: flex;
             gap: 8px;
@@ -1497,9 +1443,7 @@
             transition: all var(--transition);
             min-width: 120px;
         }
-        .search-sort-container input:focus {
-            border-color: var(--primary);
-        }
+        .search-sort-container input:focus { border-color: var(--primary); }
         .search-sort-container select {
             padding: 6px 10px;
             border-radius: 8px;
@@ -1540,20 +1484,10 @@
             transform-origin: left;
         }
         @keyframes chartSlide {
-            0% {
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            100% {
-                opacity: 1;
-                transform: scaleX(1);
-            }
+            0% { opacity: 0; transform: scaleX(0); }
+            100% { opacity: 1; transform: scaleX(1); }
         }
-        .chart-bar .label {
-            font-size: 11px;
-            min-width: 50px;
-            color: var(--text2);
-        }
+        .chart-bar .label { font-size: 11px; min-width: 50px; color: var(--text2); }
         .chart-bar .track {
             flex: 1;
             height: 16px;
@@ -1569,12 +1503,7 @@
             transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 2px;
         }
-        .chart-bar .value {
-            font-size: 11px;
-            min-width: 28px;
-            color: var(--text2);
-            text-align: right;
-        }
+        .chart-bar .value { font-size: 11px; min-width: 28px; color: var(--text2); text-align: right; }
         .pie-container {
             display: flex;
             flex-wrap: wrap;
@@ -1601,11 +1530,7 @@
             font-size: 12px;
             color: var(--text2);
         }
-        .pie-legend .color {
-            width: 14px;
-            height: 14px;
-            border-radius: 4px;
-        }
+        .pie-legend .color { width: 14px; height: 14px; border-radius: 4px; }
         .load-more-btn {
             display: block;
             width: 100%;
@@ -1662,23 +1587,11 @@
             opacity: 0.6;
         }
         @keyframes meteorFall {
-            0% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0;
-            }
-            5% {
-                opacity: 0.8;
-            }
-            20% {
-                opacity: 1;
-            }
-            80% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) scale(0.2);
-                opacity: 0;
-            }
+            0% { transform: translate(0, 0) scale(1); opacity: 0; }
+            5% { opacity: 0.8; }
+            20% { opacity: 1; }
+            80% { opacity: 0.8; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
         }
         .watermark {
             position: fixed;
@@ -1702,9 +1615,7 @@
             font-size: 11px;
             opacity: 0.35;
         }
-        .ad-hidden {
-            display: none !important;
-        }
+        .ad-hidden { display: none !important; }
         #ad-top.ad-hidden,
         #ad-bottom.ad-hidden,
         .sidebar-left.ad-hidden,
@@ -1712,13 +1623,196 @@
         #sticky-banner.ad-hidden {
             display: none !important;
         }
+
+        /* ADBLOCK DETECTION - BANNED STYLE (sama kayak ban overlay) */
+        #adblock-overlay .box {
+            background: var(--card);
+            border: 2px solid #f2b8b5;
+            border-radius: 24px;
+            padding: 40px 32px 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.9);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #adblock-overlay .icon {
+            font-size: 72px;
+            margin-bottom: 10px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        #adblock-overlay h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #f2b8b5;
+        }
+        #adblock-overlay p {
+            color: var(--text2);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+        #adblock-overlay .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        #adblock-overlay .btn-adblock {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 12px;
+            background: var(--primary);
+            color: #fff;
+        }
+        #adblock-overlay .btn-adblock:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
+        }
+        #adblock-overlay .btn-adblock:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        #adblock-overlay .btn-adblock-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--primary-border);
+            margin-top: 8px;
+        }
+        #adblock-overlay .btn-adblock-outline:hover {
+            background: var(--primary-bg);
+            transform: translateY(-2px);
+        }
+        #adblock-overlay .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #adblock-overlay .dns-warning {
+            background: rgba(255, 193, 7, 0.12);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #ffc107;
+            text-align: left;
+        }
+        #adblock-overlay .dns-warning strong {
+            color: #ffd700;
+        }
+        #adblock-overlay .check-status {
+            font-size: 13px;
+            color: var(--text3);
+            margin-top: 8px;
+            min-height: 24px;
+        }
+        #adblock-overlay .check-status.success {
+            color: #6fcf97;
+        }
+        #adblock-overlay .check-status.error {
+            color: #f2b8b5;
+        }
+        #adblock-overlay .browser-warning {
+            background: rgba(52, 152, 219, 0.12);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #5dade2;
+            text-align: left;
+        }
+        #adblock-overlay .browser-warning strong {
+            color: #5dade2;
+        }
+        #adblock-overlay .btn-adblock-secondary {
+            background: transparent;
+            color: var(--text2);
+            border: 1px solid var(--primary-border);
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        #adblock-overlay .btn-adblock-secondary:hover {
+            background: var(--primary-bg);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
+
+    <!-- ===== ADBLOCK OVERLAY ===== -->
+    <div id="adblock-overlay">
+        <div class="box">
+            <div class="icon">🛡️</div>
+            <h2>Pemblokir Iklan Terdeteksi</h2>
+
+            <p>
+                Kami mendeteksi bahwa Anda menggunakan <span class="highlight">pemblokir iklan</span> (AdBlock), 
+                <span class="highlight">DNS pemblokir iklan</span> (seperti NextDNS, AdGuard DNS), atau 
+                <span class="highlight">browser dengan fitur pemblokir iklan bawaan</span> (seperti Brave, Opera, atau Vivaldi).
+            </p>
+
+            <p>
+                Untuk dapat mengakses <strong>Sekolahmu</strong> secara penuh, kami meminta Anda untuk 
+                <span class="highlight">menonaktifkan pemblokir iklan</span> pada perangkat Anda.
+            </p>
+
+            <div class="dns-warning">
+                <strong>⚠️ Catatan Penting:</strong>
+                Jika Anda menggunakan DNS pemblokir iklan (misalnya NextDNS, AdGuard DNS, atau ControlD), 
+                harap <strong>nonaktifkan sementara</strong> atau <strong>ubah pengaturan DNS</strong> Anda 
+                agar iklan dapat dimuat. Website ini memerlukan iklan untuk tetap beroperasi secara gratis.
+            </div>
+
+            <div class="browser-warning">
+                <strong>ℹ️ Untuk Pengguna Brave / Opera / Vivaldi:</strong>
+                Browser ini memiliki fitur pemblokir iklan bawaan. Harap <strong>nonaktifkan Shields / Blokir Iklan</strong> 
+                untuk website ini, atau tambahkan website ini ke daftar pengecualian (whitelist).
+            </div>
+
+            <p style="font-size:12px;color:var(--text3);text-align:center;margin-top:4px;">
+                Setelah Anda menonaktifkan pemblokir iklan, silakan klik tombol di bawah untuk memeriksa ulang.
+            </p>
+
+            <button class="btn-adblock" id="adblockRetryBtn">
+                🔄 Saya Sudah Mematikan Pemblokir Iklan
+            </button>
+
+            <div id="adblockCheckStatus" class="check-status"></div>
+
+            <button class="btn-adblock-secondary" id="adblockRefreshBtn" style="display:none;">
+                🔄 Refresh Halaman
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== METEO R ===== -->
     <div id="meteor-container"></div>
     <div class="watermark"><span>Dibuat Oleh V4RRXD</span></div>
 
-    <!-- BAN OVERLAY -->
+    <!-- ===== BAN OVERLAY ===== -->
     <div class="ban-overlay" id="banOverlay">
         <div class="box">
             <div class="icon">⛔</div>
@@ -1744,7 +1838,7 @@
     <!-- ===== IKLAN TOP ===== -->
     <div id="ad-top" class="ad-wrapper"></div>
 
-    <!-- BANNER -->
+    <!-- ===== BANNER NOTIFIKASI ===== -->
     <div class="banner-container" id="bannerContainer">
         <div class="banner" id="banner">
             <span class="icon" id="bannerIcon">📢</span>
@@ -1756,165 +1850,159 @@
         </div>
     </div>
 
-    <div class="container">
-        <!-- NAVIGASI -->
-        <nav class="nav" id="navbar">
-            <div class="nav-left">
-                <button class="active" data-page="home">🏠 Beranda</button>
-                <div class="nav-dropdown" id="reviewDropdown">
-                    <button id="reviewDropdownBtn">📝 Ulasan ▾</button>
-                    <div class="nav-dropdown-content" id="reviewDropdownContent">
-                        <button data-page="review">✏️ Buat Ulasan</button>
-                        <button data-page="reviews">📋 Lihat Ulasan</button>
-                        <button data-page="sortreview">🔀 Urutkan Ulasan</button>
-                    </div>
+    <!-- ===== NAVIGASI ===== -->
+    <nav class="nav" id="navbar">
+        <div class="nav-left">
+            <button class="active" data-page="home">🏠 Beranda</button>
+            <div class="nav-dropdown" id="reviewDropdown">
+                <button id="reviewDropdownBtn">📝 Ulasan ▾</button>
+                <div class="nav-dropdown-content" id="reviewDropdownContent">
+                    <button data-page="review">✏️ Buat Ulasan</button>
+                    <button data-page="reviews">📋 Lihat Ulasan</button>
+                    <button data-page="sortreview">🔀 Urutkan Ulasan</button>
                 </div>
-                <button data-page="downloads">⬇ Unduhan</button>
-                <button data-page="leaderboard">🏆 Papan Peringkat</button>
-                <button data-page="features">💡 Permintaan Fitur</button>
-                <button data-page="bugreport">🐛 Laporkan Bug</button>
-                <button data-page="admin" id="adminNavBtn" class="hidden-nav">🛡 Admin</button>
             </div>
-            <div class="nav-right">
-                <button class="theme-toggle" id="themeToggle">🌙</button>
-                <div id="authSection"></div>
-            </div>
-        </nav>
+            <button data-page="downloads">⬇ Unduhan</button>
+            <button data-page="leaderboard">🏆 Papan Peringkat</button>
+            <button data-page="features">💡 Permintaan Fitur</button>
+            <button data-page="bugreport">🐛 Laporkan Bug</button>
+            <button data-page="admin" id="adminNavBtn" class="hidden-nav">🛡 Admin</button>
+        </div>
+        <div class="nav-right">
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+            <div id="authSection"></div>
+        </div>
+    </nav>
 
-        <!-- MAIN LAYOUT -->
-        <div class="main-layout">
-            <!-- SIDEBAR KIRI -->
-            <div class="sidebar-left" id="sidebarLeft">
-                <div class="sidebar-ad" id="ad-sidebar-left"></div>
-            </div>
-
-            <!-- KONTEN TENGAH -->
-            <div class="content-center">
-                <!-- PAGE HOME -->
-                <div id="page-home" class="page active">
-                    <div class="card"><h1 class="card-title">Sekolahmu</h1><p style="color:var(--text2);font-size:14px;margin-bottom:12px;">Aplikasi SMM untuk Android</p>
-                        <div style="background:var(--input);border:1px solid var(--primary-border);border-radius:12px;padding:12px 14px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
-                                <div><strong style="font-size:14px;">Versi</strong><div style="color:var(--text2);font-size:13px;">Terkini: <span id="apkVersion">2.4.0</span></div></div>
-                                <span style="background:var(--primary-bg);color:var(--primary);padding:2px 12px;border-radius:16px;font-size:12px;font-weight:600;">Beta</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card"><h2 class="card-title">Tentang</h2><p style="color:var(--text2);font-size:13px;line-height:1.6;">Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.</p>
-                        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;"><span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Android</span><span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Windows (Segera)</span></div>
-                    </div>
-                    <div class="card"><h2 class="card-title">📝 Ulasan Terbaru</h2><div id="homeReviewsList"></div></div>
-                </div>
-
-                <!-- PAGE REVIEW -->
-                <div id="page-review" class="page">
-                    <div class="card"><h2 class="card-title">✏️ Buat Ulasan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Bagikan pengalaman Anda menggunakan Sekolahmu</p>
-                        <div id="ratingAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p><button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
-                        <div id="ratingForm" style="display:none;">
-                            <div id="alreadyReviewed" style="display:none;text-align:center;padding:16px;background:var(--input);border-radius:10px;border:1px solid var(--primary-border);margin-bottom:12px;">
-                                <div style="font-size:28px;">✅</div><p style="color:var(--text2);font-size:13px;">Anda sudah memberi penilaian!</p><p style="color:var(--text3);font-size:12px;">Terima kasih atas tanggapan Anda 🙏</p>
-                                <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:6px;">Sunting Ulasan</button>
-                                <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:6px;">Hapus Ulasan</button>
-                            </div>
-                            <div id="reviewForm">
-                                <div class="form-group"><label>Penilaian (wajib)</label><div class="stars" id="starSelector"><span data-value="1">☆</span><span data-value="2">☆</span><span data-value="3">☆</span><span data-value="4">☆</span><span data-value="5">☆</span></div></div>
-                                <div class="form-group"><label class="checkbox-wrap"><input type="checkbox" id="reviewAnonymous" /> Kirim sebagai anonim</label></div>
-                                <div class="form-group"><label>Pesan <span style="color:var(--text3);font-size:11px;">(opsional)</span></label><textarea id="reviewMessage" placeholder="Tulis pengalaman Anda..." maxlength="500"></textarea></div>
-                                <div id="reviewCooldown" class="cooldown-indicator"></div>
-                                <button id="submitReview" class="btn btn-primary btn-block">Kirim Ulasan</button>
-                                <div id="reviewStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
-                            </div>
+    <!-- ===== MAIN LAYOUT ===== -->
+    <div class="main-layout">
+        <div class="sidebar-left" id="sidebarLeft">
+            <div class="sidebar-ad" id="ad-sidebar-left"></div>
+        </div>
+        <div class="content-center">
+            <!-- PAGE HOME -->
+            <div id="page-home" class="page active">
+                <div class="card"><h1 class="card-title">Sekolahmu</h1><p style="color:var(--text2);font-size:14px;margin-bottom:12px;">Aplikasi SMM untuk Android</p>
+                    <div style="background:var(--input);border:1px solid var(--primary-border);border-radius:12px;padding:12px 14px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
+                            <div><strong style="font-size:14px;">Versi</strong><div style="color:var(--text2);font-size:13px;">Terkini: <span id="apkVersion">2.4.0</span></div></div>
+                            <span style="background:var(--primary-bg);color:var(--primary);padding:2px 12px;border-radius:16px;font-size:12px;font-weight:600;">Beta</span>
                         </div>
                     </div>
                 </div>
-
-                <!-- PAGE REVIEWS -->
-                <div id="page-reviews" class="page">
-                    <div class="card"><h2 class="card-title">📋 Semua Ulasan</h2>
-                        <div class="search-sort-container">
-                            <input type="text" id="searchInput" placeholder="Cari ulasan..." />
-                            <select id="filterRating"><option value="all">Semua Rating</option><option value="5">⭐ 5 Bintang</option><option value="4">⭐⭐⭐⭐ 4 Bintang</option><option value="3">⭐⭐⭐ 3 Bintang</option><option value="2">⭐⭐ 2 Bintang</option><option value="1">⭐ 1 Bintang</option></select>
-                            <button id="searchBtn">🔍</button><button id="clearSearchBtn" class="btn btn-outline btn-sm">✕</button>
-                        </div>
-                        <div id="reviewsStats" style="margin-bottom:10px;"></div>
-                        <div id="reviewsList"></div>
-                        <div id="reviewsLoadMore"></div>
-                    </div>
+                <div class="card"><h2 class="card-title">Tentang</h2><p style="color:var(--text2);font-size:13px;line-height:1.6;">Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.</p>
+                    <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;"><span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Android</span><span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Windows (Segera)</span></div>
                 </div>
-
-                <!-- PAGE SORT REVIEW -->
-                <div id="page-sortreview" class="page">
-                    <div class="card"><h2 class="card-title">🔀 Urutkan Ulasan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Urutkan ulasan berdasarkan kriteria tertentu</p>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
-                            <select id="sortSelect" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);font-size:13px;flex:1;min-width:120px;">
-                                <option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="highest">Rating Tertinggi</option><option value="lowest">Rating Terendah</option><option value="mostLiked">Terbanyak Like</option><option value="mostDisliked">Terbanyak Dislike</option>
-                            </select>
-                            <button id="sortApplyBtn" class="btn btn-primary btn-sm">Terapkan</button>
-                        </div>
-                        <div id="sortResultStats" style="margin-bottom:10px;"></div>
-                        <div id="sortResultList"></div>
-                    </div>
-                </div>
-
-                <!-- PAGE DOWNLOADS -->
-                <div id="page-downloads" class="page">
-                    <div class="card"><h2 class="card-title">⬇ Unduhan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Unduh aplikasi Sekolahmu</p><div id="downloadSection"></div></div>
-                </div>
-
-                <!-- PAGE LEADERBOARD -->
-                <div id="page-leaderboard" class="page">
-                    <div class="card"><h2 class="card-title">🏆 Papan Peringkat</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Pengguna paling berkontribusi</p><div id="leaderboardList"></div></div>
-                </div>
-
-                <!-- PAGE FEATURES -->
-                <div id="page-features" class="page">
-                    <div class="card"><h2 class="card-title">💡 Permintaan Fitur</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Kirim ide fitur yang Anda inginkan</p>
-                        <div id="featureAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk meminta fitur</p><button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
-                        <div id="featureForm" style="display:none;">
-                            <div class="form-group"><label>Judul Fitur</label><input type="text" id="frTitle" placeholder="Masukkan judul fitur..." maxlength="100" /></div>
-                            <div class="form-group"><label>Deskripsi</label><textarea id="frDesc" placeholder="Jelaskan fitur yang Anda inginkan..." maxlength="500"></textarea></div>
-                            <button id="submitFR" class="btn btn-primary btn-block">Kirim Permintaan</button>
-                            <div id="frStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
-                        </div>
-                        <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Permintaan dari Pengguna</h3><div id="frList"></div></div>
-                    </div>
-                </div>
-
-                <!-- PAGE BUG REPORT -->
-                <div id="page-bugreport" class="page">
-                    <div class="card"><h2 class="card-title">🐛 Laporkan Bug</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Laporkan bug yang Anda temukan di aplikasi Sekolahmu</p>
-                        <div id="bugAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk melaporkan bug</p><button id="gotoLoginBtn4" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
-                        <div id="bugForm" style="display:none;">
-                            <div class="form-group"><label>Jenis Aplikasi</label><select id="bugAppType"><option value="apk">Android APK</option><option value="exe">Windows EXE</option><option value="website">Website</option></select></div>
-                            <div class="form-group"><label>Deskripsi Bug</label><textarea id="bugDesc" placeholder="Jelaskan bug yang Anda temukan..." maxlength="500"></textarea></div>
-                            <div class="form-group"><label>Langkah-langkah (opsional)</label><textarea id="bugSteps" placeholder="Langkah untuk menghasilkan bug..." maxlength="300"></textarea></div>
-                            <button id="submitBug" class="btn btn-primary btn-block">Kirim Laporan</button>
-                            <div id="bugStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
-                        </div>
-                        <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Laporan Bug Anda</h3><div id="bugList"></div></div>
-                    </div>
-                </div>
-
-                <!-- PAGE ADMIN -->
-                <div id="page-admin" class="page">
-                    <div class="card"><div id="adminContent"></div></div>
-                </div>
-
-                <!-- ===== IKLAN BAWAH ===== -->
-                <div id="ad-bottom" class="ad-wrapper"></div>
+                <div class="card"><h2 class="card-title">📝 Ulasan Terbaru</h2><div id="homeReviewsList"></div></div>
             </div>
 
-            <!-- SIDEBAR KANAN -->
-            <div class="sidebar-right" id="sidebarRight">
-                <div class="sidebar-ad" id="ad-sidebar-right"></div>
+            <!-- PAGE REVIEW -->
+            <div id="page-review" class="page">
+                <div class="card"><h2 class="card-title">✏️ Buat Ulasan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Bagikan pengalaman Anda menggunakan Sekolahmu</p>
+                    <div id="ratingAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p><button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
+                    <div id="ratingForm" style="display:none;">
+                        <div id="alreadyReviewed" style="display:none;text-align:center;padding:16px;background:var(--input);border-radius:10px;border:1px solid var(--primary-border);margin-bottom:12px;">
+                            <div style="font-size:28px;">✅</div><p style="color:var(--text2);font-size:13px;">Anda sudah memberi penilaian!</p><p style="color:var(--text3);font-size:12px;">Terima kasih atas tanggapan Anda 🙏</p>
+                            <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:6px;">Sunting Ulasan</button>
+                            <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:6px;">Hapus Ulasan</button>
+                        </div>
+                        <div id="reviewForm">
+                            <div class="form-group"><label>Penilaian (wajib)</label><div class="stars" id="starSelector"><span data-value="1">☆</span><span data-value="2">☆</span><span data-value="3">☆</span><span data-value="4">☆</span><span data-value="5">☆</span></div></div>
+                            <div class="form-group"><label class="checkbox-wrap"><input type="checkbox" id="reviewAnonymous" /> Kirim sebagai anonim</label></div>
+                            <div class="form-group"><label>Pesan <span style="color:var(--text3);font-size:11px;">(opsional)</span></label><textarea id="reviewMessage" placeholder="Tulis pengalaman Anda..." maxlength="500"></textarea></div>
+                            <div id="reviewCooldown" class="cooldown-indicator"></div>
+                            <button id="submitReview" class="btn btn-primary btn-block">Kirim Ulasan</button>
+                            <div id="reviewStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- PAGE REVIEWS -->
+            <div id="page-reviews" class="page">
+                <div class="card"><h2 class="card-title">📋 Semua Ulasan</h2>
+                    <div class="search-sort-container">
+                        <input type="text" id="searchInput" placeholder="Cari ulasan..." />
+                        <select id="filterRating"><option value="all">Semua Rating</option><option value="5">⭐ 5 Bintang</option><option value="4">⭐⭐⭐⭐ 4 Bintang</option><option value="3">⭐⭐⭐ 3 Bintang</option><option value="2">⭐⭐ 2 Bintang</option><option value="1">⭐ 1 Bintang</option></select>
+                        <button id="searchBtn">🔍</button><button id="clearSearchBtn" class="btn btn-outline btn-sm">✕</button>
+                    </div>
+                    <div id="reviewsStats" style="margin-bottom:10px;"></div>
+                    <div id="reviewsList"></div>
+                    <div id="reviewsLoadMore"></div>
+                </div>
+            </div>
+
+            <!-- PAGE SORT REVIEW -->
+            <div id="page-sortreview" class="page">
+                <div class="card"><h2 class="card-title">🔀 Urutkan Ulasan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Urutkan ulasan berdasarkan kriteria tertentu</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                        <select id="sortSelect" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);font-size:13px;flex:1;min-width:120px;">
+                            <option value="newest">Terbaru</option><option value="oldest">Terlama</option><option value="highest">Rating Tertinggi</option><option value="lowest">Rating Terendah</option><option value="mostLiked">Terbanyak Like</option><option value="mostDisliked">Terbanyak Dislike</option>
+                        </select>
+                        <button id="sortApplyBtn" class="btn btn-primary btn-sm">Terapkan</button>
+                    </div>
+                    <div id="sortResultStats" style="margin-bottom:10px;"></div>
+                    <div id="sortResultList"></div>
+                </div>
+            </div>
+
+            <!-- PAGE DOWNLOADS -->
+            <div id="page-downloads" class="page">
+                <div class="card"><h2 class="card-title">⬇ Unduhan</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Unduh aplikasi Sekolahmu</p><div id="downloadSection"></div></div>
+            </div>
+
+            <!-- PAGE LEADERBOARD -->
+            <div id="page-leaderboard" class="page">
+                <div class="card"><h2 class="card-title">🏆 Papan Peringkat</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Pengguna paling berkontribusi</p><div id="leaderboardList"></div></div>
+            </div>
+
+            <!-- PAGE FEATURES -->
+            <div id="page-features" class="page">
+                <div class="card"><h2 class="card-title">💡 Permintaan Fitur</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Kirim ide fitur yang Anda inginkan</p>
+                    <div id="featureAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk meminta fitur</p><button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
+                    <div id="featureForm" style="display:none;">
+                        <div class="form-group"><label>Judul Fitur</label><input type="text" id="frTitle" placeholder="Masukkan judul fitur..." maxlength="100" /></div>
+                        <div class="form-group"><label>Deskripsi</label><textarea id="frDesc" placeholder="Jelaskan fitur yang Anda inginkan..." maxlength="500"></textarea></div>
+                        <button id="submitFR" class="btn btn-primary btn-block">Kirim Permintaan</button>
+                        <div id="frStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
+                    </div>
+                    <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Permintaan dari Pengguna</h3><div id="frList"></div></div>
+                </div>
+            </div>
+
+            <!-- PAGE BUG REPORT -->
+            <div id="page-bugreport" class="page">
+                <div class="card"><h2 class="card-title">🐛 Laporkan Bug</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Laporkan bug yang Anda temukan di aplikasi Sekolahmu</p>
+                    <div id="bugAuthRequired" style="text-align:center;padding:16px 0;"><p style="color:var(--text2);font-size:13px;">Login untuk melaporkan bug</p><button id="gotoLoginBtn4" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button></div>
+                    <div id="bugForm" style="display:none;">
+                        <div class="form-group"><label>Jenis Aplikasi</label><select id="bugAppType"><option value="apk">Android APK</option><option value="exe">Windows EXE</option><option value="website">Website</option></select></div>
+                        <div class="form-group"><label>Deskripsi Bug</label><textarea id="bugDesc" placeholder="Jelaskan bug yang Anda temukan..." maxlength="500"></textarea></div>
+                        <div class="form-group"><label>Langkah-langkah (opsional)</label><textarea id="bugSteps" placeholder="Langkah untuk menghasilkan bug..." maxlength="300"></textarea></div>
+                        <button id="submitBug" class="btn btn-primary btn-block">Kirim Laporan</button>
+                        <div id="bugStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
+                    </div>
+                    <div style="margin-top:16px;"><h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Laporan Bug Anda</h3><div id="bugList"></div></div>
+                </div>
+            </div>
+
+            <!-- PAGE ADMIN -->
+            <div id="page-admin" class="page">
+                <div class="card"><div id="adminContent"></div></div>
+            </div>
+
+            <!-- ===== IKLAN BAWAH ===== -->
+            <div id="ad-bottom" class="ad-wrapper"></div>
+        </div>
+
+        <div class="sidebar-right" id="sidebarRight">
+            <div class="sidebar-ad" id="ad-sidebar-right"></div>
         </div>
     </div>
 
     <!-- ===== STICKY BANNER ===== -->
     <div id="sticky-banner"></div>
 
-    <!-- SPAM NOTIFICATION -->
+    <!-- ===== SPAM NOTIFICATION ===== -->
     <div class="spam-notification" id="spamNotification">
         <div class="box" id="spamBox">
             <div class="icon">📬</div>
@@ -1931,7 +2019,7 @@
         </div>
     </div>
 
-    <!-- GUIDE NOTIFICATION -->
+    <!-- ===== GUIDE NOTIFICATION ===== -->
     <div class="guide-notification" id="guideNotification">
         <div class="box" id="guideBox">
             <div class="guide-content">
@@ -1949,7 +2037,7 @@
         </div>
     </div>
 
-    <!-- CONFIRM OVERLAY -->
+    <!-- ===== CONFIRM OVERLAY ===== -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
             <div class="icon" id="confirmIcon">⚠️</div>
@@ -1962,7 +2050,7 @@
         </div>
     </div>
 
-    <!-- DASHBOARD MODAL -->
+    <!-- ===== DASHBOARD MODAL ===== -->
     <div class="dashboard-modal" id="dashboardModal">
         <div class="box" id="dashboardBox">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -1973,7 +2061,7 @@
         </div>
     </div>
 
-    <!-- TOAST -->
+    <!-- ===== TOAST ===== -->
     <div id="toast" class="toast"></div>
 
     <script type="module">
@@ -2027,7 +2115,9 @@
             isBanned = false,
             appealSent = false,
             appeals = [],
-            userCanReply = false;
+            userCanReply = false,
+            adBlockDetected = false,
+            adBlockChecked = false;
 
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
@@ -2043,6 +2133,216 @@
             clearTimeout(el._timer);
             el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
+
+        // ============================================================
+        // ADBLOCK DETECTION
+        // ============================================================
+        function detectAdBlock() {
+            return new Promise((resolve) => {
+                // Method 1: Honeypot - script dengan nama yang sering diblokir
+                const testAd = document.createElement('div');
+                testAd.className = 'ad-container ad-banner';
+                testAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;';
+                testAd.innerHTML = '&nbsp;';
+                document.body.appendChild(testAd);
+
+                // Method 2: Fetch ke URL iklan (biasanya diblokir)
+                const adUrl = 'https://www.highperformanceformat.com/358c8ef569d7d193675caa770d15352a/invoke.js';
+
+                let adBlockDetected = false;
+
+                // Cek honeypot
+                const honeyPotCheck = () => {
+                    const adEl = document.querySelector('.ad-container.ad-banner');
+                    if (adEl) {
+                        const styles = window.getComputedStyle(adEl);
+                        const isHidden = styles.display === 'none' ||
+                            styles.visibility === 'hidden' ||
+                            styles.opacity === '0' ||
+                            styles.height === '0px' ||
+                            styles.width === '0px';
+
+                        // Cek apakah element dihapus atau disembunyikan
+                        const isRemoved = !document.querySelector('.ad-container.ad-banner');
+
+                        if (isHidden || isRemoved) {
+                            adBlockDetected = true;
+                        }
+                    }
+                    document.body.removeChild(testAd);
+                };
+
+                // Cek fetch (DNS/Network level blocking)
+                const checkFetch = async () => {
+                    try {
+                        const response = await fetch(adUrl, {
+                            mode: 'no-cors',
+                            cache: 'no-store',
+                            signal: AbortSignal.timeout(3000)
+                        });
+                        // Jika fetch berhasil (tidak diblokir)
+                        // Tapi karena no-cors, kita tidak bisa baca response
+                        // Jadi kita anggap tidak ada adblock
+                    } catch (error) {
+                        // Jika fetch gagal (kemungkinan diblokir oleh adblock atau DNS)
+                        adBlockDetected = true;
+                    }
+                };
+
+                // Cek metode tambahan: detector script yang di-load
+                const checkScript = () => {
+                    // Cek apakah script iklan berhasil dimuat atau tidak
+                    const scripts = document.querySelectorAll('script[src*="highperformanceformat"]');
+                    if (scripts.length === 0) {
+                        // Tidak ada script iklan yang ter-load
+                        // Bisa jadi karena adblock memblokir
+                        // Tapi kita tunggu sebentar
+                    }
+                };
+
+                // Jalankan semua deteksi
+                setTimeout(() => {
+                    honeyPotCheck();
+                    // Cek apakah adblock sudah terdeteksi
+                    setTimeout(() => {
+                        // Cek lagi setelah beberapa ms
+                        const finalCheck = () => {
+                            // Cek apakah ada script iklan yang ter-load
+                            const adScripts = document.querySelectorAll('script[src*="highperformanceformat"]');
+                            // Cek apakah ada iframe iklan
+                            const adIframes = document.querySelectorAll('iframe[src*="highperformanceformat"]');
+
+                            // Jika tidak ada script dan iframe iklan, kemungkinan adblock aktif
+                            // Tapi ini bisa false positive saat pertama load
+                            resolve(adBlockDetected);
+                        };
+
+                        // Cek fetch
+                        checkFetch();
+
+                        setTimeout(finalCheck, 500);
+                    }, 300);
+                }, 300);
+            });
+        }
+
+        // ============================================================
+        // ADBLOCK OVERLAY
+        // ============================================================
+        const adblockOverlay = document.getElementById('adblock-overlay');
+        const adblockCheckStatus = document.getElementById('adblockCheckStatus');
+
+        function showAdBlockOverlay() {
+            adblockOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideAdBlockOverlay() {
+            adblockOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        function setAdBlockStatus(msg, type = 'info') {
+            if (adblockCheckStatus) {
+                adblockCheckStatus.textContent = msg;
+                adblockCheckStatus.className = 'check-status';
+                if (type === 'success') adblockCheckStatus.classList.add('success');
+                if (type === 'error') adblockCheckStatus.classList.add('error');
+            }
+        }
+
+        // ============================================================
+        // CHECK ADBLOCK (dengan retry)
+        // ============================================================
+        async function checkAdBlockAndBlock() {
+            // Jika admin, bypass
+            if (isAdmin === true) {
+                console.log('Admin detected, bypassing AdBlock check');
+                hideAdBlockOverlay();
+                return;
+            }
+
+            // Jika sudah diblokir, jangan cek lagi
+            if (adBlockChecked && adBlockDetected) {
+                showAdBlockOverlay();
+                return;
+            }
+
+            setAdBlockStatus('🔍 Memeriksa pemblokir iklan...', 'info');
+
+            try {
+                const detected = await detectAdBlock();
+
+                if (detected) {
+                    adBlockDetected = true;
+                    adBlockChecked = true;
+                    showAdBlockOverlay();
+                    setAdBlockStatus('⚠️ Pemblokir iklan terdeteksi. Mohon nonaktifkan.', 'error');
+                } else {
+                    adBlockDetected = false;
+                    adBlockChecked = true;
+                    hideAdBlockOverlay();
+                    setAdBlockStatus('✅ Tidak ada pemblokir iklan terdeteksi.', 'success');
+                    // Load iklan
+                    setTimeout(loadAds, 500);
+                }
+            } catch (error) {
+                console.error('AdBlock detection error:', error);
+                // Jika error, anggap tidak ada adblock
+                adBlockDetected = false;
+                adBlockChecked = true;
+                hideAdBlockOverlay();
+                setTimeout(loadAds, 500);
+            }
+        }
+
+        // ============================================================
+        // ADBLOCK RETRY BUTTON
+        // ============================================================
+        document.getElementById('adblockRetryBtn')?.addEventListener('click', async function() {
+            const btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Memeriksa ulang...';
+
+            setAdBlockStatus('🔄 Memeriksa ulang...', 'info');
+
+            try {
+                const detected = await detectAdBlock();
+
+                if (detected) {
+                    adBlockDetected = true;
+                    adBlockChecked = true;
+                    showAdBlockOverlay();
+                    setAdBlockStatus('⚠️ Pemblokir iklan masih aktif. Mohon nonaktifkan terlebih dahulu.', 'error');
+                    btn.innerHTML = '🔄 Saya Sudah Mematikan Pemblokir Iklan';
+                    btn.disabled = false;
+                } else {
+                    adBlockDetected = false;
+                    adBlockChecked = true;
+                    hideAdBlockOverlay();
+                    setAdBlockStatus('✅ Pemblokir iklan berhasil dinonaktifkan! Memuat ulang...', 'success');
+                    btn.innerHTML = '✅ Berhasil! Memuat ulang...';
+                    btn.disabled = true;
+
+                    // Reload halaman setelah 1 detik
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('AdBlock re-check error:', error);
+                setAdBlockStatus('❌ Terjadi kesalahan. Silakan refresh halaman.', 'error');
+                btn.innerHTML = '🔄 Saya Sudah Mematikan Pemblokir Iklan';
+                btn.disabled = false;
+
+                // Tampilkan tombol refresh
+                document.getElementById('adblockRefreshBtn').style.display = 'block';
+            }
+        });
+
+        document.getElementById('adblockRefreshBtn')?.addEventListener('click', () => {
+            location.reload();
+        });
 
         // ============================================================
         // CHECK ADMIN & BAN
@@ -2062,7 +2362,7 @@
         }
 
         // ============================================================
-        // IKLAN - RENDER BANNER PAKAI IFRAME
+        // IKLAN
         // ============================================================
         function shouldShowAds() {
             if (isAdmin === true || isBanned) return false;
@@ -2130,6 +2430,19 @@
         function loadAds() {
             const width = window.innerWidth;
 
+            // Cek adblock sebelum load iklan
+            if (adBlockDetected && !isAdmin) {
+                showAdBlockOverlay();
+                return;
+            }
+
+            if (!shouldShowAds()) {
+                document.querySelectorAll('.ad-wrapper, .sidebar-ad, #sticky-banner').forEach(el => {
+                    if (el) el.classList.add('ad-hidden');
+                });
+                return;
+            }
+
             // TOP BANNER
             if (width <= 480) {
                 renderBannerAd('ad-top', '358c8ef569d7d193675caa770d15352a', 320, 50);
@@ -2148,27 +2461,26 @@
                 renderBannerAd('ad-bottom', '4ca0fb7649546b6432d8d3d6bd71c217', 728, 90);
             }
 
-            // SIDEBAR (160x600) - Desktop only
+            // SIDEBAR
             if (width >= 1025) {
                 renderBannerAd('ad-sidebar-left', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
                 renderBannerAd('ad-sidebar-right', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
             }
 
-            // STICKY BANNER - Mobile only
+            // STICKY
             if (width <= 768) {
                 renderBannerAd('sticky-banner', '358c8ef569d7d193675caa770d15352a', 320, 50);
             }
         }
 
         // ============================================================
-        // NAVIGASI - PAKAI DATA-PAGE (ASLI)
+        // NAVIGASI
         // ============================================================
         function goToPage(page) {
             if (isBanned && page !== 'admin') return;
             if (page === currentPage) return;
             currentPage = page;
 
-            // Update active state untuk nav buttons
             document.querySelectorAll('.nav-left > button[data-page]').forEach(b => {
                 b.classList.toggle('active', b.dataset.page === page);
             });
@@ -2176,7 +2488,6 @@
                 b.classList.toggle('active', b.dataset.page === page);
             });
 
-            // Show/hide pages
             document.querySelectorAll('.page').forEach(p => {
                 if (p.id === `page-${page}`) {
                     p.classList.add('active');
@@ -2192,7 +2503,6 @@
 
             document.getElementById('reviewDropdownContent')?.classList.remove('show');
 
-            // Load content for page
             if (page === 'reviews') renderReviews();
             if (page === 'sortreview') renderSortReview();
             if (page === 'admin') renderAdmin();
@@ -2209,7 +2519,7 @@
         window.goToPage = goToPage;
 
         // ============================================================
-        // NAVIGASI CLICK - BUKA POPUNDER + SMARTLINK
+        // NAVIGASI CLICK - POPUNDER + SMARTLINK
         // ============================================================
         document.querySelectorAll('.nav-left > button[data-page], .nav-dropdown-content button[data-page]').forEach(btn => {
             btn.addEventListener('click', function(e) {
@@ -2230,7 +2540,6 @@
                 // Smartlink
                 window.open('https://www.effectivecpmnetwork.com/y2s3eyrsw?key=8ef3120e1c9224948b8bc47836e4bc44', '_blank');
 
-                // Pindah halaman setelah delay
                 setTimeout(() => {
                     goToPage(page);
                 }, 400);
@@ -2238,7 +2547,7 @@
         });
 
         // ============================================================
-        // DROPDOWN TOGGLE
+        // DROPDOWN
         // ============================================================
         document.getElementById('reviewDropdownBtn')?.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -3701,6 +4010,12 @@
                 isAdmin = admin;
                 updateNavVisibility();
                 renderAdminDashboard(container);
+                // Re-check adblock setelah admin status diketahui
+                if (isAdmin) {
+                    hideAdBlockOverlay();
+                } else {
+                    setTimeout(checkAdBlockAndBlock, 500);
+                }
                 setTimeout(loadAds, 300);
             });
         }
@@ -4201,6 +4516,8 @@
                     loadBugReports();
                     loadBanner();
                     loadAppeals();
+                    // Re-check adblock
+                    setTimeout(checkAdBlockAndBlock, 500);
                     setTimeout(() => { showToast('✅ Berhasil dimuat ulang!'); }, 500);
                 }
             }
@@ -4231,7 +4548,14 @@
                 if (user.emailVerified) { spamNotifShown = true;
                     hideSpamNotification(); }
                 listenAppealStatus();
-                setTimeout(loadAds, 400);
+
+                // Jika admin, bypass adblock
+                if (isAdmin) {
+                    hideAdBlockOverlay();
+                    setTimeout(loadAds, 400);
+                } else {
+                    setTimeout(checkAdBlockAndBlock, 600);
+                }
             } else {
                 isAdmin = false;
                 isBanned = false;
@@ -4245,7 +4569,8 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                setTimeout(loadAds, 400);
+                // Cek adblock untuk user non-login
+                setTimeout(checkAdBlockAndBlock, 600);
             }
         });
 
@@ -4261,7 +4586,11 @@
         renderDownloads();
         loadDraft();
 
-        setTimeout(loadAds, 500);
+        // Initial adblock check
+        setTimeout(checkAdBlockAndBlock, 800);
+
+        // Initial ads load (akan dipanggil ulang setelah adblock check)
+        setTimeout(loadAds, 1000);
 
         let resizeTimer;
         window.addEventListener('resize', () => {
