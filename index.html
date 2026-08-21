@@ -54,10 +54,8 @@
             --primary-border: rgba(214, 90, 98, 0.12);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -68,6 +66,7 @@
             padding: 12px;
             transition: background var(--transition), color var(--transition);
             position: relative;
+            will-change: background, color;
         }
 
         .container {
@@ -123,7 +122,7 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 4px 20px rgba(214, 90, 98, 0.25);
-            animation: bannerSlideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: bannerSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             position: relative;
             overflow: hidden;
         }
@@ -133,11 +132,11 @@
         }
 
         @keyframes bannerSlideDown {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(-12px) scale(0.96);
+                transform: translateY(-20px) scale(0.95);
             }
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -176,7 +175,7 @@
         }
         .banner .close-btn:hover {
             background: rgba(255, 255, 255, 0.25);
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(90deg);
         }
 
         /* ===== NAVBAR ===== */
@@ -187,6 +186,7 @@
             gap: 4px;
             background: var(--card);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 8px 12px;
             border-radius: var(--radius);
             margin-bottom: 12px;
@@ -242,6 +242,7 @@
         .nav button:hover {
             background: var(--primary-bg);
             color: var(--text);
+            transform: translateY(-1px);
         }
 
         .nav button.active {
@@ -253,11 +254,15 @@
             transform: translateX(-50%) scaleX(1);
         }
 
+        .nav button:active {
+            transform: scale(0.95);
+        }
+
         .nav button.hidden-nav {
             display: none;
         }
 
-        /* Dropdown Ulasan */
+        /* ===== DROPDOWN ===== */
         .nav-dropdown {
             position: relative;
             display: inline-block;
@@ -280,15 +285,17 @@
             z-index: 50;
             padding: 4px 0;
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             animation: dropdownFade 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transform-origin: top center;
         }
 
         @keyframes dropdownFade {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(-6px) scale(0.96);
+                transform: translateY(-8px) scale(0.96);
             }
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -317,6 +324,7 @@
             background: var(--primary-bg);
         }
 
+        /* ===== THEME TOGGLE ===== */
         .theme-toggle {
             background: var(--input);
             border: 1px solid var(--primary-border);
@@ -330,9 +338,14 @@
 
         .theme-toggle:hover {
             background: var(--primary-border);
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(10deg);
         }
 
+        .theme-toggle:active {
+            transform: scale(0.9);
+        }
+
+        /* ===== AUTH BUTTON ===== */
         .auth-btn {
             background: var(--primary);
             color: #fff;
@@ -350,6 +363,11 @@
             transform: scale(0.97);
         }
 
+        .auth-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* ===== USER BADGE ===== */
         .user-badge {
             display: flex;
             align-items: center;
@@ -370,6 +388,10 @@
             transform: scale(1.02);
         }
 
+        .user-badge:active {
+            transform: scale(0.95);
+        }
+
         .user-badge .logout-btn {
             background: none;
             border: none;
@@ -383,6 +405,7 @@
 
         .user-badge .logout-btn:hover {
             background: rgba(242, 184, 181, 0.15);
+            transform: scale(1.05);
         }
 
         .user-badge .status-verified {
@@ -407,6 +430,7 @@
 
         .user-badge .status-unverified:hover {
             background: rgba(242, 184, 181, 0.2);
+            transform: scale(1.05);
         }
 
         .user-badge .admin-badge {
@@ -425,19 +449,15 @@
 
         .page.active {
             display: block;
-            animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
-        .page.animated {
-            animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes pageFadeIn {
-            from {
+            0% {
                 opacity: 0;
-                transform: translateY(16px) scale(0.98);
+                transform: translateY(24px) scale(0.98);
             }
-            to {
+            100% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -447,6 +467,7 @@
         .card {
             background: var(--card);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
             padding: 16px 18px;
@@ -457,7 +478,8 @@
 
         .card:hover {
             border-color: var(--primary);
-            box-shadow: 0 8px 40px rgba(214, 90, 98, 0.06);
+            box-shadow: 0 8px 40px rgba(214, 90, 98, 0.08);
+            transform: translateY(-2px);
         }
 
         .card-title {
@@ -486,10 +508,27 @@
             gap: 4px;
             text-decoration: none;
             will-change: transform;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.2), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
         }
 
         .btn:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
 
         .btn-primary {
@@ -499,8 +538,8 @@
 
         .btn-primary:hover {
             background: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(214, 90, 98, 0.25);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
         }
 
         .btn-danger {
@@ -511,7 +550,7 @@
 
         .btn-danger:hover {
             background: rgba(242, 184, 181, 0.25);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .btn-success {
@@ -522,7 +561,7 @@
 
         .btn-success:hover {
             background: rgba(111, 207, 151, 0.25);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .btn-outline {
@@ -533,7 +572,7 @@
 
         .btn-outline:hover {
             background: var(--primary-bg);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .btn-sm {
@@ -553,58 +592,109 @@
             transform: none !important;
         }
 
-        /* ===== DOWNLOAD ===== */
-        .download-box {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-        }
-
-        .download-box .row {
+        /* ===== STARS ===== */
+        .stars {
             display: flex;
-            justify-content: space-between;
+            gap: 6px;
+            font-size: 40px;
+            cursor: pointer;
+            margin: 8px 0 14px;
+            user-select: none;
+            justify-content: center;
+            padding: 4px 0;
+        }
+
+        .stars span {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            color: #48454e;
+            display: inline-block;
+            will-change: transform, color;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .stars span.active {
+            color: #ffd700;
+            transform: scale(1.15);
+        }
+
+        .stars span:hover {
+            transform: scale(1.25) rotate(-8deg);
+            color: #ffd700;
+        }
+
+        .stars span:active {
+            transform: scale(0.8);
+        }
+
+        .stars span.bounce {
+            animation: starBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes starBounce {
+            0% {
+                transform: scale(0.3) rotate(-30deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.4) rotate(10deg);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9) rotate(-5deg);
+            }
+            100% {
+                transform: scale(1.15) rotate(0deg);
+            }
+        }
+
+        /* ===== NAME FIELD ANIMATION ===== */
+        .name-field-wrap {
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 80px;
+            opacity: 1;
+            transform: translateY(0);
+            margin-bottom: 12px;
+        }
+
+        .name-field-wrap.hidden {
+            max-height: 0;
+            opacity: 0;
+            transform: translateY(-12px) scale(0.96);
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .name-field-wrap .form-group {
+            margin-bottom: 0;
+        }
+
+        /* ===== CHECKBOX ===== */
+        .checkbox-wrap {
+            display: flex;
             align-items: center;
-            flex-wrap: wrap;
             gap: 8px;
-        }
-
-        .download-box .info .ver,
-        .download-box .info .sz {
+            cursor: pointer;
             color: var(--text2);
             font-size: 13px;
+            transition: all var(--transition);
         }
 
-        .coming-soon {
-            background: var(--input);
-            border: 1px dashed var(--primary-border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            color: var(--text2);
+        .checkbox-wrap:hover {
+            color: var(--text);
         }
 
-        .coming-soon .icon {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 4px;
+        .checkbox-wrap input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            transition: all var(--transition);
         }
 
-        .download-locked {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            text-align: center;
-            color: var(--text2);
-            font-size: 13px;
-        }
-
-        .download-locked .icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 4px;
+        .checkbox-wrap input[type="checkbox"]:checked {
+            transform: scale(1.1);
         }
 
         /* ===== FORM ===== */
@@ -640,6 +730,7 @@
         .form-group select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-bg);
+            transform: scale(1.01);
         }
 
         .form-group textarea {
@@ -655,31 +746,33 @@
             padding: 12px 14px;
             margin-bottom: 8px;
             transition: all var(--transition);
+            will-change: transform, box-shadow;
         }
 
         .review-item:hover {
             border-color: var(--primary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
         .review-item.removing {
-            animation: slideOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .review-item.editing {
             border-color: var(--primary);
             background: var(--primary-bg);
+            box-shadow: 0 0 0 2px var(--primary);
         }
 
         @keyframes slideOut {
-            from {
+            0% {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
-            to {
+            100% {
                 opacity: 0;
-                transform: translateY(-10px) scale(0.94);
+                transform: translateY(-16px) scale(0.94);
             }
         }
 
@@ -761,15 +854,33 @@
 
         .like-dislike button:hover {
             background: var(--primary-bg);
-            transform: scale(1.05);
+            transform: scale(1.08);
+        }
+
+        .like-dislike button:active {
+            transform: scale(0.9);
         }
 
         .like-dislike button.liked {
             color: #6fcf97;
+            animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
         .like-dislike button.disliked {
             color: #f2b8b5;
+            animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes likePop {
+            0% {
+                transform: scale(0.8);
+            }
+            50% {
+                transform: scale(1.3);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
 
         .like-dislike .count {
@@ -790,6 +901,18 @@
             border-radius: 8px;
             padding: 6px 10px;
             margin-bottom: 4px;
+            animation: commentSlide 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes commentSlide {
+            0% {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.96);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .comments-section .comment .cname {
@@ -829,6 +952,7 @@
 
         .comments-section .comment-form input:focus {
             border-color: var(--primary);
+            transform: scale(1.01);
         }
 
         .comments-section .comment-form button {
@@ -845,7 +969,11 @@
 
         .comments-section .comment-form button:hover {
             background: var(--primary-hover);
-            transform: scale(1.02);
+            transform: scale(1.04);
+        }
+
+        .comments-section .comment-form button:active {
+            transform: scale(0.92);
         }
 
         /* ===== ADMIN ===== */
@@ -866,8 +994,9 @@
         }
 
         .admin-stats .stat:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(214, 90, 98, 0.1);
         }
 
         .admin-stats .stat .num {
@@ -942,6 +1071,7 @@
 
         .badge-item:hover {
             border-color: var(--primary);
+            transform: translateX(4px);
         }
 
         .badge-item .rank {
@@ -977,6 +1107,7 @@
 
         .fr-item:hover {
             border-color: var(--primary);
+            transform: translateX(4px);
         }
 
         .fr-item .top {
@@ -1039,6 +1170,19 @@
             align-items: center;
             gap: 6px;
             margin-bottom: 4px;
+            animation: chartSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transform-origin: left;
+        }
+
+        @keyframes chartSlide {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
         }
 
         .chart-bar .label {
@@ -1060,7 +1204,7 @@
             height: 100%;
             background: var(--primary);
             border-radius: 8px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 2px;
         }
 
@@ -1095,6 +1239,7 @@
         .search-sort-container input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-bg);
+            transform: scale(1.01);
         }
 
         .search-sort-container select {
@@ -1126,7 +1271,11 @@
 
         .search-sort-container button:hover {
             background: var(--primary-hover);
-            transform: scale(1.02);
+            transform: scale(1.04);
+        }
+
+        .search-sort-container button:active {
+            transform: scale(0.92);
         }
 
         /* ===== AUTH ===== */
@@ -1155,13 +1304,13 @@
             transition: all var(--transition);
         }
 
+        .auth-tabs button:hover {
+            background: var(--primary-border);
+        }
+
         .auth-tabs button.active {
             background: var(--primary);
             color: #fff;
-        }
-
-        .auth-tabs button:hover:not(.active) {
-            background: var(--primary-border);
         }
 
         .auth-form {
@@ -1170,6 +1319,7 @@
 
         .auth-form.active {
             display: block;
+            animation: pageFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .password-wrap {
@@ -1196,6 +1346,7 @@
 
         .password-toggle:hover {
             color: var(--text);
+            transform: translateY(-50%) scale(1.1);
         }
 
         /* ===== SPAM ===== */
@@ -1207,8 +1358,8 @@
             bottom: 0;
             z-index: 9999;
             background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1231,8 +1382,8 @@
             max-width: 420px;
             width: 100%;
             box-shadow: var(--shadow);
-            transform: scale(0.92) translateY(12px);
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-height: 90vh;
             overflow-y: auto;
         }
@@ -1370,16 +1521,17 @@
             position: fixed;
             bottom: 70px;
             left: 50%;
-            transform: translateX(-50%) translateY(20px);
+            transform: translateX(-50%) translateY(20px) scale(0.95);
             background: var(--card);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--primary-border);
             padding: 8px 18px;
             border-radius: 10px;
             font-size: 13px;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 999;
             box-shadow: var(--shadow);
             color: var(--text);
@@ -1389,7 +1541,7 @@
 
         .toast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0) scale(1);
         }
 
         .empty {
@@ -1405,7 +1557,8 @@
             inset: 0;
             z-index: 999;
             background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1428,8 +1581,8 @@
             max-width: 360px;
             width: 100%;
             box-shadow: var(--shadow);
-            transform: scale(0.9) translateY(10px);
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .confirm-overlay.show .confirm-dialog {
@@ -1476,8 +1629,8 @@
             bottom: 0;
             z-index: 9998;
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1500,8 +1653,8 @@
             max-width: 400px;
             width: 100%;
             box-shadow: var(--shadow);
-            transform: scale(0.92) translateY(12px);
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .dashboard-modal.show .box {
@@ -1521,6 +1674,7 @@
             .nav {
                 padding: 6px 8px;
                 gap: 3px;
+                flex-wrap: wrap;
             }
 
             .nav button {
@@ -1530,6 +1684,7 @@
 
             .nav-dropdown-content {
                 min-width: 120px;
+                left: -20px;
             }
             .nav-dropdown-content button {
                 font-size: 10px;
@@ -1541,6 +1696,8 @@
                 width: 100%;
                 justify-content: center;
                 gap: 3px;
+                padding-top: 4px;
+                border-top: 1px solid var(--primary-border);
             }
 
             .banner-container {
@@ -1620,6 +1777,11 @@
             .download-box .row .btn {
                 justify-content: center;
             }
+
+            .stars {
+                font-size: 32px;
+                gap: 4px;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1631,6 +1793,37 @@
                 font-size: 9px;
                 padding: 3px 6px;
             }
+            .stars {
+                font-size: 28px;
+                gap: 3px;
+            }
+        }
+
+        /* ===== OPTIMASI ===== */
+        .optimize-gpu {
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--input);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
         }
     </style>
 </head>
@@ -1680,7 +1873,7 @@
         </nav>
 
         <!-- PAGE HOME -->
-        <div id="page-home" class="page active animated">
+        <div id="page-home" class="page active">
             <div class="card">
                 <h1 class="card-title">Sekolahmu</h1>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:12px;">Aplikasi SMM untuk Android</p>
@@ -1752,8 +1945,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="checkbox-wrap" style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text2);font-size:13px;">
-                                <input type="checkbox" id="reviewAnonymous" style="width:16px;height:16px;accent-color:var(--primary);" />
+                            <label class="checkbox-wrap">
+                                <input type="checkbox" id="reviewAnonymous" />
                                 Kirim sebagai anonim
                             </label>
                         </div>
@@ -2312,7 +2505,6 @@
             const totalReviews = userReviews.length;
             const avgRating = totalReviews > 0 ? (userReviews.reduce((s, r) => s + r.rating, 0) / totalReviews) : 0;
 
-            // Admin tidak perlu verifikasi
             const isVerified = currentUser.emailVerified || isAdmin;
             const verifiedText = isVerified ? 'Terverifikasi' : 'Belum Verifikasi';
             const verifiedClass = isVerified ? 'status-verified' : 'status-unverified';
@@ -2764,6 +2956,25 @@
 
             try {
                 await update(ref(db, `reviews/${reviewId}`), updates);
+                // Refresh UI untuk update animasi
+                const likeBtn = document.querySelector(`[data-review="${reviewId}"][data-type="like"]`);
+                const dislikeBtn = document.querySelector(`[data-review="${reviewId}"][data-type="dislike"]`);
+                if (likeBtn) {
+                    const count = likeBtn.querySelector('.count');
+                    if (count) {
+                        const newLikes = (updates.likes !== undefined) ? updates.likes : likes;
+                        count.textContent = newLikes;
+                    }
+                    likeBtn.classList.toggle('liked', updates[`likedBy/${uid}`] === true || (likedBy[uid] && !updates[`likedBy/${uid}`]));
+                }
+                if (dislikeBtn) {
+                    const count = dislikeBtn.querySelector('.count');
+                    if (count) {
+                        const newDislikes = (updates.dislikes !== undefined) ? updates.dislikes : dislikes;
+                        count.textContent = newDislikes;
+                    }
+                    dislikeBtn.classList.toggle('disliked', updates[`dislikedBy/${uid}`] === true || (dislikedBy[uid] && !updates[`dislikedBy/${uid}`]));
+                }
             } catch (err) {
                 showToast('Gagal: ' + err.message, true);
             }
@@ -2911,7 +3122,7 @@
                 if (selectedRating === val) {
                     selectedRating = 0;
                     starEls.forEach(s => {
-                        s.classList.remove('active');
+                        s.classList.remove('active', 'bounce');
                         s.textContent = '☆';
                     });
                     return;
@@ -2922,6 +3133,36 @@
                     const active = sv <= val;
                     s.classList.toggle('active', active);
                     s.textContent = active ? '★' : '☆';
+                    if (active) {
+                        s.classList.remove('bounce');
+                        // Staggered bounce
+                        const delay = (val - sv) * 40;
+                        setTimeout(() => {
+                            s.classList.add('bounce');
+                        }, delay);
+                    } else {
+                        s.classList.remove('bounce');
+                    }
+                });
+            });
+
+            el.addEventListener('mouseenter', () => {
+                const val = parseInt(el.dataset.value);
+                starEls.forEach(s => {
+                    const sv = parseInt(s.dataset.value);
+                    if (sv <= val && !s.classList.contains('active')) {
+                        s.style.color = '#ffd700';
+                        s.style.transform = 'scale(1.2) rotate(-6deg)';
+                    }
+                });
+            });
+
+            el.addEventListener('mouseleave', () => {
+                starEls.forEach(s => {
+                    s.style.color = '';
+                    if (!s.classList.contains('active')) {
+                        s.style.transform = '';
+                    }
                 });
             });
         });
@@ -3018,7 +3259,7 @@
 
                     selectedRating = 0;
                     starEls.forEach(s => {
-                        s.classList.remove('active');
+                        s.classList.remove('active', 'bounce');
                         s.textContent = '☆';
                     });
                     if (nameInput) nameInput.value = '';
@@ -3576,11 +3817,11 @@
             });
 
             const months = Object.keys(monthData).sort();
-            const chartHtml = months.length > 0 ? months.map(m => {
+            const chartHtml = months.length > 0 ? months.map((m, i) => {
                 const avgMonth = monthData[m].sum / monthData[m].total;
                 const percent = (avgMonth / 5) * 100;
                 return `
-                    <div class="chart-bar">
+                    <div class="chart-bar" style="animation-delay:${i * 50}ms;">
                         <span class="label">${m}</span>
                         <div class="track">
                             <div class="fill" style="width:${percent}%;"></div>
