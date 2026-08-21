@@ -70,7 +70,7 @@
         .ad-wrapper {
             text-align: center;
             padding: 6px 0;
-            min-height: 60px;
+            min-height: 50px;
             background: var(--input);
             border-radius: 8px;
             margin: 4px 0;
@@ -87,12 +87,12 @@
         #ad-top {
             margin-top: -4px;
             margin-bottom: 6px;
-            min-height: 60px;
+            min-height: 50px;
         }
         #ad-bottom {
             margin-top: 8px;
             margin-bottom: 4px;
-            min-height: 60px;
+            min-height: 50px;
         }
         #sticky-banner {
             display: none;
@@ -142,27 +142,31 @@
         .ad-hidden {
             display: none !important;
         }
-        .watermark {
-            position: fixed;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text3);
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: 10;
+        @media (min-width: 1025px) {
+            .sidebar-left,
+            .sidebar-right {
+                display: block !important;
+            }
+            #sticky-banner {
+                display: none !important;
+            }
         }
-        .watermark span {
-            display: inline-block;
-            background: var(--card);
-            padding: 4px 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(4px);
-            border: 1px solid var(--primary-border);
-            font-size: 11px;
-            opacity: 0.35;
+        @media (max-width: 1024px) {
+            .sidebar-left,
+            .sidebar-right {
+                display: none !important;
+            }
+            .main-layout {
+                display: block;
+            }
+        }
+        @media (max-width: 768px) {
+            #sticky-banner {
+                display: block !important;
+            }
+            body {
+                padding-bottom: 70px;
+            }
         }
         /* ===== BANNER NOTIFIKASI ===== */
         .banner-container {
@@ -351,6 +355,20 @@
             color: var(--primary);
             background: var(--primary-bg);
         }
+        .theme-toggle {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            color: var(--text);
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all var(--transition);
+        }
+        .theme-toggle:hover {
+            background: var(--primary-border);
+            transform: scale(1.05) rotate(10deg);
+        }
         /* ===== CARDS ===== */
         .card {
             background: var(--card);
@@ -372,61 +390,79 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
-        @media (min-width: 1025px) {
-            .sidebar-left,
-            .sidebar-right {
-                display: block !important;
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+            animation: pageFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes pageFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
             }
-            #sticky-banner {
-                display: none !important;
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
-        @media (max-width: 1024px) {
-            .sidebar-left,
-            .sidebar-right {
-                display: none !important;
-            }
-            .main-layout {
-                display: block;
-            }
+        .empty {
+            color: var(--text3);
+            text-align: center;
+            padding: 24px 12px;
+            font-size: 13px;
         }
-        @media (max-width: 768px) {
-            #sticky-banner {
-                display: block !important;
-            }
-            body {
-                padding-bottom: 70px;
-            }
-            .watermark {
-                bottom: 60px;
-            }
-            .nav {
-                padding: 4px 6px;
-                gap: 2px;
-            }
-            .nav button {
-                font-size: 10px;
-                padding: 3px 6px;
-            }
-            .nav-right {
-                margin-left: 0;
-                width: 100%;
-                justify-content: center;
-                gap: 3px;
-                padding-top: 4px;
-                border-top: 1px solid var(--primary-border);
-            }
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
         }
-        @media (max-width: 480px) {
-            .nav-left button {
-                font-size: 8px;
-                padding: 2px 5px;
-            }
-            .card {
-                padding: 10px 8px;
-            }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
         }
-        /* ===== CSS LAINNYA (semua dari kode asli) ===== */
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
+        }
+        .btn-success {
+            background: rgba(111, 207, 151, 0.15);
+            color: #6fcf97;
+            border: 1px solid rgba(111, 207, 151, 0.15);
+        }
+        .btn-danger {
+            background: rgba(242, 184, 181, 0.15);
+            color: #f2b8b5;
+            border: 1px solid rgba(242, 184, 181, 0.15);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--primary-border);
+        }
+        .btn-outline:hover {
+            background: var(--primary-bg);
+            transform: translateY(-2px);
+        }
+        .btn-sm {
+            padding: 3px 10px;
+            font-size: 11px;
+            border-radius: 6px;
+        }
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
         .auth-btn {
             background: var(--primary);
             color: #fff;
@@ -509,108 +545,6 @@
             font-weight: 700;
             letter-spacing: 0.5px;
         }
-        .theme-toggle {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            color: var(--text);
-            padding: 4px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all var(--transition);
-        }
-        .theme-toggle:hover {
-            background: var(--primary-border);
-            transform: scale(1.05) rotate(10deg);
-        }
-        .page {
-            display: none;
-        }
-        .page.active {
-            display: block;
-            animation: pageFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        @keyframes pageFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(30px) scale(0.97);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .empty {
-            color: var(--text3);
-            text-align: center;
-            padding: 24px 12px;
-            font-size: 13px;
-        }
-        .btn {
-            border: none;
-            border-radius: 10px;
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
-        }
-        .btn-success {
-            background: rgba(111, 207, 151, 0.15);
-            color: #6fcf97;
-            border: 1px solid rgba(111, 207, 151, 0.15);
-        }
-        .btn-success:hover {
-            background: rgba(111, 207, 151, 0.25);
-            transform: translateY(-2px);
-        }
-        .btn-danger {
-            background: rgba(242, 184, 181, 0.15);
-            color: #f2b8b5;
-            border: 1px solid rgba(242, 184, 181, 0.15);
-        }
-        .btn-danger:hover {
-            background: rgba(242, 184, 181, 0.25);
-            transform: translateY(-2px);
-        }
-        .btn-outline {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--primary-border);
-        }
-        .btn-outline:hover {
-            background: var(--primary-bg);
-            transform: translateY(-2px);
-        }
-        .btn-sm {
-            padding: 3px 10px;
-            font-size: 11px;
-            border-radius: 6px;
-        }
-        .btn-block {
-            width: 100%;
-            justify-content: center;
-        }
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
         .toast {
             position: fixed;
             bottom: 70px;
@@ -659,21 +593,56 @@
             transform: scale(1.25) rotate(-8deg);
             color: #ffd700;
         }
-        .stars span.bounce {
-            animation: starBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        .review-item {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            transition: all var(--transition);
         }
-        @keyframes starBounce {
-            0% {
-                transform: scale(0.3) rotate(-30deg);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.4) rotate(10deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.15) rotate(0deg);
-            }
+        .review-item:hover {
+            border-color: rgba(214, 90, 98, 0.25);
+            transform: translateY(-2px);
+        }
+        .review-item .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .review-item .name {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text);
+        }
+        .review-item .stars-display {
+            color: #ffd700;
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+        .review-item .msg {
+            color: var(--text2);
+            font-size: 13px;
+            margin-top: 3px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .review-item .meta {
+            color: var(--text3);
+            font-size: 10px;
+            margin-top: 4px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .review-item .actions {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 4px;
         }
         .form-group {
             margin-bottom: 10px;
@@ -706,10 +675,6 @@
             box-shadow: 0 0 0 3px var(--primary-bg);
             transform: scale(1.01);
         }
-        .form-group textarea {
-            min-height: 60px;
-            resize: vertical;
-        }
         .checkbox-wrap {
             display: flex;
             align-items: center;
@@ -727,242 +692,6 @@
             height: 17px;
             accent-color: var(--primary);
             cursor: pointer;
-        }
-        .review-item {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: var(--radius);
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            transition: all var(--transition);
-        }
-        .review-item:hover {
-            border-color: rgba(214, 90, 98, 0.25);
-            transform: translateY(-2px);
-        }
-        .review-item.removing {
-            animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        .review-item.editing {
-            border-color: var(--primary);
-            background: var(--primary-bg);
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-        @keyframes slideOut {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-16px) scale(0.94);
-            }
-        }
-        .review-item .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-        .review-item .name {
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text);
-        }
-        .review-item .name .badge-anon {
-            font-size: 9px;
-            background: var(--input);
-            color: var(--text2);
-            padding: 1px 8px;
-            border-radius: 16px;
-            border: 1px solid var(--primary-border);
-            margin-left: 4px;
-        }
-        .review-item .name .badge-best {
-            font-size: 9px;
-            background: #ffd700;
-            color: #000;
-            padding: 1px 8px;
-            border-radius: 16px;
-            font-weight: 700;
-            margin-left: 4px;
-        }
-        .review-item .stars-display {
-            color: #ffd700;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-        .review-item .msg {
-            color: var(--text2);
-            font-size: 13px;
-            margin-top: 3px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-        .review-item .msg .read-more-btn {
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-            background: none;
-            border: none;
-            font-size: 12px;
-            padding: 0 4px;
-            transition: color var(--transition);
-        }
-        .review-item .meta {
-            color: var(--text3);
-            font-size: 10px;
-            margin-top: 4px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .review-item .actions {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            margin-top: 4px;
-        }
-        .like-dislike {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-            margin-top: 4px;
-        }
-        .like-dislike button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 2px 6px;
-            border-radius: 6px;
-            transition: all var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            color: var(--text2);
-        }
-        .like-dislike button:hover {
-            background: var(--primary-bg);
-            transform: scale(1.08);
-        }
-        .like-dislike button.liked {
-            color: #6fcf97;
-            animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .like-dislike button.disliked {
-            color: #f2b8b5;
-            animation: likePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        @keyframes likePop {
-            0% {
-                transform: scale(0.8);
-            }
-            50% {
-                transform: scale(1.3);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-        .like-dislike .count {
-            font-size: 11px;
-            font-weight: 600;
-            min-width: 14px;
-        }
-        .comments-section {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--primary-border);
-        }
-        .comments-section .comment {
-            background: var(--input);
-            border-radius: 8px;
-            padding: 6px 10px;
-            margin-bottom: 4px;
-            animation: commentSlide 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        }
-        .comments-section .comment.nested {
-            margin-left: 20px;
-            border-left: 2px solid var(--primary);
-        }
-        .comments-section .comment .cname {
-            font-weight: 600;
-            font-size: 11px;
-            color: var(--text);
-        }
-        .comments-section .comment .cmsg {
-            font-size: 12px;
-            color: var(--text2);
-        }
-        .comments-section .comment .cmeta {
-            font-size: 9px;
-            color: var(--text3);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-top: 2px;
-        }
-        .comments-section .comment .cmeta .reply-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 0 4px;
-            transition: color var(--transition);
-        }
-        @keyframes commentSlide {
-            0% {
-                opacity: 0;
-                transform: translateY(-8px) scale(0.96);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        .comments-section .comment-form {
-            display: flex;
-            gap: 6px;
-            margin-top: 6px;
-        }
-        .comments-section .comment-form input {
-            flex: 1;
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--primary-border);
-            background: var(--input);
-            color: var(--text);
-            font-size: 12px;
-            outline: none;
-            transition: all var(--transition);
-        }
-        .comments-section .comment-form input:focus {
-            border-color: var(--primary);
-        }
-        .comments-section .comment-form button {
-            padding: 6px 14px;
-            border-radius: 8px;
-            border: none;
-            background: var(--primary);
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition);
-            font-size: 12px;
-        }
-        .comments-section .comment-form button:hover {
-            background: var(--primary-hover);
-            transform: scale(1.04);
-        }
-        .comments-section .comment-form button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
         }
         .admin-stats {
             display: grid;
@@ -1059,9 +788,6 @@
         .badge-item .bcount {
             font-size: 12px;
             color: var(--text2);
-        }
-        .badge-item .bbadge {
-            font-size: 18px;
         }
         .fr-item {
             background: var(--input);
@@ -1239,10 +965,6 @@
             background: var(--primary-hover);
             transform: scale(1.04);
         }
-        .admin-reply-form button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
         .auth-container {
             max-width: 380px;
             margin: 0 auto;
@@ -1301,491 +1023,6 @@
         .password-toggle:hover {
             color: var(--text);
             transform: translateY(-50%) scale(1.1);
-        }
-        .spam-notification {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(16px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .spam-notification.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .spam-notification .box {
-            background: var(--card);
-            border: 1px solid var(--primary-border);
-            border-radius: 24px;
-            padding: 28px 24px 24px;
-            max-width: 440px;
-            width: 100%;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .spam-notification.show .box {
-            transform: scale(1) translateY(0);
-        }
-        .spam-notification .icon {
-            font-size: 48px;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        .spam-notification h3 {
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        .spam-notification p {
-            color: var(--text2);
-            font-size: 13px;
-            text-align: center;
-            line-height: 1.6;
-            margin-bottom: 4px;
-        }
-        .spam-notification .highlight {
-            color: #ffd700;
-            font-weight: 600;
-        }
-        .spam-notification .box-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            align-items: center;
-            margin-top: 14px;
-        }
-        .spam-notification .box-actions .btn {
-            min-width: 100px;
-            justify-content: center;
-        }
-        .spam-notification .box-actions .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .spam-notification .box-actions .guide-link {
-            font-size: 11px;
-            color: var(--text3);
-            text-decoration: underline;
-            cursor: pointer;
-            transition: color 0.2s;
-            background: none;
-            border: none;
-            font-family: inherit;
-        }
-        .spam-notification .box-actions .guide-link:hover {
-            color: var(--text);
-        }
-        .spam-notification .cooldown-text {
-            font-size: 11px;
-            color: var(--text3);
-            text-align: center;
-            margin-top: 2px;
-        }
-        .guide-notification {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(16px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .guide-notification.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .guide-notification .box {
-            background: var(--card);
-            border: 1px solid var(--primary-border);
-            border-radius: 24px;
-            padding: 28px 24px 24px;
-            max-width: 440px;
-            width: 100%;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .guide-notification.show .box {
-            transform: scale(1) translateY(0);
-        }
-        .guide-notification .guide-content h1 {
-            font-size: 20px;
-        }
-        .guide-notification .guide-content h2 {
-            font-size: 16px;
-            margin-top: 12px;
-        }
-        .guide-notification .guide-content p {
-            color: var(--text2);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        .guide-notification .guide-content .note {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin: 10px 0;
-        }
-        .guide-notification .guide-content .back-btn {
-            margin-top: 10px;
-        }
-        .dashboard-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 9999;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(16px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .dashboard-modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .dashboard-modal .box {
-            background: var(--card);
-            border: 1px solid var(--primary-border);
-            border-radius: 24px;
-            padding: 28px 24px 24px;
-            max-width: 440px;
-            width: 100%;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
-            transform: scale(0.92) translateY(20px);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        .dashboard-modal.show .box {
-            transform: scale(1) translateY(0);
-        }
-        .confirm-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            padding: 20px;
-        }
-        .confirm-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .confirm-dialog {
-            background: var(--card);
-            border: 1px solid var(--primary-border);
-            border-radius: 18px;
-            padding: 24px 20px 20px;
-            max-width: 360px;
-            width: 100%;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
-            transform: scale(0.9) translateY(20px);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .confirm-overlay.show .confirm-dialog {
-            transform: scale(1) translateY(0);
-        }
-        .confirm-dialog .icon {
-            font-size: 36px;
-            text-align: center;
-            margin-bottom: 6px;
-        }
-        .confirm-dialog h3 {
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 4px;
-        }
-        .confirm-dialog p {
-            color: var(--text2);
-            font-size: 13px;
-            text-align: center;
-            margin-bottom: 14px;
-            line-height: 1.5;
-        }
-        .confirm-dialog .actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        .confirm-dialog .actions .btn {
-            min-width: 70px;
-            justify-content: center;
-        }
-        .download-locked {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            text-align: center;
-            color: var(--text2);
-            font-size: 13px;
-        }
-        .download-locked .icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .download-box {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin-bottom: 10px;
-        }
-        .download-box .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .download-box .info .ver,
-        .download-box .info .sz {
-            color: var(--text2);
-            font-size: 13px;
-        }
-        .coming-soon {
-            background: var(--input);
-            border: 1px dashed var(--primary-border);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            color: var(--text2);
-        }
-        .coming-soon .icon {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .cooldown-indicator {
-            font-size: 11px;
-            color: var(--text3);
-            text-align: center;
-            margin-top: 4px;
-            opacity: 0;
-            transition: opacity var(--transition);
-        }
-        .cooldown-indicator.show {
-            opacity: 1;
-        }
-        .skeleton {
-            background: var(--input);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 8px;
-            animation: skeletonPulse 1.2s ease-in-out infinite;
-            min-height: 80px;
-        }
-        .skeleton .line {
-            height: 12px;
-            background: var(--border);
-            border-radius: 6px;
-            margin-bottom: 6px;
-            width: 100%;
-        }
-        .skeleton .line.short {
-            width: 60%;
-        }
-        .skeleton .line.medium {
-            width: 80%;
-        }
-        @keyframes skeletonPulse {
-            0%,
-            100% {
-                opacity: 0.6;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-        .load-more-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--primary-border);
-            border-radius: 10px;
-            background: var(--input);
-            color: var(--text2);
-            cursor: pointer;
-            transition: all var(--transition);
-            font-size: 13px;
-            font-weight: 600;
-            text-align: center;
-        }
-        .load-more-btn:hover {
-            background: var(--primary-bg);
-            border-color: rgba(214, 90, 98, 0.25);
-            transform: translateY(-2px);
-        }
-        .load-more-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-        .search-sort-container {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-        .search-sort-container input {
-            flex: 1;
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--primary-border);
-            background: var(--input);
-            color: var(--text);
-            font-size: 13px;
-            outline: none;
-            transition: all var(--transition);
-            min-width: 120px;
-        }
-        .search-sort-container input:focus {
-            border-color: var(--primary);
-        }
-        .search-sort-container select {
-            padding: 6px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--primary-border);
-            background: var(--input);
-            color: var(--text);
-            font-size: 12px;
-            outline: none;
-        }
-        .search-sort-container button {
-            padding: 6px 12px;
-            border-radius: 8px;
-            border: none;
-            background: var(--primary);
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition);
-            font-size: 12px;
-        }
-        .search-sort-container button:hover {
-            background: var(--primary-hover);
-            transform: scale(1.04);
-        }
-        .chart-container {
-            background: var(--input);
-            border: 1px solid var(--primary-border);
-            border-radius: var(--radius);
-            padding: 12px 14px;
-            margin-bottom: 10px;
-        }
-        .chart-bar {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 4px;
-            animation: chartSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            transform-origin: left;
-        }
-        @keyframes chartSlide {
-            0% {
-                opacity: 0;
-                transform: scaleX(0);
-            }
-            100% {
-                opacity: 1;
-                transform: scaleX(1);
-            }
-        }
-        .chart-bar .label {
-            font-size: 11px;
-            min-width: 50px;
-            color: var(--text2);
-        }
-        .chart-bar .track {
-            flex: 1;
-            height: 16px;
-            background: var(--input);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-        .chart-bar .fill {
-            height: 100%;
-            background: var(--primary);
-            border-radius: 8px;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            min-width: 2px;
-        }
-        .chart-bar .value {
-            font-size: 11px;
-            min-width: 28px;
-            color: var(--text2);
-            text-align: right;
-        }
-        .pie-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 0;
-        }
-        .pie {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .pie-legend {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .pie-legend .item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            color: var(--text2);
-        }
-        .pie-legend .color {
-            width: 14px;
-            height: 14px;
-            border-radius: 4px;
         }
         .ban-overlay {
             position: fixed;
@@ -1941,6 +1178,458 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        .spam-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .spam-notification.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .spam-notification .box {
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 24px;
+            padding: 28px 24px 24px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .spam-notification.show .box {
+            transform: scale(1) translateY(0);
+        }
+        .spam-notification .icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .spam-notification h3 {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .spam-notification p {
+            color: var(--text2);
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 4px;
+        }
+        .spam-notification .highlight {
+            color: #ffd700;
+            font-weight: 600;
+        }
+        .spam-notification .box-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin-top: 14px;
+        }
+        .spam-notification .box-actions .btn {
+            min-width: 100px;
+            justify-content: center;
+        }
+        .spam-notification .box-actions .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .spam-notification .box-actions .guide-link {
+            font-size: 11px;
+            color: var(--text3);
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+        .spam-notification .box-actions .guide-link:hover {
+            color: var(--text);
+        }
+        .spam-notification .cooldown-text {
+            font-size: 11px;
+            color: var(--text3);
+            text-align: center;
+            margin-top: 2px;
+        }
+        .guide-notification {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .guide-notification.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .guide-notification .box {
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 24px;
+            padding: 28px 24px 24px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .guide-notification.show .box {
+            transform: scale(1) translateY(0);
+        }
+        .guide-notification .guide-content h1 {
+            font-size: 20px;
+        }
+        .guide-notification .guide-content h2 {
+            font-size: 16px;
+            margin-top: 12px;
+        }
+        .guide-notification .guide-content p {
+            color: var(--text2);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .guide-notification .guide-content .note {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin: 10px 0;
+        }
+        .dashboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .dashboard-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .dashboard-modal .box {
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 24px;
+            padding: 28px 24px 24px;
+            max-width: 440px;
+            width: 100%;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .dashboard-modal.show .box {
+            transform: scale(1) translateY(0);
+        }
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+        .confirm-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .confirm-dialog {
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 18px;
+            padding: 24px 20px 20px;
+            max-width: 360px;
+            width: 100%;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .confirm-overlay.show .confirm-dialog {
+            transform: scale(1) translateY(0);
+        }
+        .confirm-dialog .icon {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .confirm-dialog h3 {
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+        .confirm-dialog p {
+            color: var(--text2);
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        .confirm-dialog .actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .confirm-dialog .actions .btn {
+            min-width: 70px;
+            justify-content: center;
+        }
+        .download-locked {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+            color: var(--text2);
+            font-size: 13px;
+        }
+        .download-locked .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .download-box {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+        .download-box .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .download-box .info .ver,
+        .download-box .info .sz {
+            color: var(--text2);
+            font-size: 13px;
+        }
+        .coming-soon {
+            background: var(--input);
+            border: 1px dashed var(--primary-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text2);
+        }
+        .coming-soon .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .cooldown-indicator {
+            font-size: 11px;
+            color: var(--text3);
+            text-align: center;
+            margin-top: 4px;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+        .cooldown-indicator.show {
+            opacity: 1;
+        }
+        .search-sort-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .search-sort-container input {
+            flex: 1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            transition: all var(--transition);
+            min-width: 120px;
+        }
+        .search-sort-container input:focus {
+            border-color: var(--primary);
+        }
+        .search-sort-container select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+        }
+        .search-sort-container button {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 12px;
+        }
+        .search-sort-container button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.04);
+        }
+        .chart-container {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            margin-bottom: 10px;
+        }
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+            animation: chartSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            transform-origin: left;
+        }
+        @keyframes chartSlide {
+            0% {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
+        .chart-bar .label {
+            font-size: 11px;
+            min-width: 50px;
+            color: var(--text2);
+        }
+        .chart-bar .track {
+            flex: 1;
+            height: 16px;
+            background: var(--input);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-bar .fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 8px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 2px;
+        }
+        .chart-bar .value {
+            font-size: 11px;
+            min-width: 28px;
+            color: var(--text2);
+            text-align: right;
+        }
+        .pie-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        .pie {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .pie-legend .item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text2);
+        }
+        .pie-legend .color {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+        }
+        .load-more-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--primary-border);
+            border-radius: 10px;
+            background: var(--input);
+            color: var(--text2);
+            cursor: pointer;
+            transition: all var(--transition);
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .load-more-btn:hover {
+            background: var(--primary-bg);
+            border-color: rgba(214, 90, 98, 0.25);
+            transform: translateY(-2px);
+        }
+        .load-more-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
         #meteor-container {
             position: fixed;
             top: 0;
@@ -1972,18 +1661,6 @@
             transform-origin: left center;
             opacity: 0.6;
         }
-        .meteor::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 1px;
-            background: linear-gradient(to right, rgba(214, 90, 98, 0.3), transparent);
-            transform: rotate(-45deg);
-            transform-origin: left center;
-            opacity: 0.3;
-        }
         @keyframes meteorFall {
             0% {
                 transform: translate(0, 0) scale(1);
@@ -2003,7 +1680,28 @@
                 opacity: 0;
             }
         }
-        /* ===== AD HIDDEN ===== */
+        .watermark {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text3);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .watermark span {
+            display: inline-block;
+            background: var(--card);
+            padding: 4px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--primary-border);
+            font-size: 11px;
+            opacity: 0.35;
+        }
         .ad-hidden {
             display: none !important;
         }
@@ -2059,6 +1757,7 @@
     </div>
 
     <div class="container">
+        <!-- NAVIGASI -->
         <nav class="nav" id="navbar">
             <div class="nav-left">
                 <button class="active" data-page="home">🏠 Beranda</button>
@@ -2278,6 +1977,9 @@
     <div id="toast" class="toast"></div>
 
     <script type="module">
+        // ============================================================
+        // IMPORT FIREBASE
+        // ============================================================
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, push, onValue, remove, get, set, update } from "firebase/database";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "firebase/auth";
@@ -2295,7 +1997,9 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
 
-        // ===== VARIABLES =====
+        // ============================================================
+        // VARIABLES
+        // ============================================================
         let selectedRating = 0,
             currentUser = null,
             isAdmin = false,
@@ -2328,6 +2032,9 @@
         const $ = s => document.querySelector(s);
         const $$ = s => document.querySelectorAll(s);
 
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
         function showToast(msg, err = false) {
             const el = $('#toast');
             el.textContent = msg;
@@ -2337,7 +2044,9 @@
             el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
 
-        // ===== CHECK ADMIN & BAN =====
+        // ============================================================
+        // CHECK ADMIN & BAN
+        // ============================================================
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
@@ -2346,10 +2055,15 @@
         }
 
         async function checkBanStatus(uid) {
-            try { const snap = await get(ref(db, `banned/${uid}`)); return !!snap.val(); } catch { return false; }
+            try {
+                const snap = await get(ref(db, `banned/${uid}`));
+                return !!snap.val();
+            } catch { return false; }
         }
 
-        // ===== IKLAN =====
+        // ============================================================
+        // IKLAN - RENDER BANNER PAKAI IFRAME
+        // ============================================================
         function shouldShowAds() {
             if (isAdmin === true || isBanned) return false;
             return true;
@@ -2364,7 +2078,6 @@
                 container.classList.add('ad-hidden');
                 return;
             }
-
             container.classList.remove('ad-hidden');
 
             const iframe = document.createElement('iframe');
@@ -2435,44 +2148,27 @@
                 renderBannerAd('ad-bottom', '4ca0fb7649546b6432d8d3d6bd71c217', 728, 90);
             }
 
-            // SIDEBAR (160x600)
+            // SIDEBAR (160x600) - Desktop only
             if (width >= 1025) {
                 renderBannerAd('ad-sidebar-left', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
                 renderBannerAd('ad-sidebar-right', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
             }
 
-            // STICKY BANNER (mobile)
+            // STICKY BANNER - Mobile only
             if (width <= 768) {
                 renderBannerAd('sticky-banner', '358c8ef569d7d193675caa770d15352a', 320, 50);
             }
         }
 
-        // ===== NAVIGASI DENGAN POPUNDER =====
-        function handleNavClick(page) {
-            if (isAdmin === true || isBanned) {
-                goToPage(page);
-                return;
-            }
-
-            // Popunder
-            const script = document.createElement('script');
-            script.src = "https://pl30951615.effectivecpmnetwork.com/99/62/2e/99622ee28aa86c307ea95cdc2ee72256.js";
-            document.head.appendChild(script);
-
-            // Smartlink
-            window.open('https://www.effectivecpmnetwork.com/y2s3eyrsw?key=8ef3120e1c9224948b8bc47836e4bc44', '_blank');
-
-            setTimeout(() => { goToPage(page); }, 400);
-        }
-
-        window.handleNavClick = handleNavClick;
-
-        // ===== NAVIGASI =====
+        // ============================================================
+        // NAVIGASI - PAKAI DATA-PAGE (ASLI)
+        // ============================================================
         function goToPage(page) {
             if (isBanned && page !== 'admin') return;
             if (page === currentPage) return;
             currentPage = page;
 
+            // Update active state untuk nav buttons
             document.querySelectorAll('.nav-left > button[data-page]').forEach(b => {
                 b.classList.toggle('active', b.dataset.page === page);
             });
@@ -2480,6 +2176,7 @@
                 b.classList.toggle('active', b.dataset.page === page);
             });
 
+            // Show/hide pages
             document.querySelectorAll('.page').forEach(p => {
                 if (p.id === `page-${page}`) {
                     p.classList.add('active');
@@ -2495,6 +2192,7 @@
 
             document.getElementById('reviewDropdownContent')?.classList.remove('show');
 
+            // Load content for page
             if (page === 'reviews') renderReviews();
             if (page === 'sortreview') renderSortReview();
             if (page === 'admin') renderAdmin();
@@ -2511,11 +2209,48 @@
         window.goToPage = goToPage;
 
         // ============================================================
-        // SEMUA FUNGSI ASLI DARI KODE PERTAMA
-        // (saya tulis ulang semua fungsi yang hilang)
+        // NAVIGASI CLICK - BUKA POPUNDER + SMARTLINK
         // ============================================================
+        document.querySelectorAll('.nav-left > button[data-page], .nav-dropdown-content button[data-page]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
 
-        // ===== BANNER =====
+                // Admin atau banned tidak kena popunder
+                if (isAdmin === true || isBanned) {
+                    goToPage(page);
+                    return;
+                }
+
+                // Popunder
+                const script = document.createElement('script');
+                script.src = "https://pl30951615.effectivecpmnetwork.com/99/62/2e/99622ee28aa86c307ea95cdc2ee72256.js";
+                document.head.appendChild(script);
+
+                // Smartlink
+                window.open('https://www.effectivecpmnetwork.com/y2s3eyrsw?key=8ef3120e1c9224948b8bc47836e4bc44', '_blank');
+
+                // Pindah halaman setelah delay
+                setTimeout(() => {
+                    goToPage(page);
+                }, 400);
+            });
+        });
+
+        // ============================================================
+        // DROPDOWN TOGGLE
+        // ============================================================
+        document.getElementById('reviewDropdownBtn')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('reviewDropdownContent').classList.toggle('show');
+        });
+        document.addEventListener('click', () => {
+            document.getElementById('reviewDropdownContent')?.classList.remove('show');
+        });
+
+        // ============================================================
+        // BANNER NOTIFIKASI
+        // ============================================================
         function loadBanner() {
             onValue(ref(db, 'banner'), (snap) => {
                 const data = snap.val();
@@ -2525,7 +2260,9 @@
                     document.getElementById('bannerMessage').textContent = data.message || '';
                     document.getElementById('bannerIcon').textContent = data.icon || '📢';
                     el.classList.add('show');
-                } else { el.classList.remove('show'); }
+                } else {
+                    el.classList.remove('show');
+                }
             });
         }
         document.getElementById('bannerClose').addEventListener('click', () => {
@@ -2535,7 +2272,9 @@
         });
         if (localStorage.getItem('bannerClosed') === 'true') bannerClosed = true;
 
-        // ===== LOAD UPDATE =====
+        // ============================================================
+        // LOAD UPDATE DATA
+        // ============================================================
         function loadUpdateData() {
             onValue(ref(db, 'update'), (snap) => {
                 const data = snap.val();
@@ -2548,7 +2287,9 @@
         }
         loadUpdateData();
 
-        // ===== LOAD REVIEWS =====
+        // ============================================================
+        // LOAD REVIEWS
+        // ============================================================
         function loadReviews() {
             onValue(ref(db, 'reviews'), (snap) => {
                 const data = snap.val();
@@ -2587,7 +2328,9 @@
             });
         }
 
-        // ===== RENDER REVIEWS =====
+        // ============================================================
+        // RENDER REVIEWS
+        // ============================================================
         function renderReviews(loadMore = false) {
             const list = document.getElementById('reviewsList'),
                 stats = document.getElementById('reviewsStats'),
@@ -2728,12 +2471,17 @@
             }
         }
 
-        // ===== RENDER HOME REVIEWS =====
+        // ============================================================
+        // RENDER HOME REVIEWS
+        // ============================================================
         function renderHomeReviews() {
             const list = document.getElementById('homeReviewsList');
             if (!list) return;
             const recent = [...allReviews].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0)).slice(0, 5);
-            if (recent.length === 0) { list.innerHTML = '<div class="empty">Belum ada ulasan. Jadilah yang pertama!</div>'; return; }
+            if (recent.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada ulasan. Jadilah yang pertama!</div>';
+                return;
+            }
             list.innerHTML = recent.map(r => {
                 const name = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
                 const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
@@ -2743,9 +2491,10 @@
             }).join('');
         }
 
-        // ===== RENDER LEADERBOARD =====
+        // ============================================================
+        // RENDER LEADERBOARD
+        // ============================================================
         function renderLeaderboard() {
-            if (isBanned) return;
             const list = document.getElementById('leaderboardList');
             if (!list) return;
             const stats = {};
@@ -2760,7 +2509,10 @@
             const sorted = Object.keys(stats).map(k => ({ name: stats[k].name, total: stats[k].total, avg: stats[k]
                     .ratings.reduce((a, b) => a + b, 0) / stats[k].ratings.length, likes: stats[k].likes }))
                 .sort((a, b) => b.total - a.total);
-            if (sorted.length === 0) { list.innerHTML = '<div class="empty">Belum ada data</div>'; return; }
+            if (sorted.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada data</div>';
+                return;
+            }
             const medals = ['🥇', '🥈', '🥉'];
             list.innerHTML = sorted.slice(0, 10).map((item, i) => {
                 const medal = i < 3 ? medals[i] : `#${i + 1}`;
@@ -2768,9 +2520,10 @@
             }).join('');
         }
 
-        // ===== RENDER SORT REVIEW =====
+        // ============================================================
+        // RENDER SORT REVIEW
+        // ============================================================
         function renderSortReview() {
-            if (isBanned) return;
             const list = document.getElementById('sortResultList'),
                 stats = document.getElementById('sortResultStats');
             if (!list) return;
@@ -2798,8 +2551,11 @@
                 default:
                     break;
             }
-            if (sorted.length === 0) { list.innerHTML = '<div class="empty">Belum ada ulasan</div>';
-                if (stats) stats.innerHTML = ''; return; }
+            if (sorted.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada ulasan</div>';
+                if (stats) stats.innerHTML = '';
+                return;
+            }
             const labelMap = { newest: 'Terbaru', oldest: 'Terlama', highest: 'Rating Tertinggi', lowest: 'Rating Terendah',
                 mostLiked: 'Terbanyak Like', mostDisliked: 'Terbanyak Dislike' };
             if (stats) stats.innerHTML =
@@ -2816,7 +2572,9 @@
         }
         document.getElementById('sortApplyBtn')?.addEventListener('click', renderSortReview);
 
-        // ===== LIKE/DISLIKE =====
+        // ============================================================
+        // LIKE/DISLIKE
+        // ============================================================
         async function toggleLike(reviewId, type) {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
             if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
@@ -2846,7 +2604,9 @@
                     .message, true); }
         }
 
-        // ===== COMMENTS =====
+        // ============================================================
+        // COMMENTS
+        // ============================================================
         async function addComment(reviewId, parentId = null) {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
             if (!currentUser) { showToast('Silakan login terlebih dahulu.', true); return; }
@@ -2866,29 +2626,85 @@
             } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
         }
 
-        // ===== DELETE MY REVIEW =====
+        // ============================================================
+        // COOLDOWNS
+        // ============================================================
+        function startReviewCooldown() {
+            reviewCooldown += 10;
+            updateReviewCooldown();
+            if (reviewCooldownTimer) clearInterval(reviewCooldownTimer);
+            reviewCooldownTimer = setInterval(() => {
+                reviewCooldown--;
+                updateReviewCooldown();
+                if (reviewCooldown <= 0) { clearInterval(reviewCooldownTimer);
+                    reviewCooldownTimer = null;
+                    updateReviewCooldown(); }
+            }, 1000);
+        }
+
+        function updateReviewCooldown() {
+            const el = document.getElementById('reviewCooldown'),
+                btn = document.getElementById('submitReview');
+            if (!el || !btn) return;
+            if (reviewCooldown > 0) {
+                el.textContent = `⏳ Tunggu ${reviewCooldown} detik sebelum mengirim ulang`;
+                el.classList.add('show');
+                btn.disabled = true;
+            } else {
+                el.textContent = '';
+                el.classList.remove('show');
+                btn.disabled = false;
+            }
+        }
+
+        function startCommentCooldown() {
+            commentCooldown += 3;
+            updateCommentCooldown();
+            if (commentCooldownTimer) clearInterval(commentCooldownTimer);
+            commentCooldownTimer = setInterval(() => {
+                commentCooldown--;
+                updateCommentCooldown();
+                if (commentCooldown <= 0) { clearInterval(commentCooldownTimer);
+                    commentCooldownTimer = null;
+                    updateCommentCooldown(); }
+            }, 1000);
+        }
+
+        function updateCommentCooldown() { document.querySelectorAll('.comment-form button').forEach(b => b.disabled =
+                commentCooldown > 0); }
+
+        // ============================================================
+        // DELETE MY REVIEW
+        // ============================================================
         async function deleteMyReview(id) {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
-            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email terlebih dahulu.',
-                    true);
-                showSpamNotification(); return; }
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
+                showToast('⚠️ Verifikasi email terlebih dahulu.', true);
+                showSpamNotification();
+                return;
+            }
             const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan Anda akan dihapus secara permanen.', '🗑️');
             if (!confirmed) return;
-            try { await remove(ref(db, `reviews/${id}`));
+            try {
+                await remove(ref(db, `reviews/${id}`));
                 showToast('Ulasan Anda telah dihapus');
                 userHasReviewed = false;
                 userReviewId = null;
                 document.getElementById('alreadyReviewed').style.display = 'none';
-                document.getElementById('reviewForm').style.display = 'block'; } catch (err) { showToast('Gagal menghapus',
-                    true); }
+                document.getElementById('reviewForm').style.display = 'block';
+            } catch (err) { showToast('Gagal menghapus', true); }
         }
 
-        // ===== EDIT REVIEW =====
+        // ============================================================
+        // EDIT REVIEW
+        // ============================================================
         function startEditingReview(id) {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
-            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) { showToast('⚠️ Verifikasi email terlebih dahulu.',
-                    true);
-                showSpamNotification(); return; }
+            if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
+                showToast('⚠️ Verifikasi email terlebih dahulu.', true);
+                showSpamNotification();
+                return;
+            }
             const review = allReviews.find(r => r.id === id);
             if (!review) return;
             goToPage('reviews');
@@ -2913,10 +2729,11 @@
             editDiv.querySelector('.save-edit').addEventListener('click', async () => {
                 const newMsg = editDiv.querySelector('textarea').value.trim();
                 if (!newMsg) { showToast('Pesan tidak boleh kosong.', true); return; }
-                try { await update(ref(db, `reviews/${review.id}`), { message: newMsg, timestamp: Date
-                        .now() });
+                try {
+                    await update(ref(db, `reviews/${review.id}`), { message: newMsg, timestamp: Date.now() });
                     showToast('Ulasan berhasil diperbarui!');
-                    cancelEdit(item); } catch (err) { showToast('❌ Gagal memperbarui: ' + err.message, true); }
+                    cancelEdit(item);
+                } catch (err) { showToast('❌ Gagal memperbarui: ' + err.message, true); }
             });
             editDiv.querySelector('.cancel-edit').addEventListener('click', () => { cancelEdit(item); });
             setTimeout(() => editDiv.querySelector('textarea').focus(), 100);
@@ -2932,7 +2749,9 @@
             if (actionsEl) actionsEl.style.display = '';
         }
 
-        // ===== STARS =====
+        // ============================================================
+        // STARS
+        // ============================================================
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
@@ -2974,10 +2793,11 @@
             });
         });
 
-        // ===== ANONYM =====
+        // ============================================================
+        // ANONYM & DRAFT
+        // ============================================================
         const anonCheckbox = $('#reviewAnonymous');
 
-        // ===== DRAFT =====
         document.getElementById('reviewMessage')?.addEventListener('input', () => {
             const msg = document.getElementById('reviewMessage').value,
                 rating = selectedRating,
@@ -3004,12 +2824,20 @@
             } catch (e) {}
         }
 
-        // ===== SUBMIT REVIEW =====
+        // ============================================================
+        // SUBMIT REVIEW
+        // ============================================================
         document.getElementById('submitReview')?.addEventListener('click', async () => {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
-            if (isSubmitting || !currentUser) { if (!currentUser) showToast('Silakan login terlebih dahulu.', true); return; }
-            if (!currentUser.emailVerified && !isAdmin) { showToast('⚠️ Verifikasi email terlebih dahulu.', true);
-                showSpamNotification(); return; }
+            if (isSubmitting || !currentUser) {
+                if (!currentUser) showToast('Silakan login terlebih dahulu.', true);
+                return;
+            }
+            if (!currentUser.emailVerified && !isAdmin) {
+                showToast('⚠️ Verifikasi email terlebih dahulu.', true);
+                showSpamNotification();
+                return;
+            }
             if (userHasReviewed) { showToast('Anda sudah memberi penilaian.', true); return; }
             if (reviewCooldown > 0) { showToast(`⏳ Tunggu ${reviewCooldown} detik.`, true); return; }
 
@@ -3026,9 +2854,20 @@
 
             try {
                 const newRef = push(ref(db, 'reviews'));
-                await set(newRef, { name: anonymous ? 'Anonim' : name, anonymous, rating, message, appVersion: updateData
-                        .latestVersion || '2.4.0', timestamp: Date.now(), uid: currentUser.uid, email: currentUser
-                        .email, likes: 0, dislikes: 0, likedBy: {}, dislikedBy: {} });
+                await set(newRef, {
+                    name: anonymous ? 'Anonim' : name,
+                    anonymous,
+                    rating,
+                    message,
+                    appVersion: updateData.latestVersion || '2.4.0',
+                    timestamp: Date.now(),
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    likes: 0,
+                    dislikes: 0,
+                    likedBy: {},
+                    dislikedBy: {}
+                });
                 if (statusEl) statusEl.textContent = '✅ Ulasan berhasil dikirim!';
                 showToast('Ulasan berhasil dikirim!');
                 localStorage.removeItem('reviewDraft');
@@ -3050,56 +2889,17 @@
             setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 4000);
         });
 
-        // ===== COOLDOWNS =====
-        function startReviewCooldown() {
-            reviewCooldown += 10;
-            updateReviewCooldown();
-            if (reviewCooldownTimer) clearInterval(reviewCooldownTimer);
-            reviewCooldownTimer = setInterval(() => {
-                reviewCooldown--;
-                updateReviewCooldown();
-                if (reviewCooldown <= 0) { clearInterval(reviewCooldownTimer);
-                    reviewCooldownTimer = null;
-                    updateReviewCooldown(); }
-            }, 1000);
-        }
-
-        function updateReviewCooldown() {
-            const el = document.getElementById('reviewCooldown'),
-                btn = document.getElementById('submitReview');
-            if (!el || !btn) return;
-            if (reviewCooldown > 0) { el.textContent = `⏳ Tunggu ${reviewCooldown} detik sebelum mengirim ulang`;
-                el.classList.add('show');
-                btn.disabled = true; } else { el.textContent = '';
-                el.classList.remove('show');
-                btn.disabled = false; }
-        }
-
-        function startCommentCooldown() {
-            commentCooldown += 3;
-            updateCommentCooldown();
-            if (commentCooldownTimer) clearInterval(commentCooldownTimer);
-            commentCooldownTimer = setInterval(() => {
-                commentCooldown--;
-                updateCommentCooldown();
-                if (commentCooldown <= 0) { clearInterval(commentCooldownTimer);
-                    commentCooldownTimer = null;
-                    updateCommentCooldown(); }
-            }, 1000);
-        }
-
-        function updateCommentCooldown() { document.querySelectorAll('.comment-form button').forEach(b => b.disabled =
-                commentCooldown > 0); }
-
-        // ===== FEATURE REQUESTS =====
+        // ============================================================
+        // FEATURE REQUESTS
+        // ============================================================
         function checkFeatureAuth() {
-            if (isBanned) return;
             const form = document.getElementById('featureForm'),
                 req = document.getElementById('featureAuthRequired');
             if (currentUser) { form.style.display = 'block';
                 req.style.display = 'none'; } else { form.style.display = 'none';
                 req.style.display = 'block'; }
         }
+
         document.getElementById('gotoLoginBtn3')?.addEventListener('click', () => goToPage('admin'));
 
         document.getElementById('submitFR')?.addEventListener('click', async () => {
@@ -3111,10 +2911,19 @@
             if (!desc) { showToast('Masukkan deskripsi fitur.', true); return; }
             try {
                 const newRef = push(ref(db, 'featureRequests'));
-                await set(newRef, { uid: currentUser.uid, name: currentUser.displayName || currentUser.email?.split(
-                        '@')[0] || 'Pengguna', email: currentUser.email, title, description: desc, status: 'pending',
-                    timestamp: Date.now(), upvotes: 0, adminReply: null, adminReplyTimestamp: null,
-                    adminReplyName: null });
+                await set(newRef, {
+                    uid: currentUser.uid,
+                    name: currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna',
+                    email: currentUser.email,
+                    title,
+                    description: desc,
+                    status: 'pending',
+                    timestamp: Date.now(),
+                    upvotes: 0,
+                    adminReply: null,
+                    adminReplyTimestamp: null,
+                    adminReplyName: null
+                });
                 showToast('✅ Permintaan fitur berhasil dikirim!');
                 document.getElementById('frTitle').value = '';
                 document.getElementById('frDesc').value = '';
@@ -3140,9 +2949,12 @@
             if (!list) return;
             let filtered = featureRequests;
             if (!isAdmin && currentUser) filtered = featureRequests.filter(f => f.uid === currentUser.uid);
-            if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada permintaan fitur</div>'; return; }
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada permintaan fitur</div>';
+                return;
+            }
             const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak',
-            replied: '💬 Dibalas' };
+                replied: '💬 Dibalas' };
             const statusClass = { pending: 'pending', approved: 'approved', rejected: 'rejected', replied: 'replied' };
             const hasAdminReply = (fr) => fr.adminReply && fr.adminReply.trim().length > 0;
             list.innerHTML = filtered.map(fr => {
@@ -3166,9 +2978,12 @@
                     const reply = input?.value.trim();
                     if (!reply) { showToast('Masukkan balasan.', true); return; }
                     try {
-                        await update(ref(db, `featureRequests/${id}`), { adminReply: reply,
-                            adminReplyTimestamp: Date.now(), adminReplyName: currentUser?.displayName ||
-                                currentUser?.email || 'Admin', status: 'replied' });
+                        await update(ref(db, `featureRequests/${id}`), {
+                            adminReply: reply,
+                            adminReplyTimestamp: Date.now(),
+                            adminReplyName: currentUser?.displayName || currentUser?.email || 'Admin',
+                            status: 'replied'
+                        });
                         showToast('✅ Balasan berhasil dikirim!');
                         input.value = '';
                         loadFeatureRequests();
@@ -3218,15 +3033,17 @@
             }));
         }
 
-        // ===== BUG REPORTS =====
+        // ============================================================
+        // BUG REPORTS
+        // ============================================================
         function checkBugAuth() {
-            if (isBanned) return;
             const form = document.getElementById('bugForm'),
                 req = document.getElementById('bugAuthRequired');
             if (currentUser) { form.style.display = 'block';
                 req.style.display = 'none'; } else { form.style.display = 'none';
                 req.style.display = 'block'; }
         }
+
         document.getElementById('gotoLoginBtn4')?.addEventListener('click', () => goToPage('admin'));
 
         document.getElementById('submitBug')?.addEventListener('click', async () => {
@@ -3238,10 +3055,19 @@
             if (!desc) { showToast('Masukkan deskripsi bug.', true); return; }
             try {
                 const newRef = push(ref(db, 'bugReports'));
-                await set(newRef, { uid: currentUser.uid, name: currentUser.displayName || currentUser.email?.split(
-                        '@')[0] || 'Pengguna', email: currentUser.email, appType, description: desc, steps: steps ||
-                        'Tidak ada langkah', status: 'pending', timestamp: Date.now(), adminReply: null,
-                    adminReplyTimestamp: null, adminReplyName: null });
+                await set(newRef, {
+                    uid: currentUser.uid,
+                    name: currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna',
+                    email: currentUser.email,
+                    appType,
+                    description: desc,
+                    steps: steps || 'Tidak ada langkah',
+                    status: 'pending',
+                    timestamp: Date.now(),
+                    adminReply: null,
+                    adminReplyTimestamp: null,
+                    adminReplyName: null
+                });
                 showToast('✅ Laporan bug berhasil dikirim!');
                 document.getElementById('bugDesc').value = '';
                 document.getElementById('bugSteps').value = '';
@@ -3267,9 +3093,12 @@
             if (!list) return;
             let filtered = bugReports;
             if (!isAdmin && currentUser) filtered = bugReports.filter(b => b.uid === currentUser.uid);
-            if (filtered.length === 0) { list.innerHTML = '<div class="empty">Belum ada laporan bug</div>'; return; }
+            if (filtered.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada laporan bug</div>';
+                return;
+            }
             const statusLabel = { pending: '⏳ Menunggu', resolved: '✅ Selesai', rejected: '❌ Ditolak',
-            replied: '💬 Dibalas' };
+                replied: '💬 Dibalas' };
             const statusClass = { pending: 'pending', resolved: 'resolved', rejected: 'rejected', replied: 'replied' };
             const hasAdminReply = (b) => b.adminReply && b.adminReply.trim().length > 0;
             list.innerHTML = filtered.map(bug => {
@@ -3296,9 +3125,12 @@
                     const reply = input?.value.trim();
                     if (!reply) { showToast('Masukkan balasan.', true); return; }
                     try {
-                        await update(ref(db, `bugReports/${id}`), { adminReply: reply,
-                            adminReplyTimestamp: Date.now(), adminReplyName: currentUser?.displayName ||
-                                currentUser?.email || 'Admin', status: 'replied' });
+                        await update(ref(db, `bugReports/${id}`), {
+                            adminReply: reply,
+                            adminReplyTimestamp: Date.now(),
+                            adminReplyName: currentUser?.displayName || currentUser?.email || 'Admin',
+                            status: 'replied'
+                        });
                         showToast('✅ Balasan berhasil dikirim!');
                         input.value = '';
                         loadBugReports();
@@ -3348,7 +3180,9 @@
             }));
         }
 
-        // ===== RATING AUTH =====
+        // ============================================================
+        // RATING AUTH
+        // ============================================================
         function checkRatingAuth() {
             const form = $('#ratingForm'),
                 req = $('#ratingAuthRequired');
@@ -3368,19 +3202,21 @@
                 form.style.display = 'none';
                 req.style.display = 'block';
                 req.innerHTML =
-                    `<p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p><button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;" onclick="handleNavClick('admin')">Login</button>`;
+                    `<p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p><button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button>`;
                 document.getElementById('gotoLoginBtn2')?.addEventListener('click', () => goToPage('admin'));
             }
         }
 
-        // ===== DOWNLOADS =====
+        // ============================================================
+        // DOWNLOADS
+        // ============================================================
         function renderDownloads() {
             if (isBanned) return;
             const section = document.getElementById('downloadSection');
             if (!section) return;
             if (!currentUser) {
                 section.innerHTML =
-                    `<div class="download-locked"><span class="icon">🔒</span><p>Login untuk mengunduh APK</p><button class="btn btn-primary btn-sm" onclick="handleNavClick('admin')" style="margin-top:8px;">Login</button></div>`;
+                    `<div class="download-locked"><span class="icon">🔒</span><p>Login untuk mengunduh APK</p><button class="btn btn-primary btn-sm" onclick="goToPage('admin')" style="margin-top:8px;">Login</button></div>`;
                 return;
             }
             if (!currentUser.emailVerified && !isAdmin) {
@@ -3397,12 +3233,15 @@
                 <div class="coming-soon"><span class="icon">🖥</span><strong style="font-size:15px;">Windows EXE</strong><div style="color:var(--text3);font-size:13px;margin-top:4px;">Dalam tahap pengembangan</div><div style="color:var(--text3);font-size:12px;margin-top:2px;">🚧 Segera hadir</div></div>
             `;
             document.getElementById('downloadApkBtn')?.addEventListener('click', () => {
-                setTimeout(() => { showToast('🎉 Terima kasih telah menggunakan aplikasi buatan kami! Jika menemukan bug, silakan laporkan di kolom Laporkan Bug. 🙏'); },
-                    500);
+                setTimeout(() => {
+                    showToast('🎉 Terima kasih telah menggunakan aplikasi buatan kami! Jika menemukan bug, silakan laporkan di kolom Laporkan Bug. 🙏');
+                }, 500);
             });
         }
 
-        // ===== SPAM =====
+        // ============================================================
+        // SPAM NOTIFICATION
+        // ============================================================
         function showSpamNotification() {
             if (spamNotifShown || !currentUser || currentUser.emailVerified || isAdmin || isBanned) return;
             document.getElementById('spamNotification').classList.add('show');
@@ -3416,19 +3255,28 @@
             const el = document.getElementById('spamCooldown');
             const btn = document.getElementById('spamResendBtn');
             if (!el || !btn) return;
-            if (isCooldownActive && resendCooldown > 0) { el.textContent = `⏳ Tunggu ${resendCooldown} detik`;
-                btn.disabled = true; } else { el.textContent = '';
-                btn.disabled = false; }
+            if (isCooldownActive && resendCooldown > 0) {
+                el.textContent = `⏳ Tunggu ${resendCooldown} detik`;
+                btn.disabled = true;
+            } else {
+                el.textContent = '';
+                btn.disabled = false;
+            }
         }
 
         async function resendVerification() {
             if (isCooldownActive) { showToast('⏳ Tunggu cooldown selesai', true); return; }
             if (!currentUser) { showToast('❌ Silakan login terlebih dahulu.', true); return; }
-            if (currentUser.emailVerified) { showToast('✅ Email sudah terverifikasi!', false);
-                hideSpamNotification(); return; }
-            try { await sendEmailVerification(currentUser);
+            if (currentUser.emailVerified) {
+                showToast('✅ Email sudah terverifikasi!', false);
+                hideSpamNotification();
+                return;
+            }
+            try {
+                await sendEmailVerification(currentUser);
                 showToast('📧 Email verifikasi telah dikirim! Periksa inbox atau folder spam.');
-                startCooldown(); } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
+                startCooldown();
+            } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
         }
 
         function startCooldown() {
@@ -3439,10 +3287,12 @@
             resendTimer = setInterval(() => {
                 resendCooldown--;
                 updateCooldownDisplay();
-                if (resendCooldown <= 0) { clearInterval(resendTimer);
+                if (resendCooldown <= 0) {
+                    clearInterval(resendTimer);
                     resendTimer = null;
                     isCooldownActive = false;
-                    updateCooldownDisplay(); }
+                    updateCooldownDisplay();
+                }
             }, 1000);
         }
 
@@ -3456,11 +3306,15 @@
                 spamNotifShown = true;
                 updateAuthUI();
                 goToPage('home');
-            } else { showToast('❌ Email belum terverifikasi. Periksa inbox atau folder spam.', true);
-                showSpamNotification(); }
+            } else {
+                showToast('❌ Email belum terverifikasi. Periksa inbox atau folder spam.', true);
+                showSpamNotification();
+            }
         });
-        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => { hideSpamNotification();
-            localStorage.setItem('spamBannerSeen', 'true'); });
+        document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
+            hideSpamNotification();
+            localStorage.setItem('spamBannerSeen', 'true');
+        });
         document.getElementById('spamGuideBtn')?.addEventListener('click', () => {
             document.getElementById('spamNotification').classList.remove('show');
             document.getElementById('guideNotification').classList.add('show');
@@ -3472,7 +3326,9 @@
             }
         });
 
-        // ===== CONFIRM =====
+        // ============================================================
+        // CONFIRM
+        // ============================================================
         let confirmResolve = null;
 
         function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
@@ -3501,7 +3357,9 @@
             }
         });
 
-        // ===== THEME =====
+        // ============================================================
+        // THEME
+        // ============================================================
         const themeToggle = $('#themeToggle');
         themeToggle.addEventListener('click', () => {
             isDarkMode = !isDarkMode;
@@ -3509,19 +3367,15 @@
             themeToggle.textContent = isDarkMode ? '🌙' : '☀️';
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         });
-        if (localStorage.getItem('theme') === 'light') { isDarkMode = false;
+        if (localStorage.getItem('theme') === 'light') {
+            isDarkMode = false;
             document.documentElement.setAttribute('data-theme', 'light');
-            themeToggle.textContent = '☀️'; }
+            themeToggle.textContent = '☀️';
+        }
 
-        // ===== DROPDOWN =====
-        const dropdownBtn = document.getElementById('reviewDropdownBtn');
-        const dropdownContent = document.getElementById('reviewDropdownContent');
-        dropdownBtn?.addEventListener('click', (e) => { e.stopPropagation();
-            dropdownContent.classList.toggle('show'); });
-        document.addEventListener('click', () => { dropdownContent?.classList.remove('show'); });
-        dropdownContent?.addEventListener('click', (e) => e.stopPropagation());
-
-        // ===== BAN & APPEAL =====
+        // ============================================================
+        // BAN & APPEAL
+        // ============================================================
         function showBanOverlay() {
             document.getElementById('banOverlay').classList.add('show');
             isBanned = true;
@@ -3565,7 +3419,8 @@
                 });
                 showToast('✅ Banding berhasil dikirim!');
                 appealSent = true;
-                document.getElementById('appealStatus').textContent = '✅ Banding telah dikirim. Menunggu tanggapan dari administrator.';
+                document.getElementById('appealStatus').textContent =
+                    '✅ Banding telah dikirim. Menunggu tanggapan dari administrator.';
                 document.getElementById('submitAppealBtn').disabled = true;
                 document.getElementById('appealMessage').disabled = true;
                 document.getElementById('banAppealBtn').style.display = 'none';
@@ -3729,7 +3584,9 @@
             });
         }
 
-        // ===== ADMIN =====
+        // ============================================================
+        // ADMIN
+        // ============================================================
         function renderAdmin() {
             if (isBanned) return;
             const container = document.getElementById('adminContent');
@@ -3786,8 +3643,11 @@
                             return;
                         }
                         if (!userCred.user.emailVerified) {
-                            if (status) { status.textContent = '⚠️ Verifikasi email terlebih dahulu! Periksa inbox atau spam.';
-                                status.style.color = '#f2b8b5'; }
+                            if (status) {
+                                status.textContent =
+                                    '⚠️ Verifikasi email terlebih dahulu! Periksa inbox atau spam.';
+                                status.style.color = '#f2b8b5';
+                            }
                             showToast('⚠️ Verifikasi email terlebih dahulu!', true);
                             showSpamNotification();
                             goToPage('home');
@@ -3816,8 +3676,10 @@
                     try {
                         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
                         await sendEmailVerification(userCred.user);
-                        if (status) { status.textContent = '✅ Verifikasi email telah dikirim! Periksa inbox atau spam.';
-                            status.style.color = '#6fcf97'; }
+                        if (status) {
+                            status.textContent = '✅ Verifikasi email telah dikirim! Periksa inbox atau spam.';
+                            status.style.color = '#6fcf97';
+                        }
                         showToast('📧 Cek email untuk verifikasi');
                         showSpamNotification();
                         goToPage('home');
@@ -3893,7 +3755,7 @@
                 '<p style="color:var(--text2);font-size:12px;text-align:center;">Belum ada data rating.</p>';
 
             const statusLabel = { pending: '⏳ Menunggu', approved: '✅ Disetujui', rejected: '❌ Ditolak',
-            replied: '💬 Dibalas' };
+                replied: '💬 Dibalas' };
             let appealsHtml = '';
             if (appeals.length > 0) {
                 appealsHtml = appeals.map(a => `
@@ -4092,8 +3954,10 @@
                 if (days === 0) { showToast('Pilih jumlah hari terlebih dahulu.', true); return; }
                 const limit = Date.now() - (days * 24 * 60 * 60 * 1000);
                 const toDelete = allReviews.filter(r => (r.timestamp || 0) < limit).map(r => r.id);
-                if (toDelete.length === 0) { showToast(`Tidak ada ulasan yang berusia lebih dari ${days} hari.`,
-                    true); return; }
+                if (toDelete.length === 0) {
+                    showToast(`Tidak ada ulasan yang berusia lebih dari ${days} hari.`, true);
+                    return;
+                }
                 const confirmed = await showConfirm('Hapus Otomatis?',
                     `Hapus ${toDelete.length} ulasan yang berusia lebih dari ${days} hari?`, '⚠️', 'Ya, Hapus');
                 if (!confirmed) return;
@@ -4174,7 +4038,9 @@
             } catch (e) {}
         }
 
-        // ===== AUTH UI =====
+        // ============================================================
+        // AUTH UI
+        // ============================================================
         function updateAuthUI() {
             const section = document.getElementById('authSection');
             if (!section) return;
@@ -4221,14 +4087,17 @@
                 });
                 if (!verified && !isAdmin && !spamNotifShown) setTimeout(() => showSpamNotification(), 1500);
             } else {
-                section.innerHTML = `<button class="auth-btn" id="loginNavBtn" onclick="handleNavClick('admin')">Login</button>`;
+                section.innerHTML =
+                    `<button class="auth-btn" id="loginNavBtn" onclick="goToPage('admin')">Login</button>`;
             }
             checkRatingAuth();
             checkFeatureAuth();
             checkBugAuth();
         }
 
-        // ===== DASHBOARD =====
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
         function openDashboard() {
             if (isBanned) { showToast('⛔ Akun Anda diblokir.', true); return; }
             const modal = document.getElementById('dashboardModal');
@@ -4294,7 +4163,9 @@
             if (e.target === e.currentTarget) document.getElementById('dashboardModal').classList.remove('show');
         });
 
-        // ===== SEARCH =====
+        // ============================================================
+        // SEARCH
+        // ============================================================
         document.getElementById('searchBtn')?.addEventListener('click', () => { displayedReviews = 0;
             renderReviews(); });
         document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
@@ -4310,7 +4181,9 @@
         document.getElementById('filterRating')?.addEventListener('change', () => { displayedReviews = 0;
             renderReviews(); });
 
-        // ===== PULL TO REFRESH =====
+        // ============================================================
+        // PULL TO REFRESH
+        // ============================================================
         let pullStart = 0,
             isPulling = false;
         document.addEventListener('touchstart', (e) => {
@@ -4334,7 +4207,9 @@
         });
         document.addEventListener('touchend', () => { isPulling = false; });
 
-        // ===== AUTH STATE =====
+        // ============================================================
+        // AUTH STATE
+        // ============================================================
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
             if (user) {
@@ -4374,7 +4249,9 @@
             }
         });
 
-        // ===== INIT =====
+        // ============================================================
+        // INIT
+        // ============================================================
         loadReviews();
         loadFeatureRequests();
         loadBugReports();
@@ -4411,8 +4288,6 @@
                 container.appendChild(m);
             }
         })();
-
-        console.log('✅ App loaded - isAdmin:', isAdmin);
     </script>
 </body>
 </html>
