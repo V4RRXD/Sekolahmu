@@ -36,6 +36,8 @@
             --primary-border: rgba(214, 90, 98, 0.15);
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --radius: 16px;
+            --nav-height: 56px;
+            --banner-height: 0px;
         }
 
         [data-theme="light"] {
@@ -68,6 +70,7 @@
             padding: 12px;
             transition: background var(--transition), color var(--transition);
             position: relative;
+            padding-top: 0;
         }
 
         .container {
@@ -105,13 +108,12 @@
             transition: all var(--transition);
         }
 
-        /* ===== BANNER NOTIFICATION ===== */
+        /* ===== BANNER ===== */
         .banner-container {
-            position: sticky;
-            top: 0;
+            position: relative;
             z-index: 45;
-            margin: -12px -12px 16px -12px;
-            padding: 12px 12px 0 12px;
+            margin: -12px -12px 12px -12px;
+            padding: 8px 12px 0 12px;
             background: var(--bg);
             transition: all var(--transition);
         }
@@ -120,12 +122,12 @@
             background: var(--primary);
             color: #fff;
             border-radius: var(--radius);
-            padding: 14px 18px;
+            padding: 12px 16px;
             display: none;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
-            animation: bannerSlideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.25);
+            animation: bannerSlideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
             position: relative;
             overflow: hidden;
         }
@@ -134,22 +136,10 @@
             display: flex;
         }
 
-        .banner::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-
         @keyframes bannerSlideDown {
             from {
                 opacity: 0;
-                transform: translateY(-20px) scale(0.96);
+                transform: translateY(-12px) scale(0.96);
             }
             to {
                 opacity: 1;
@@ -158,41 +148,36 @@
         }
 
         .banner .icon {
-            font-size: 22px;
+            font-size: 20px;
             flex-shrink: 0;
         }
-
         .banner .content {
             flex: 1;
         }
-
         .banner .content .title {
             font-weight: 700;
-            font-size: 14px;
-        }
-
-        .banner .content .message {
             font-size: 13px;
-            opacity: 0.9;
-            margin-top: 2px;
         }
-
+        .banner .content .message {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 1px;
+        }
         .banner .close-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
             color: #fff;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: all var(--transition);
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .banner .close-btn:hover {
             background: rgba(255, 255, 255, 0.25);
             transform: scale(1.05);
@@ -203,15 +188,15 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             background: var(--card);
             backdrop-filter: blur(16px);
-            padding: 10px 16px;
+            padding: 8px 12px;
             border-radius: var(--radius);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             border: 1px solid var(--primary-border);
             position: sticky;
-            top: 76px;
+            top: 0;
             z-index: 40;
             transition: all var(--transition);
             box-shadow: var(--shadow);
@@ -219,14 +204,14 @@
 
         .nav-left {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             flex-wrap: wrap;
             flex: 1;
         }
 
         .nav-right {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
             margin-left: auto;
         }
@@ -235,22 +220,23 @@
             background: transparent;
             color: var(--text2);
             border: none;
-            padding: 7px 14px;
-            border-radius: 10px;
-            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all var(--transition);
             position: relative;
+            white-space: nowrap;
         }
 
         .nav button::after {
             content: '';
             position: absolute;
-            bottom: 2px;
+            bottom: 1px;
             left: 50%;
             transform: translateX(-50%) scaleX(0);
-            width: 60%;
+            width: 50%;
             height: 2px;
             background: var(--primary);
             border-radius: 4px;
@@ -275,14 +261,74 @@
             display: none;
         }
 
+        /* Dropdown untuk Ulasan */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-dropdown button {
+            padding: 5px 10px;
+        }
+
+        .nav-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 10px;
+            min-width: 160px;
+            box-shadow: var(--shadow);
+            z-index: 50;
+            padding: 4px 0;
+            backdrop-filter: blur(16px);
+            animation: dropdownFade 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes dropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-6px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .nav-dropdown-content.show {
+            display: block;
+        }
+
+        .nav-dropdown-content button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 6px 14px;
+            font-size: 12px;
+            border-radius: 0;
+            white-space: nowrap;
+        }
+
+        .nav-dropdown-content button:hover {
+            background: var(--primary-bg);
+        }
+
+        .nav-dropdown-content button.active {
+            color: var(--primary);
+            background: var(--primary-bg);
+        }
+
         .theme-toggle {
             background: var(--input);
             border: 1px solid var(--primary-border);
             color: var(--text);
-            padding: 6px 12px;
-            border-radius: 10px;
+            padding: 4px 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: all var(--transition);
         }
 
@@ -295,10 +341,10 @@
             background: var(--primary);
             color: #fff;
             border: none;
-            padding: 7px 16px;
-            border-radius: 10px;
+            padding: 5px 14px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all var(--transition);
         }
@@ -311,12 +357,12 @@
         .user-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--input);
-            padding: 5px 12px 5px 16px;
-            border-radius: 10px;
+            padding: 4px 10px 4px 14px;
+            border-radius: 8px;
             border: 1px solid var(--primary-border);
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text);
             cursor: pointer;
             transition: all var(--transition);
@@ -333,9 +379,9 @@
             border: none;
             color: #f2b8b5;
             cursor: pointer;
-            font-size: 13px;
-            padding: 2px 6px;
-            border-radius: 6px;
+            font-size: 12px;
+            padding: 2px 4px;
+            border-radius: 4px;
             transition: all var(--transition);
         }
 
@@ -345,18 +391,18 @@
 
         .user-badge .status-verified {
             color: #6fcf97;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 12px;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
             background: rgba(111, 207, 151, 0.12);
             border: 1px solid rgba(111, 207, 151, 0.15);
         }
 
         .user-badge .status-unverified {
             color: #f2b8b5;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 12px;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
             background: rgba(242, 184, 181, 0.12);
             border: 1px solid rgba(242, 184, 181, 0.15);
             cursor: pointer;
@@ -369,9 +415,9 @@
 
         .user-badge .admin-badge {
             color: var(--primary);
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 12px;
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
             background: var(--primary-bg);
             border: 1px solid var(--primary-border);
         }
@@ -379,17 +425,22 @@
         /* ===== PAGES ===== */
         .page {
             display: none;
-            animation: pageFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .page.active {
             display: block;
+            animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Animasi hanya saat pertama kali masuk */
+        .page.animated {
+            animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         @keyframes pageFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(24px) scale(0.98);
+                transform: translateY(16px) scale(0.98);
             }
             to {
                 opacity: 1;
@@ -403,41 +454,41 @@
             backdrop-filter: blur(12px);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
-            padding: 20px 22px;
-            margin-bottom: 14px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
             box-shadow: var(--shadow);
             transition: all var(--transition);
         }
 
         .card:hover {
             border-color: var(--primary);
-            box-shadow: 0 8px 40px rgba(214, 90, 98, 0.08);
+            box-shadow: 0 8px 40px rgba(214, 90, 98, 0.06);
         }
 
         .card-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .card-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text2);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         /* ===== BUTTONS ===== */
         .btn {
             border: none;
-            border-radius: 12px;
-            padding: 10px 22px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 8px 18px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             text-decoration: none;
             will-change: transform;
         }
@@ -454,7 +505,7 @@
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(214, 90, 98, 0.3);
+            box-shadow: 0 4px 16px rgba(214, 90, 98, 0.25);
         }
 
         .btn-danger {
@@ -491,9 +542,9 @@
         }
 
         .btn-sm {
-            padding: 4px 12px;
-            font-size: 12px;
-            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 11px;
+            border-radius: 6px;
         }
 
         .btn-block {
@@ -509,14 +560,14 @@
 
         /* ===== FORM ===== */
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             color: var(--text2);
         }
 
@@ -524,12 +575,12 @@
         .form-group textarea,
         .form-group select {
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 8px 12px;
+            border-radius: 10px;
             border: 1px solid var(--primary-border);
             background: var(--input);
             color: var(--text);
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: all var(--transition);
             font-family: inherit;
@@ -543,7 +594,7 @@
         }
 
         .form-group textarea {
-            min-height: 70px;
+            min-height: 60px;
             resize: vertical;
         }
 
@@ -557,36 +608,24 @@
             background: var(--input);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 10px;
-            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            padding: 12px 14px;
+            margin-bottom: 8px;
             transition: all var(--transition);
         }
 
         .review-item:hover {
             border-color: var(--primary);
             transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
 
         .review-item.removing {
-            animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            animation: slideOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .review-item.editing {
             border-color: var(--primary);
             background: var(--primary-bg);
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-16px) scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
         }
 
         @keyframes slideOut {
@@ -596,7 +635,7 @@
             }
             to {
                 opacity: 0;
-                transform: translateY(-12px) scale(0.94);
+                transform: translateY(-10px) scale(0.94);
             }
         }
 
@@ -610,68 +649,69 @@
 
         .review-item .name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text);
         }
 
         .review-item .name .badge-anon {
-            font-size: 10px;
+            font-size: 9px;
             background: var(--input);
             color: var(--text2);
-            padding: 1px 10px;
-            border-radius: 20px;
+            padding: 1px 8px;
+            border-radius: 16px;
             border: 1px solid var(--primary-border);
             margin-left: 4px;
         }
 
         .review-item .stars-display {
             color: #ffd700;
-            font-size: 14px;
+            font-size: 13px;
             letter-spacing: 1px;
         }
 
         .review-item .msg {
             color: var(--text2);
-            font-size: 14px;
-            margin-top: 4px;
+            font-size: 13px;
+            margin-top: 3px;
             line-height: 1.5;
         }
 
         .review-item .meta {
             color: var(--text3);
-            font-size: 11px;
-            margin-top: 6px;
+            font-size: 10px;
+            margin-top: 4px;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .review-item .actions {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             flex-wrap: wrap;
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         /* ===== LIKE/DISLIKE ===== */
         .like-dislike {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
+            margin-top: 4px;
         }
 
         .like-dislike button {
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 14px;
-            padding: 4px 8px;
-            border-radius: 8px;
+            font-size: 13px;
+            padding: 2px 6px;
+            border-radius: 6px;
             transition: all var(--transition);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             color: var(--text2);
         }
 
@@ -689,57 +729,56 @@
         }
 
         .like-dislike .count {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            min-width: 16px;
+            min-width: 14px;
         }
 
         /* ===== COMMENTS ===== */
         .comments-section {
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid var(--primary-border);
         }
 
         .comments-section .comment {
             background: var(--input);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin-bottom: 6px;
-            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin-bottom: 4px;
         }
 
         .comments-section .comment .cname {
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text);
         }
 
         .comments-section .comment .cmsg {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text2);
-            margin-top: 2px;
+            margin-top: 1px;
         }
 
         .comments-section .comment .cmeta {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text3);
         }
 
         .comments-section .comment-form {
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            gap: 6px;
+            margin-top: 6px;
         }
 
         .comments-section .comment-form input {
             flex: 1;
-            padding: 8px 12px;
-            border-radius: 10px;
+            padding: 6px 10px;
+            border-radius: 8px;
             border: 1px solid var(--primary-border);
             background: var(--input);
             color: var(--text);
-            font-size: 13px;
+            font-size: 12px;
             outline: none;
             transition: all var(--transition);
         }
@@ -749,15 +788,15 @@
         }
 
         .comments-section .comment-form button {
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 6px 14px;
+            border-radius: 8px;
             border: none;
             background: var(--primary);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition);
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .comments-section .comment-form button:hover {
@@ -768,16 +807,16 @@
         /* ===== ADMIN ===== */
         .admin-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
-            margin-bottom: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .admin-stats .stat {
             background: var(--input);
             border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px;
+            border-radius: 10px;
+            padding: 10px;
             text-align: center;
             transition: all var(--transition);
         }
@@ -788,13 +827,13 @@
         }
 
         .admin-stats .stat .num {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             color: var(--primary);
         }
 
         .admin-stats .stat .lbl {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text2);
         }
 
@@ -803,27 +842,43 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .admin-bulk-actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-            padding: 14px;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 10px 14px;
             background: var(--input);
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid var(--primary-border);
+            align-items: center;
         }
 
         .admin-bulk-actions select {
-            padding: 6px 12px;
-            border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 6px;
             border: 1px solid var(--primary-border);
             background: var(--bg);
             color: var(--text);
-            font-size: 13px;
+            font-size: 12px;
+        }
+
+        .admin-bulk-actions input {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+            min-width: 80px;
+        }
+
+        .admin-bulk-actions input:focus {
+            border-color: var(--primary);
         }
 
         /* ===== BADGE ===== */
@@ -831,14 +886,13 @@
             background: var(--input);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 8px;
+            padding: 10px 14px;
+            margin-bottom: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
-            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            gap: 6px;
             transition: all var(--transition);
         }
 
@@ -847,24 +901,24 @@
         }
 
         .badge-item .rank {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #ffd700;
-            min-width: 30px;
+            min-width: 28px;
         }
 
         .badge-item .bname {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .badge-item .bcount {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text2);
         }
 
         .badge-item .bbadge {
-            font-size: 22px;
+            font-size: 18px;
         }
 
         /* ===== FEATURE REQUEST ===== */
@@ -872,9 +926,8 @@
             background: var(--input);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
-            padding: 14px 18px;
-            margin-bottom: 8px;
-            animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            padding: 10px 14px;
+            margin-bottom: 6px;
             transition: all var(--transition);
         }
 
@@ -891,25 +944,25 @@
 
         .fr-item .title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .fr-item .desc {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text2);
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .fr-item .meta {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text3);
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .fr-item .status {
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 16px;
+            font-size: 10px;
             font-weight: 600;
         }
 
@@ -933,28 +986,28 @@
             background: var(--input);
             border: 1px solid var(--primary-border);
             border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
         }
 
         .chart-bar {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
+            gap: 6px;
+            margin-bottom: 4px;
         }
 
         .chart-bar .label {
-            font-size: 12px;
-            min-width: 60px;
+            font-size: 11px;
+            min-width: 50px;
             color: var(--text2);
         }
 
         .chart-bar .track {
             flex: 1;
-            height: 20px;
+            height: 16px;
             background: var(--input);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
             position: relative;
         }
@@ -962,27 +1015,28 @@
         .chart-bar .fill {
             height: 100%;
             background: var(--primary);
-            border-radius: 10px;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             min-width: 2px;
         }
 
         .chart-bar .value {
-            font-size: 12px;
-            min-width: 30px;
+            font-size: 11px;
+            min-width: 28px;
             color: var(--text2);
             text-align: right;
         }
 
-        /* ===== SORTIR ===== */
-        .sort-container {
+        /* ===== SEARCH & SORT ===== */
+        .search-sort-container {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
-        .sort-container select {
+        .search-sort-container input {
+            flex: 1;
             padding: 6px 12px;
             border-radius: 8px;
             border: 1px solid var(--primary-border);
@@ -991,75 +1045,69 @@
             font-size: 13px;
             outline: none;
             transition: all var(--transition);
+            min-width: 120px;
         }
 
-        .sort-container select:focus {
-            border-color: var(--primary);
-        }
-
-        /* ===== SEARCH ===== */
-        .search-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .search-container input {
-            flex: 1;
-            padding: 8px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--primary-border);
-            background: var(--input);
-            color: var(--text);
-            font-size: 14px;
-            outline: none;
-            transition: all var(--transition);
-        }
-
-        .search-container input:focus {
+        .search-sort-container input:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-bg);
         }
 
-        .search-container button {
-            padding: 8px 16px;
-            border-radius: 10px;
+        .search-sort-container select {
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-border);
+            background: var(--input);
+            color: var(--text);
+            font-size: 12px;
+            outline: none;
+            transition: all var(--transition);
+        }
+
+        .search-sort-container select:focus {
+            border-color: var(--primary);
+        }
+
+        .search-sort-container button {
+            padding: 6px 12px;
+            border-radius: 8px;
             border: none;
             background: var(--primary);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
             transition: all var(--transition);
+            font-size: 12px;
         }
 
-        .search-container button:hover {
+        .search-sort-container button:hover {
             background: var(--primary-hover);
             transform: scale(1.02);
         }
 
         /* ===== AUTH ===== */
         .auth-container {
-            max-width: 400px;
+            max-width: 380px;
             margin: 0 auto;
         }
 
         .auth-tabs {
             display: flex;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid var(--primary-border);
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .auth-tabs button {
             flex: 1;
-            padding: 10px;
+            padding: 8px;
             border: none;
             background: var(--input);
             color: var(--text2);
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             transition: all var(--transition);
         }
 
@@ -1078,7 +1126,6 @@
 
         .auth-form.active {
             display: block;
-            animation: pageFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .password-wrap {
@@ -1086,18 +1133,18 @@
         }
 
         .password-wrap input {
-            padding-right: 44px;
+            padding-right: 40px;
         }
 
         .password-toggle {
             position: absolute;
-            right: 10px;
+            right: 8px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: var(--text2);
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             padding: 4px;
             transition: all var(--transition);
@@ -1107,7 +1154,7 @@
             color: var(--text);
         }
 
-        /* ===== SPAM NOTIFICATION ===== */
+        /* ===== SPAM ===== */
         .spam-notification {
             position: fixed;
             top: 0;
@@ -1135,9 +1182,9 @@
         .spam-notification .box {
             background: var(--card);
             border: 1px solid var(--primary-border);
-            border-radius: 24px;
-            padding: 32px 28px 28px;
-            max-width: 440px;
+            border-radius: 20px;
+            padding: 28px 24px 24px;
+            max-width: 420px;
             width: 100%;
             box-shadow: var(--shadow);
             transform: scale(0.92) translateY(12px);
@@ -1151,21 +1198,21 @@
         }
 
         .spam-notification .icon {
-            font-size: 52px;
+            font-size: 48px;
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .spam-notification h3 {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .spam-notification p {
             color: var(--text2);
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
             line-height: 1.6;
             margin-bottom: 4px;
@@ -1179,13 +1226,13 @@
         .spam-notification .box-actions {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
-            margin-top: 18px;
+            margin-top: 14px;
         }
 
         .spam-notification .box-actions .btn {
-            min-width: 120px;
+            min-width: 100px;
             justify-content: center;
         }
 
@@ -1195,7 +1242,7 @@
         }
 
         .spam-notification .box-actions .guide-link {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text3);
             text-decoration: underline;
             cursor: pointer;
@@ -1210,54 +1257,54 @@
         }
 
         .spam-notification .cooldown-text {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text3);
             text-align: center;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         /* ===== GUIDE ===== */
         .guide-content {
-            max-width: 720px;
+            max-width: 680px;
             margin: 0 auto;
-            padding: 10px 0;
+            padding: 8px 0;
         }
 
         .guide-content h1 {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .guide-content h2 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            margin-top: 20px;
-            margin-bottom: 8px;
+            margin-top: 16px;
+            margin-bottom: 6px;
         }
 
         .guide-content p,
         .guide-content li {
             color: var(--text2);
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.7;
         }
 
         .guide-content ul {
-            padding-left: 20px;
-            margin: 6px 0 10px;
+            padding-left: 18px;
+            margin: 4px 0 8px;
         }
 
         .guide-content ul li {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .guide-content .note {
             background: var(--input);
             border: 1px solid var(--primary-border);
-            border-radius: 12px;
-            padding: 14px 18px;
-            margin: 12px 0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin: 10px 0;
         }
 
         .guide-content .note strong {
@@ -1265,27 +1312,27 @@
         }
 
         .guide-content .back-btn {
-            margin-top: 18px;
+            margin-top: 14px;
         }
 
         .guide-content hr {
             border: none;
             border-top: 1px solid var(--primary-border);
-            margin: 16px 0;
+            margin: 12px 0;
         }
 
         /* ===== TOAST ===== */
         .toast {
             position: fixed;
-            bottom: 80px;
+            bottom: 70px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: var(--card);
             backdrop-filter: blur(16px);
             border: 1px solid var(--primary-border);
-            padding: 10px 22px;
-            border-radius: 12px;
-            font-size: 14px;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-size: 13px;
             opacity: 0;
             pointer-events: none;
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1304,7 +1351,8 @@
         .empty {
             color: var(--text3);
             text-align: center;
-            padding: 30px 12px;
+            padding: 24px 12px;
+            font-size: 13px;
         }
 
         /* ===== CONFIRM ===== */
@@ -1331,9 +1379,9 @@
         .confirm-dialog {
             background: var(--card);
             border: 1px solid var(--primary-border);
-            border-radius: 20px;
-            padding: 28px 24px 22px;
-            max-width: 400px;
+            border-radius: 18px;
+            padding: 24px 20px 20px;
+            max-width: 360px;
             width: 100%;
             box-shadow: var(--shadow);
             transform: scale(0.9) translateY(10px);
@@ -1345,34 +1393,75 @@
         }
 
         .confirm-dialog .icon {
-            font-size: 40px;
+            font-size: 36px;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .confirm-dialog h3 {
-            font-size: 18px;
+            font-size: 16px;
             text-align: center;
             margin-bottom: 4px;
         }
 
         .confirm-dialog p {
             color: var(--text2);
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
-            margin-bottom: 18px;
+            margin-bottom: 14px;
             line-height: 1.5;
         }
 
         .confirm-dialog .actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
 
         .confirm-dialog .actions .btn {
-            min-width: 80px;
+            min-width: 70px;
             justify-content: center;
+        }
+
+        /* ===== DASHBOARD MODAL ===== */
+        .dashboard-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 9998;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .dashboard-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dashboard-modal .box {
+            background: var(--card);
+            border: 1px solid var(--primary-border);
+            border-radius: 20px;
+            padding: 24px 22px 22px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            transform: scale(0.92) translateY(12px);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+        }
+
+        .dashboard-modal.show .box {
+            transform: scale(1) translateY(0);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1382,38 +1471,53 @@
             }
 
             .card {
-                padding: 14px 12px;
-            }
-
-            .stars {
-                font-size: 30px;
+                padding: 12px 10px;
             }
 
             .nav {
-                padding: 8px 12px;
-                gap: 4px;
-                top: 68px;
+                padding: 6px 8px;
+                gap: 3px;
             }
 
             .nav button {
-                font-size: 11px;
-                padding: 5px 10px;
+                font-size: 10px;
+                padding: 4px 7px;
+            }
+
+            .nav-dropdown-content {
+                min-width: 130px;
+            }
+            .nav-dropdown-content button {
+                font-size: 10px;
+                padding: 4px 10px;
             }
 
             .nav-right {
                 margin-left: 0;
                 width: 100%;
                 justify-content: center;
+                gap: 3px;
             }
 
             .banner-container {
-                margin: -8px -8px 12px -8px;
-                padding: 8px 8px 0 8px;
+                margin: -8px -8px 8px -8px;
+                padding: 4px 8px 0 8px;
             }
 
             .banner {
-                padding: 12px 14px;
+                padding: 10px 12px;
                 flex-wrap: wrap;
+            }
+            .banner .content .title {
+                font-size: 12px;
+            }
+            .banner .content .message {
+                font-size: 11px;
+            }
+            .banner .close-btn {
+                width: 22px;
+                height: 22px;
+                font-size: 12px;
             }
 
             .admin-stats {
@@ -1422,10 +1526,11 @@
 
             .admin-bulk-actions {
                 flex-direction: column;
+                align-items: stretch;
             }
 
             .confirm-dialog {
-                padding: 20px 16px 18px;
+                padding: 18px 14px 16px;
             }
 
             .review-item .actions {
@@ -1433,30 +1538,30 @@
             }
 
             .spam-notification .box {
-                padding: 24px 18px 20px;
+                padding: 20px 14px 16px;
                 max-height: 95vh;
             }
 
             .guide-content h1 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .watermark {
                 font-size: 10px;
-                bottom: 8px;
+                bottom: 6px;
             }
 
             .watermark span {
                 font-size: 9px;
-                padding: 2px 12px;
+                padding: 2px 10px;
             }
 
-            .search-container {
+            .search-sort-container {
                 flex-direction: column;
             }
 
-            .sort-container {
-                flex-direction: column;
+            .search-sort-container input {
+                min-width: unset;
             }
 
             .comments-section .comment-form {
@@ -1467,18 +1572,27 @@
                 flex-direction: column;
                 text-align: center;
             }
+
+            .user-badge {
+                font-size: 11px;
+                padding: 3px 8px 3px 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-modal .box {
+                padding: 18px 14px 14px;
+            }
         }
 
         @media (max-width: 400px) {
             .nav-left button {
-                font-size: 10px;
-                padding: 4px 8px;
+                font-size: 9px;
+                padding: 3px 6px;
             }
-            .user-badge {
-                font-size: 11px;
-                padding: 4px 8px;
-                flex-wrap: wrap;
-                justify-content: center;
+            .nav-dropdown-content button {
+                font-size: 9px;
+                padding: 3px 8px;
             }
         }
     </style>
@@ -1488,7 +1602,7 @@
     <!-- WATERMARK -->
     <div class="watermark"><span>Made By V4RRXD</span></div>
 
-    <!-- ===== BANNER ===== -->
+    <!-- BANNER -->
     <div class="banner-container" id="bannerContainer">
         <div class="banner" id="banner">
             <span class="icon" id="bannerIcon">📢</span>
@@ -1506,11 +1620,20 @@
         <nav class="nav" id="navbar">
             <div class="nav-left">
                 <button class="active" data-page="home">Beranda</button>
-                <button data-page="review">Ulasan</button>
-                <button data-page="reviews">Lihat Ulasan</button>
-                <button data-page="leaderboard">Papan Peringkat</button>
-                <button data-page="features">Request Fitur</button>
-                <button data-page="admin" id="adminNavBtn" class="hidden-nav">Admin</button>
+
+                <!-- Dropdown Ulasan -->
+                <div class="nav-dropdown" id="reviewDropdown">
+                    <button id="reviewDropdownBtn">Ulasan ▾</button>
+                    <div class="nav-dropdown-content" id="reviewDropdownContent">
+                        <button data-page="review">✏️ Buat Ulasan</button>
+                        <button data-page="reviews">📋 Lihat Ulasan</button>
+                        <button data-page="sortreview">🔀 Sortir Review</button>
+                    </div>
+                </div>
+
+                <button data-page="leaderboard">🏆 Papan Peringkat</button>
+                <button data-page="features">💡 Request Fitur</button>
+                <button data-page="admin" id="adminNavBtn" class="hidden-nav">🛡 Admin</button>
             </div>
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle">🌙</button>
@@ -1519,56 +1642,56 @@
         </nav>
 
         <!-- PAGE HOME -->
-        <div id="page-home" class="page active">
+        <div id="page-home" class="page active animated">
             <div class="card">
                 <h1 class="card-title">Sekolahmu</h1>
-                <p style="color:var(--text2);font-size:15px;margin-bottom:14px;">Aplikasi SMM untuk Android</p>
-                <div style="background:var(--input);border:1px solid var(--primary-border);border-radius:14px;padding:16px 18px;">
-                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <p style="color:var(--text2);font-size:14px;margin-bottom:12px;">Aplikasi SMM untuk Android</p>
+                <div style="background:var(--input);border:1px solid var(--primary-border);border-radius:12px;padding:12px 14px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;">
                         <div>
-                            <strong style="font-size:15px;">Versi</strong>
-                            <div style="color:var(--text2);font-size:14px;">Terkini: <span id="apkVersion">2.4.0</span></div>
+                            <strong style="font-size:14px;">Versi</strong>
+                            <div style="color:var(--text2);font-size:13px;">Terkini: <span id="apkVersion">2.4.0</span></div>
                         </div>
-                        <span style="background:var(--primary-bg);color:var(--primary);padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
+                        <span style="background:var(--primary-bg);color:var(--primary);padding:2px 12px;border-radius:16px;font-size:12px;font-weight:600;">Beta</span>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <h2 class="card-title">Tentang</h2>
-                <p style="color:var(--text2);font-size:14px;line-height:1.6;">
+                <p style="color:var(--text2);font-size:13px;line-height:1.6;">
                     Aplikasi SMM (Sekolah Murid Merdeka) dengan pengalaman lebih cepat dan ringan.
                 </p>
-                <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--primary-border);">Android</span>
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--primary-border);">Windows (Segera)</span>
+                <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+                    <span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Android</span>
+                    <span style="background:var(--input);padding:2px 12px;border-radius:16px;font-size:11px;border:1px solid var(--primary-border);">Windows (Segera)</span>
                 </div>
             </div>
 
-            <!-- ===== REVIEW TERBARU DI HOME ===== -->
+            <!-- REVIEW TERBARU -->
             <div class="card">
                 <h2 class="card-title">📝 Ulasan Terbaru</h2>
                 <div id="homeReviewsList"></div>
             </div>
         </div>
 
-        <!-- PAGE REVIEW (BUAT ULASAN) -->
+        <!-- PAGE REVIEW (BUAT) -->
         <div id="page-review" class="page">
             <div class="card">
                 <h2 class="card-title">✏️ Buat Ulasan</h2>
-                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Bagikan pengalaman kamu menggunakan Sekolahmu</p>
+                <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Bagikan pengalaman kamu menggunakan Sekolahmu</p>
 
-                <div id="ratingAuthRequired" style="text-align:center;padding:20px 0;">
-                    <p style="color:var(--text2);">Login untuk memberi penilaian</p>
-                    <button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:10px;">Login</button>
+                <div id="ratingAuthRequired" style="text-align:center;padding:16px 0;">
+                    <p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p>
+                    <button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button>
                 </div>
 
                 <div id="ratingForm" style="display:none;">
-                    <div id="alreadyReviewed" style="display:none;text-align:center;padding:20px;background:var(--input);border-radius:12px;border:1px solid var(--primary-border);margin-bottom:14px;">
-                        <div style="font-size:32px;">✅</div>
-                        <p style="color:var(--text2);">Kamu sudah memberi penilaian!</p>
-                        <p style="color:var(--text3);font-size:13px;">Terima kasih atas tanggapan kamu 🙏</p>
-                        <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:8px;">Sunting Ulasan</button>
-                        <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:8px;">Hapus Ulasan</button>
+                    <div id="alreadyReviewed" style="display:none;text-align:center;padding:16px;background:var(--input);border-radius:10px;border:1px solid var(--primary-border);margin-bottom:12px;">
+                        <div style="font-size:28px;">✅</div>
+                        <p style="color:var(--text2);font-size:13px;">Kamu sudah memberi penilaian!</p>
+                        <p style="color:var(--text3);font-size:12px;">Terima kasih atas tanggapan kamu 🙏</p>
+                        <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:6px;">Sunting Ulasan</button>
+                        <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:6px;">Hapus Ulasan</button>
                     </div>
 
                     <div id="reviewForm">
@@ -1591,9 +1714,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="checkbox-wrap">
-                                <input type="checkbox" id="reviewAnonymous" />
-                                <span>Kirim sebagai anonim</span>
+                            <label class="checkbox-wrap" style="display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--text2);font-size:13px;">
+                                <input type="checkbox" id="reviewAnonymous" style="width:16px;height:16px;accent-color:var(--primary);" />
+                                Kirim sebagai anonim
                             </label>
                         </div>
 
@@ -1603,37 +1726,48 @@
                         </div>
 
                         <button id="submitReview" class="btn btn-primary btn-block">Kirim Ulasan</button>
-                        <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                        <div id="reviewStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- PAGE REVIEWS (LIHAT ULASAN) -->
+        <!-- PAGE REVIEWS (LIHAT) -->
         <div id="page-reviews" class="page">
             <div class="card">
                 <h2 class="card-title">📋 Semua Ulasan</h2>
 
-                <!-- Search -->
-                <div class="search-container">
+                <div class="search-sort-container">
                     <input type="text" id="searchInput" placeholder="Cari ulasan..." />
                     <button id="searchBtn">🔍</button>
                     <button id="clearSearchBtn" class="btn btn-outline btn-sm">✕</button>
                 </div>
 
-                <!-- Sortir -->
-                <div class="sort-container">
-                    <select id="sortSelect">
+                <div id="reviewsStats" style="margin-bottom:10px;"></div>
+                <div id="reviewsList"></div>
+            </div>
+        </div>
+
+        <!-- PAGE SORT REVIEW -->
+        <div id="page-sortreview" class="page">
+            <div class="card">
+                <h2 class="card-title">🔀 Sortir Review</h2>
+                <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Urutkan ulasan berdasarkan kriteria tertentu</p>
+
+                <div class="sort-container" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+                    <select id="sortSelect" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);font-size:13px;flex:1;min-width:120px;">
                         <option value="newest">Terbaru</option>
                         <option value="oldest">Terlama</option>
                         <option value="highest">Rating Tertinggi</option>
                         <option value="lowest">Rating Terendah</option>
                         <option value="mostLiked">Terbanyak Like</option>
+                        <option value="mostDisliked">Terbanyak Dislike</option>
                     </select>
+                    <button id="sortApplyBtn" class="btn btn-primary btn-sm">Terapkan</button>
                 </div>
 
-                <div id="reviewsStats" style="margin-bottom:14px;"></div>
-                <div id="reviewsList"></div>
+                <div id="sortResultStats" style="margin-bottom:10px;"></div>
+                <div id="sortResultList"></div>
             </div>
         </div>
 
@@ -1641,7 +1775,7 @@
         <div id="page-leaderboard" class="page">
             <div class="card">
                 <h2 class="card-title">🏆 Papan Peringkat</h2>
-                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Pengguna paling berkontribusi</p>
+                <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Pengguna paling berkontribusi</p>
                 <div id="leaderboardList"></div>
             </div>
         </div>
@@ -1650,11 +1784,11 @@
         <div id="page-features" class="page">
             <div class="card">
                 <h2 class="card-title">💡 Request Fitur</h2>
-                <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Kirim ide fitur yang kamu inginkan</p>
+                <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Kirim ide fitur yang kamu inginkan</p>
 
-                <div id="featureAuthRequired" style="text-align:center;padding:20px 0;">
-                    <p style="color:var(--text2);">Login untuk request fitur</p>
-                    <button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:10px;">Login</button>
+                <div id="featureAuthRequired" style="text-align:center;padding:16px 0;">
+                    <p style="color:var(--text2);font-size:13px;">Login untuk request fitur</p>
+                    <button id="gotoLoginBtn3" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button>
                 </div>
 
                 <div id="featureForm" style="display:none;">
@@ -1667,11 +1801,11 @@
                         <textarea id="frDesc" placeholder="Jelaskan fitur yang kamu inginkan..." maxlength="500"></textarea>
                     </div>
                     <button id="submitFR" class="btn btn-primary btn-block">Kirim Request</button>
-                    <div id="frStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                    <div id="frStatus" style="margin-top:8px;font-size:13px;color:var(--text2);text-align:center;"></div>
                 </div>
 
-                <div style="margin-top:20px;">
-                    <h3 style="font-size:16px;font-weight:600;margin-bottom:10px;">Request dari Pengguna</h3>
+                <div style="margin-top:16px;">
+                    <h3 style="font-size:15px;font-weight:600;margin-bottom:8px;">Request dari Pengguna</h3>
                     <div id="frList"></div>
                 </div>
             </div>
@@ -1684,11 +1818,11 @@
             </div>
         </div>
 
-        <!-- PAGE DASHBOARD (muncul sebagai overlay/modal) -->
-        <div class="spam-notification" id="dashboardModal">
+        <!-- DASHBOARD MODAL -->
+        <div class="dashboard-modal" id="dashboardModal">
             <div class="box" id="dashboardBox">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-                    <h2 style="font-size:20px;">👤 Dashboard</h2>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <h2 style="font-size:18px;">👤 Dashboard</h2>
                     <button class="btn btn-outline btn-sm" id="dashboardClose">✕ Tutup</button>
                 </div>
                 <div id="dashboardContent"></div>
@@ -1705,7 +1839,7 @@
             <p>
                 Email verifikasi mungkin masuk ke folder <span class="highlight">Spam</span> atau <span class="highlight">Promosi</span>.
             </p>
-            <p style="font-size:13px;color:var(--text3);">
+            <p style="font-size:12px;color:var(--text3);">
                 Jika tidak menemukan email verifikasi, coba kirim ulang atau cek kembali.
             </p>
             <div class="box-actions">
@@ -1713,7 +1847,7 @@
                 <div class="cooldown-text" id="spamCooldown"></div>
                 <button class="btn btn-success" id="spamVerifiedBtn">✅ Saya Sudah Verifikasi</button>
                 <button class="btn btn-outline" id="spamUnderstandBtn">Saya Mengerti</button>
-                <button class="guide-link" id="spamGuideBtn">📖 Panduan Verifikasi Email</button>
+                <button class="guide-link" id="spamGuideBtn">📖 Panduan Verifikasi</button>
             </div>
         </div>
     </div>
@@ -1723,46 +1857,16 @@
         <div class="box" id="guideBox">
             <div class="guide-content">
                 <h1>📖 Panduan Verifikasi Alamat Email</h1>
-                <p>
-                    Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan. Agar akun Anda dapat digunakan sepenuhnya, Anda wajib melakukan verifikasi email terlebih dahulu.
-                </p>
-                <p>Ikuti langkah-langkah di bawah ini dengan saksama:</p>
-
-                <h2>Langkah 1: Periksa Kotak Masuk Email Anda</h2>
-                <p>Buka aplikasi atau situs penyedia email yang Anda gunakan (misalnya Gmail, Yahoo, Outlook, atau lainnya).</p>
-                <ul>
-                    <li>Cari email baru dari pengirim <strong>noreply@sekolahmu-status.firebaseapp.com</strong>.</li>
-                    <li>Subjek email biasanya bertuliskan: <strong>"Verify your email for sekolahmu-status"</strong>.</li>
-                </ul>
-
-                <h2>Langkah 2: Jika Email Tidak Ditemukan di Kotak Masuk</h2>
-                <p>Terkadang email verifikasi dapat tertahan atau masuk ke folder lain. Lakukan pengecekan tambahan:</p>
-                <ul>
-                    <li><strong>Folder Spam / Junk</strong> – Buka folder spam atau sampah di email Anda. Jika ada, tandai sebagai <em>Not Spam</em> agar email berikutnya tidak masuk ke folder tersebut.</li>
-                    <li><strong>Folder Promosi / Sosial (khusus Gmail)</strong> – Periksa tab <em>Promotions</em> atau <em>Social</em>.</li>
-                    <li><strong>Folder Archive / All Mail</strong> – Jika Anda menggunakan fitur arsip, cek seluruh surat masuk.</li>
-                </ul>
-
-                <h2>Langkah 3: Buka Tautan Verifikasi</h2>
-                <ul>
-                    <li>Setelah menemukan email verifikasi, klik tautan yang diawali <strong>"https://sekolahmu-status.firebaseapp.com/"</strong>.</li>
-                    <li>Jika tautan tidak dapat diklik, salin (copy) seluruh alamat tautan tersebut dan tempelkan (paste) ke bilah alamat peramban (browser) Anda, lalu tekan Enter.</li>
-                </ul>
-
-                <h2>Langkah 4: Konfirmasi Keberhasilan</h2>
-                <p>Setelah Anda mengklik tautan verifikasi, Anda akan diarahkan kembali ke halaman website. Pada halaman tersebut terdapat tombol <strong>"Saya Sudah Verifikasi"</strong> dan sistem akan menampilkan halaman yang mengonfirmasi bahwa alamat email Anda telah berhasil diverifikasi.</p>
-
+                <p>Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan.</p>
+                <h2>Langkah 1: Periksa Kotak Masuk</h2>
+                <p>Cari email dari <strong>noreply@sekolahmu-status.firebaseapp.com</strong> dengan subjek "Verify your email".</p>
+                <h2>Langkah 2: Cek Folder Spam</h2>
+                <p>Jika tidak ditemukan, periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>.</p>
+                <h2>Langkah 3: Buka Tautan</h2>
+                <p>Klik tautan verifikasi yang dikirim ke email Anda.</p>
                 <div class="note">
-                    <strong>📌 Catatan Penting</strong>
-                    <ul>
-                        <li>Tautan verifikasi hanya berlaku selama <strong>3 hari</strong>.</li>
-                        <li>Jangan membagikan tautan verifikasi kepada siapa pun.</li>
-                        <li>Proses verifikasi ini wajib dilakukan <strong>satu kali</strong> untuk setiap akun.</li>
-                    </ul>
+                    <strong>📌 Catatan:</strong> Tautan verifikasi berlaku 3 hari.
                 </div>
-
-                <p style="font-size:13px;color:var(--text3);margin-top:4px;"><strong>Hormat kami,</strong> V4RRXD</p>
-
                 <hr />
                 <button class="btn btn-outline back-btn" id="guideBackBtn">← Kembali</button>
             </div>
@@ -1795,12 +1899,7 @@
             remove,
             get,
             set,
-            update,
-            query,
-            orderByChild,
-            equalTo,
-            limitToLast,
-            orderByKey
+            update
         } from "firebase/database";
         import {
             getAuth,
@@ -1827,7 +1926,7 @@
 
         const ADMIN_UID = "3JIwxiDLKoOp8T1LIuaCpB0fqYA2";
 
-        // ===== STATE =====
+        // STATE
         let selectedRating = 0;
         let currentUser = null;
         let isAdmin = false;
@@ -1841,11 +1940,12 @@
         let resendCooldown = 0;
         let resendTimer = null;
         let isCooldownActive = false;
-        let allComments = {};
         let featureRequests = [];
         let bannerClosed = false;
+        let currentPage = 'home';
+        let pageAnimated = {};
 
-        // ===== DOM =====
+        // DOM
         const $ = (s) => document.querySelector(s);
         const $$ = (s) => document.querySelectorAll(s);
 
@@ -1906,7 +2006,7 @@
             if (!el || !btn) return;
 
             if (isCooldownActive && resendCooldown > 0) {
-                el.textContent = `⏳ Tunggu ${resendCooldown} detik sebelum kirim ulang`;
+                el.textContent = `⏳ Tunggu ${resendCooldown}s`;
                 btn.disabled = true;
             } else {
                 el.textContent = '';
@@ -1939,21 +2039,21 @@
                 return;
             }
             if (!currentUser) {
-                showToast('❌ Login dulu untuk kirim ulang', true);
+                showToast('❌ Login dulu', true);
                 return;
             }
             if (currentUser.emailVerified) {
-                showToast('✅ Email sudah terverifikasi!', false);
+                showToast('✅ Sudah terverifikasi!', false);
                 hideSpamNotification();
                 return;
             }
 
             try {
                 await sendEmailVerification(currentUser);
-                showToast('📧 Email verifikasi dikirim! Cek inbox/spam');
+                showToast('📧 Email verifikasi dikirim!');
                 startCooldown();
             } catch (err) {
-                showToast('❌ Gagal kirim ulang: ' + err.message, true);
+                showToast('❌ Gagal: ' + err.message, true);
             }
         }
 
@@ -1967,13 +2067,13 @@
             const refreshedUser = auth.currentUser;
 
             if (refreshedUser && refreshedUser.emailVerified) {
-                showToast('✅ Email sudah terverifikasi!', false);
+                showToast('✅ Email terverifikasi!', false);
                 hideSpamNotification();
                 spamNotifShown = true;
                 updateAuthUI();
                 goToPage('home');
             } else {
-                showToast('❌ Email belum terverifikasi. Cek inbox/spam!', true);
+                showToast('❌ Email belum terverifikasi', true);
                 showSpamNotification();
             }
         }
@@ -2045,21 +2145,74 @@
             themeToggle.textContent = '☀️';
         }
 
+        // ===== DROPDOWN =====
+        const dropdownBtn = document.getElementById('reviewDropdownBtn');
+        const dropdownContent = document.getElementById('reviewDropdownContent');
+
+        dropdownBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownContent.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            dropdownContent?.classList.remove('show');
+        });
+
+        dropdownContent?.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
         // ===== NAVIGATION =====
         function goToPage(page) {
-            document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
-            const btn = document.querySelector(`[data-page="${page}"]`);
-            if (btn) btn.classList.add('active');
-
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(`page-${page}`);
-            if (target) {
-                target.classList.remove('active');
-                void target.offsetHeight;
-                target.classList.add('active');
+            if (page === currentPage) {
+                // Sudah di halaman yang sama, jangan animasi ulang
+                return;
             }
 
+            currentPage = page;
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-left > button').forEach(b => {
+                if (b.dataset.page === page) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+
+            // Update dropdown items
+            document.querySelectorAll('.nav-dropdown-content button').forEach(b => {
+                if (b.dataset.page === page) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+
+            // Update pages
+            document.querySelectorAll('.page').forEach(p => {
+                if (p.id === `page-${page}`) {
+                    p.classList.add('active');
+                    // Tambahkan animasi hanya jika belum pernah di-animasi
+                    if (!pageAnimated[page]) {
+                        p.classList.add('animated');
+                        // Hapus animasi setelah selesai agar tidak berulang
+                        setTimeout(() => {
+                            p.classList.remove('animated');
+                        }, 500);
+                        pageAnimated[page] = true;
+                    }
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+
+            // Close dropdown
+            dropdownContent?.classList.remove('show');
+
+            // Render konten
             if (page === 'reviews') renderReviews();
+            if (page === 'sortreview') renderSortReview();
             if (page === 'admin') renderAdmin();
             if (page === 'review') checkRatingAuth();
             if (page === 'leaderboard') renderLeaderboard();
@@ -2071,7 +2224,16 @@
             goToPage('home');
         }
 
-        document.querySelectorAll('.nav-left button').forEach(btn => {
+        // Nav buttons
+        document.querySelectorAll('.nav-left > button[data-page]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                goToPage(page);
+            });
+        });
+
+        // Dropdown items
+        document.querySelectorAll('.nav-dropdown-content button[data-page]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const page = btn.dataset.page;
                 goToPage(page);
@@ -2115,32 +2277,32 @@
             const avgRating = totalReviews > 0 ? (userReviews.reduce((s, r) => s + r.rating, 0) / totalReviews) : 0;
 
             content.innerHTML = `
-                <div style="text-align:center;padding:4px 0;">
-                    <div style="font-size:48px;margin-bottom:4px;">👤</div>
-                    <h3 style="font-size:18px;">${displayName}</h3>
-                    <p style="color:var(--text2);font-size:13px;">${currentUser.email}</p>
-                    <p style="margin-top:4px;">
-                        <span class="${currentUser.emailVerified ? 'status-verified' : 'status-unverified'}">
+                <div style="text-align:center;padding:2px 0;">
+                    <div style="font-size:40px;margin-bottom:2px;">👤</div>
+                    <h3 style="font-size:16px;">${displayName}</h3>
+                    <p style="color:var(--text2);font-size:12px;">${currentUser.email}</p>
+                    <p style="margin-top:3px;">
+                        <span class="${currentUser.emailVerified ? 'status-verified' : 'status-unverified'}" style="font-size:11px;padding:2px 10px;border-radius:12px;">
                             ${currentUser.emailVerified ? '✅ Terverifikasi' : '⚠️ Belum Verifikasi'}
                         </span>
                     </p>
                 </div>
-                <hr style="border-color:var(--primary-border);margin:12px 0;" />
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
-                    <div style="background:var(--input);padding:12px;border-radius:10px;">
-                        <div style="font-size:24px;font-weight:700;color:var(--primary);">${totalReviews}</div>
-                        <div style="font-size:11px;color:var(--text2);">Total Ulasan</div>
+                <hr style="border-color:var(--primary-border);margin:10px 0;" />
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+                    <div style="background:var(--input);padding:10px;border-radius:8px;">
+                        <div style="font-size:20px;font-weight:700;color:var(--primary);">${totalReviews}</div>
+                        <div style="font-size:10px;color:var(--text2);">Total Ulasan</div>
                     </div>
-                    <div style="background:var(--input);padding:12px;border-radius:10px;">
-                        <div style="font-size:24px;font-weight:700;color:#ffd700;">${avgRating.toFixed(1)}</div>
-                        <div style="font-size:11px;color:var(--text2);">Rating Rata-rata</div>
+                    <div style="background:var(--input);padding:10px;border-radius:8px;">
+                        <div style="font-size:20px;font-weight:700;color:#ffd700;">${avgRating.toFixed(1)}</div>
+                        <div style="font-size:10px;color:var(--text2);">Rating</div>
                     </div>
-                    <div style="background:var(--input);padding:12px;border-radius:10px;">
-                        <div style="font-size:24px;font-weight:700;color:var(--text2);">${currentUser.metadata?.creationTime ? new Date(currentUser.metadata.creationTime).toLocaleDateString('id-ID') : '-'}</div>
-                        <div style="font-size:11px;color:var(--text2);">Bergabung</div>
+                    <div style="background:var(--input);padding:10px;border-radius:8px;">
+                        <div style="font-size:20px;font-weight:700;color:var(--text2);">${currentUser.metadata?.creationTime ? new Date(currentUser.metadata.creationTime).toLocaleDateString('id-ID') : '-'}</div>
+                        <div style="font-size:10px;color:var(--text2);">Bergabung</div>
                     </div>
                 </div>
-                <div style="margin-top:12px;">
+                <div style="margin-top:10px;">
                     <button class="btn btn-outline btn-sm btn-block" id="dashboardLogout">Logout</button>
                 </div>
             `;
@@ -2182,7 +2344,7 @@
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 return `
-                    <div class="review-item" style="animation-delay:${Math.min(index * 50, 300)}ms;">
+                    <div class="review-item" style="border-left:3px solid var(--primary);">
                         <div class="top">
                             <span class="name">${displayName} ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}</span>
                             <span class="stars-display">${starsStr}</span>
@@ -2199,7 +2361,6 @@
             const list = document.getElementById('leaderboardList');
             if (!list) return;
 
-            // Hitung statistik per user
             const userStats = {};
             allReviews.forEach(r => {
                 if (r.anonymous) return;
@@ -2228,7 +2389,7 @@
             list.innerHTML = sorted.slice(0, 10).map((item, index) => {
                 const medal = index < 3 ? medals[index] : `#${index + 1}`;
                 return `
-                    <div class="badge-item" style="animation-delay:${Math.min(index * 30, 300)}ms;">
+                    <div class="badge-item">
                         <div class="rank">${medal}</div>
                         <div class="bname">${item.name}</div>
                         <div class="bcount">${item.total} ulasan • ${item.avg.toFixed(1)} ★</div>
@@ -2265,11 +2426,11 @@
             const desc = document.getElementById('frDesc').value.trim();
 
             if (!title) {
-                showToast('Masukkan judul fitur', true);
+                showToast('Masukkan judul', true);
                 return;
             }
             if (!desc) {
-                showToast('Masukkan deskripsi fitur', true);
+                showToast('Masukkan deskripsi', true);
                 return;
             }
 
@@ -2291,7 +2452,7 @@
                 document.getElementById('frDesc').value = '';
                 loadFeatureRequests();
             } catch (err) {
-                showToast('❌ Gagal kirim: ' + err.message, true);
+                showToast('❌ Gagal: ' + err.message, true);
             }
         });
 
@@ -2327,7 +2488,7 @@
                 };
                 const statusClass = fr.status || 'pending';
                 return `
-                    <div class="fr-item" style="animation-delay:${Math.min(index * 20, 200)}ms;">
+                    <div class="fr-item">
                         <div class="top">
                             <span class="title">${fr.title}</span>
                             <span class="status ${statusClass}">${statusLabel[statusClass] || 'Menunggu'}</span>
@@ -2335,7 +2496,7 @@
                         <div class="desc">${fr.description}</div>
                         <div class="meta">oleh ${fr.name || 'Anonim'} • ${fr.timestamp ? new Date(fr.timestamp).toLocaleDateString('id-ID') : ''}</div>
                         ${isAdmin ? `
-                            <div style="margin-top:6px;display:flex;gap:6px;">
+                            <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
                                 <button class="btn btn-success btn-sm fr-approve" data-id="${fr.id}">Setujui</button>
                                 <button class="btn btn-danger btn-sm fr-reject" data-id="${fr.id}">Tolak</button>
                                 <button class="btn btn-danger btn-sm fr-delete" data-id="${fr.id}">Hapus</button>
@@ -2395,11 +2556,11 @@
                     form.style.display = 'none';
                     req.style.display = 'block';
                     req.innerHTML = `
-                        <div style="padding:20px 0;">
-                            <div style="font-size:40px;">📧</div>
-                            <p style="color:var(--text2);">Verifikasi email dulu untuk memberi penilaian</p>
-                            <p style="color:var(--text3);font-size:13px;margin-top:4px;">Cek inbox atau folder spam</p>
-                            <button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:10px;">Kirim Ulang Verifikasi</button>
+                        <div style="padding:16px 0;">
+                            <div style="font-size:36px;">📧</div>
+                            <p style="color:var(--text2);font-size:13px;">Verifikasi email dulu untuk memberi penilaian</p>
+                            <p style="color:var(--text3);font-size:12px;">Cek inbox atau folder spam</p>
+                            <button id="resendVerifyBtn" class="btn btn-primary btn-sm" style="margin-top:8px;">Kirim Ulang Verifikasi</button>
                         </div>
                     `;
                     document.getElementById('resendVerifyBtn')?.addEventListener('click', resendVerification);
@@ -2412,8 +2573,8 @@
                 form.style.display = 'none';
                 req.style.display = 'block';
                 req.innerHTML = `
-                    <p style="color:var(--text2);">Login untuk memberi penilaian</p>
-                    <button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:10px;">Login</button>
+                    <p style="color:var(--text2);font-size:13px;">Login untuk memberi penilaian</p>
+                    <button id="gotoLoginBtn2" class="btn btn-primary" style="margin-top:8px;font-size:12px;">Login</button>
                 `;
                 document.getElementById('gotoLoginBtn2')?.addEventListener('click', () => {
                     goToPage('admin');
@@ -2446,7 +2607,7 @@
                 document.getElementById('editMyReviewBtn').style.display = 'none';
                 document.getElementById('deleteMyReviewBtn').style.display = 'none';
                 const info = document.createElement('p');
-                info.style.cssText = 'color:var(--text3);font-size:13px;margin-top:6px;';
+                info.style.cssText = 'color:var(--text3);font-size:12px;margin-top:4px;';
                 info.textContent = '📧 Verifikasi email untuk sunting/hapus ulasan';
                 alreadyDiv.appendChild(info);
             } else {
@@ -2460,7 +2621,7 @@
         // ===== LIKE/DISLIKE =====
         async function toggleLike(reviewId, type) {
             if (!currentUser) {
-                showToast('Login dulu untuk memberi like', true);
+                showToast('Login dulu', true);
                 return;
             }
 
@@ -2479,13 +2640,11 @@
 
             if (type === 'like') {
                 if (likedBy[uid]) {
-                    // Unlikes
                     updates['likes'] = Math.max(0, likes - 1);
                     updates[`likedBy/${uid}`] = null;
                 } else {
                     updates['likes'] = likes + 1;
                     updates[`likedBy/${uid}`] = true;
-                    // Remove dislike if exists
                     if (dislikedBy[uid]) {
                         updates['dislikes'] = Math.max(0, dislikes - 1);
                         updates[`dislikedBy/${uid}`] = null;
@@ -2515,7 +2674,7 @@
         // ===== COMMENTS =====
         async function addComment(reviewId) {
             if (!currentUser) {
-                showToast('Login dulu untuk komentar', true);
+                showToast('Login dulu', true);
                 return;
             }
 
@@ -2551,12 +2710,7 @@
                 return;
             }
 
-            const confirmed = await showConfirm(
-                'Hapus Ulasan?',
-                'Ulasan kamu akan dihapus secara permanen.',
-                '🗑️',
-                'Ya, Hapus'
-            );
+            const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan kamu akan dihapus permanen.', '🗑️');
             if (!confirmed) return;
 
             try {
@@ -2569,7 +2723,7 @@
                 if (alreadyDiv) alreadyDiv.style.display = 'none';
                 if (reviewForm) reviewForm.style.display = 'block';
             } catch (err) {
-                showToast('Gagal hapus ulasan', true);
+                showToast('Gagal hapus', true);
             }
         }
 
@@ -2626,7 +2780,7 @@
                     showToast('Ulasan diperbarui');
                     cancelEdit(item);
                 } catch (err) {
-                    showToast('Gagal perbarui ulasan', true);
+                    showToast('Gagal perbarui', true);
                 }
             });
 
@@ -2698,15 +2852,8 @@
                 if (data) {
                     updateData = data;
                     const version = data.latestVersion || '2.4.0';
-                    const size = data.size || '3.78 MB';
-                    const url = data.apkUrl ||
-                        'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
-
                     const apkVer = document.getElementById('apkVersion');
-                    const downloadBtn = document.getElementById('downloadBtn');
-
                     if (apkVer) apkVer.textContent = version;
-                    if (downloadBtn) downloadBtn.href = url;
                 }
             });
         }
@@ -2835,6 +2982,7 @@
                 renderReviews();
                 renderHomeReviews();
                 renderLeaderboard();
+                renderSortReview();
             });
         }
 
@@ -2846,7 +2994,6 @@
 
             document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
-            // Search filter
             const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || '';
             let filtered = allReviews;
             if (searchQuery) {
@@ -2856,28 +3003,8 @@
                 );
             }
 
-            // Sort
-            const sortBy = document.getElementById('sortSelect')?.value || 'newest';
-            filtered = [...filtered];
-            switch (sortBy) {
-                case 'newest':
-                    filtered.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-                    break;
-                case 'oldest':
-                    filtered.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-                    break;
-                case 'highest':
-                    filtered.sort((a, b) => b.rating - a.rating);
-                    break;
-                case 'lowest':
-                    filtered.sort((a, b) => a.rating - b.rating);
-                    break;
-                case 'mostLiked':
-                    filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-                    break;
-                default:
-                    break;
-            }
+            // Default sort: newest
+            filtered = [...filtered].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             if (filtered.length === 0) {
                 list.innerHTML = '<div class="empty">Tidak ada ulasan yang cocok</div>';
@@ -2894,15 +3021,15 @@
 
             if (stats) {
                 stats.innerHTML = `
-                    <div style="display:flex;gap:14px;flex-wrap:wrap;background:var(--input);padding:12px 16px;border-radius:12px;border:1px solid var(--primary-border);">
-                        <div style="display:flex;align-items:center;gap:6px;">
-                            <span style="font-size:26px;font-weight:700;color:#ffd700;">${avg.toFixed(1)}</span>
-                            <span style="color:#ffd700;font-size:18px;">★</span>
-                            <span style="color:var(--text2);font-size:13px;">(${total} ulasan)</span>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;background:var(--input);padding:8px 12px;border-radius:8px;border:1px solid var(--primary-border);">
+                        <div style="display:flex;align-items:center;gap:4px;">
+                            <span style="font-size:22px;font-weight:700;color:#ffd700;">${avg.toFixed(1)}</span>
+                            <span style="color:#ffd700;font-size:16px;">★</span>
+                            <span style="color:var(--text2);font-size:12px;">(${total} ulasan)</span>
                         </div>
-                        <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px;align-items:center;">
+                        <div style="display:flex;gap:3px;flex-wrap:wrap;font-size:11px;align-items:center;">
                             ${[5,4,3,2,1].map(n => `
-                                <span style="background:var(--input);padding:2px 10px;border-radius:20px;border:1px solid var(--primary-border);display:flex;align-items:center;gap:4px;">
+                                <span style="background:var(--input);padding:1px 8px;border-radius:16px;border:1px solid var(--primary-border);display:flex;align-items:center;gap:3px;">
                                     <span style="color:#ffd700;">${'★'.repeat(n)}</span>
                                     <span style="color:var(--text2);">${starsCount[n-1]}</span>
                                 </span>
@@ -2940,14 +3067,13 @@
                 } else if (isOwner && !currentUser?.emailVerified) {
                     actionsHtml = `
                         <div class="actions">
-                            <span style="font-size:12px;color:var(--text3);">📧 Verifikasi untuk sunting/hapus</span>
+                            <span style="font-size:11px;color:var(--text3);">📧 Verifikasi untuk sunting/hapus</span>
                         </div>
                     `;
                 }
 
-                // Comments
                 const comments = r.comments ? Object.values(r.comments) : [];
-                const commentsHtml = comments.length > 0 ? `
+                const commentsHtml = `
                     <div class="comments-section">
                         ${comments.map(c => `
                             <div class="comment">
@@ -2961,17 +3087,10 @@
                             <button onclick="document.querySelector('script[type=module]').__addComment('${r.id}')">Kirim</button>
                         </div>
                     </div>
-                ` : `
-                    <div class="comments-section">
-                        <div class="comment-form">
-                            <input type="text" id="commentInput_${r.id}" placeholder="Tulis komentar..." />
-                            <button onclick="document.querySelector('script[type=module]').__addComment('${r.id}')">Kirim</button>
-                        </div>
-                    </div>
                 `;
 
                 return `
-                    <div class="review-item" data-id="${r.id}" style="animation-delay:${Math.min(index * 20, 300)}ms;">
+                    <div class="review-item" data-id="${r.id}">
                         <div class="top">
                             <span class="name">
                                 ${displayName}
@@ -3000,7 +3119,7 @@
                 `;
             }).join('');
 
-            // ===== LIKE/DISLIKE EVENTS =====
+            // LIKE/DISLIKE
             document.querySelectorAll('.like-dislike button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const reviewId = btn.dataset.review;
@@ -3009,18 +3128,16 @@
                 });
             });
 
-            // ===== DELETE REVIEW =====
+            // DELETE
             document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
                     const review = allReviews.find(r => r.id === id);
                     const isOwner = currentUser && review && review.uid === currentUser.uid;
                     const title = isOwner ? 'Hapus Ulasan Kamu?' : 'Hapus Ulasan?';
-                    const message = isOwner ?
-                        'Ulasan kamu akan dihapus secara permanen.' :
-                        'Ulasan ini akan dihapus secara permanen.';
+                    const message = isOwner ? 'Ulasan kamu akan dihapus permanen.' : 'Ulasan ini akan dihapus permanen.';
 
-                    const confirmed = await showConfirm(title, message, '🗑️', 'Ya, Hapus');
+                    const confirmed = await showConfirm(title, message, '🗑️');
                     if (!confirmed) return;
 
                     const item = btn.closest('.review-item');
@@ -3044,7 +3161,7 @@
                 });
             });
 
-            // ===== EDIT REVIEW =====
+            // EDIT
             document.querySelectorAll('.edit-review').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -3056,6 +3173,87 @@
             });
         }
 
+        // ===== SORT REVIEW =====
+        function renderSortReview() {
+            const list = document.getElementById('sortResultList');
+            const stats = document.getElementById('sortResultStats');
+            if (!list) return;
+
+            const sortBy = document.getElementById('sortSelect')?.value || 'newest';
+            let sorted = [...allReviews];
+
+            switch (sortBy) {
+                case 'newest':
+                    sorted.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    break;
+                case 'oldest':
+                    sorted.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                    break;
+                case 'highest':
+                    sorted.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'lowest':
+                    sorted.sort((a, b) => a.rating - b.rating);
+                    break;
+                case 'mostLiked':
+                    sorted.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+                    break;
+                case 'mostDisliked':
+                    sorted.sort((a, b) => (b.dislikes || 0) - (a.dislikes || 0));
+                    break;
+                default:
+                    break;
+            }
+
+            if (sorted.length === 0) {
+                list.innerHTML = '<div class="empty">Belum ada ulasan</div>';
+                if (stats) stats.innerHTML = '';
+                return;
+            }
+
+            const labelMap = {
+                newest: 'Terbaru',
+                oldest: 'Terlama',
+                highest: 'Rating Tertinggi',
+                lowest: 'Rating Terendah',
+                mostLiked: 'Terbanyak Like',
+                mostDisliked: 'Terbanyak Dislike'
+            };
+
+            if (stats) {
+                stats.innerHTML = `
+                    <div style="background:var(--input);padding:8px 12px;border-radius:8px;border:1px solid var(--primary-border);font-size:12px;color:var(--text2);">
+                        Menampilkan ${sorted.length} ulasan • Diurutkan: ${labelMap[sortBy] || 'Terbaru'}
+                    </div>
+                `;
+            }
+
+            list.innerHTML = sorted.map((r, index) => {
+                const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
+                const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
+                const likes = r.likes || 0;
+                const dislikes = r.dislikes || 0;
+
+                return `
+                    <div class="review-item" style="border-left:3px solid var(--primary);">
+                        <div class="top">
+                            <span class="name">${displayName} ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}</span>
+                            <span class="stars-display">${starsStr}</span>
+                        </div>
+                        <div class="msg">${r.message}</div>
+                        <div class="meta">
+                            <span>${date}</span>
+                            <span>•</span>
+                            <span>👍 ${likes} 👎 ${dislikes}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('sortApplyBtn')?.addEventListener('click', renderSortReview);
+
         // ===== ADMIN =====
         function renderAdmin() {
             const container = document.getElementById('adminContent');
@@ -3064,7 +3262,7 @@
             if (!currentUser) {
                 container.innerHTML = `
                     <div class="auth-container">
-                        <h2 style="margin-bottom:12px;">🔐 Login / Daftar</h2>
+                        <h2 style="margin-bottom:10px;">🔐 Login / Daftar</h2>
                         <div class="auth-tabs">
                             <button class="active" data-tab="login">Login</button>
                             <button data-tab="register">Daftar</button>
@@ -3083,7 +3281,7 @@
                                 </div>
                             </div>
                             <button id="loginBtn" class="btn btn-primary btn-block">Login</button>
-                            <div id="loginStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                            <div id="loginStatus" style="margin-top:6px;font-size:13px;color:var(--text2);text-align:center;"></div>
                         </div>
 
                         <div id="registerForm" class="auth-form">
@@ -3099,7 +3297,7 @@
                                 </div>
                             </div>
                             <button id="registerBtn" class="btn btn-primary btn-block">Daftar</button>
-                            <div id="registerStatus" style="margin-top:8px;font-size:14px;color:var(--text2);text-align:center;"></div>
+                            <div id="registerStatus" style="margin-top:6px;font-size:13px;color:var(--text2);text-align:center;"></div>
                         </div>
                     </div>
                 `;
@@ -3253,11 +3451,11 @@
         function renderAdminDashboard(container) {
             if (!isAdmin) {
                 container.innerHTML = `
-                    <div style="text-align:center;padding:20px 0;">
-                        <div style="font-size:40px;">🔒</div>
-                        <h3>Bukan Admin</h3>
-                        <p style="color:var(--text2);">Akun ini tidak memiliki akses admin</p>
-                        <button id="logoutBtn" class="btn btn-outline" style="margin-top:12px;">Logout</button>
+                    <div style="text-align:center;padding:16px 0;">
+                        <div style="font-size:36px;">🔒</div>
+                        <h3 style="font-size:16px;">Bukan Admin</h3>
+                        <p style="color:var(--text2);font-size:13px;">Akun ini tidak memiliki akses admin</p>
+                        <button id="logoutBtn" class="btn btn-outline" style="margin-top:10px;">Logout</button>
                     </div>
                 `;
                 document.getElementById('logoutBtn')?.addEventListener('click', () => {
@@ -3270,7 +3468,6 @@
             const total = allReviews.length;
             const avg = total > 0 ? (allReviews.reduce((s, r) => s + r.rating, 0) / total) : 0;
 
-            // Hitung rating per bulan untuk grafik
             const monthData = {};
             allReviews.forEach(r => {
                 if (r.timestamp) {
@@ -3295,11 +3492,11 @@
                         <span class="value">${avgMonth.toFixed(1)} ★</span>
                     </div>
                 `;
-            }).join('') : '<p style="color:var(--text2);font-size:13px;">Belum ada data rating</p>';
+            }).join('') : '<p style="color:var(--text2);font-size:12px;">Belum ada data rating</p>';
 
             container.innerHTML = `
                 <div class="admin-header">
-                    <h2>🛡 Panel Admin</h2>
+                    <h2 style="font-size:18px;">🛡 Panel Admin</h2>
                     <button id="logoutBtn" class="btn btn-outline btn-sm">Logout</button>
                 </div>
                 <div class="admin-stats">
@@ -3308,24 +3505,21 @@
                     <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">Versi APK</div></div>
                 </div>
 
-                <!-- ===== GRAFIK RATING ===== -->
-                <div class="card" style="margin-bottom:14px;">
-                    <h3 style="font-size:16px;font-weight:600;margin-bottom:10px;">📊 Grafik Rating Per Bulan</h3>
+                <div style="margin-bottom:10px;">
+                    <h3 style="font-size:14px;font-weight:600;margin-bottom:6px;">📊 Grafik Rating Per Bulan</h3>
                     <div class="chart-container">
                         ${chartHtml}
                     </div>
                 </div>
 
-                <!-- ===== EXPORT DATA ===== -->
                 <div class="admin-bulk-actions">
-                    <span style="font-weight:600;font-size:13px;">Export Data:</span>
+                    <span style="font-weight:600;font-size:12px;">Export Data:</span>
                     <button id="exportCSV" class="btn btn-success btn-sm">📥 CSV</button>
                     <button id="exportJSON" class="btn btn-success btn-sm">📥 JSON</button>
                 </div>
 
-                <!-- ===== BULK DELETE ===== -->
                 <div class="admin-bulk-actions">
-                    <span style="font-weight:600;font-size:13px;">Hapus Berdasarkan:</span>
+                    <span style="font-weight:600;font-size:12px;">Hapus Berdasarkan:</span>
                     <select id="bulkStarSelect">
                         <option value="all">Semua Ulasan</option>
                         <option value="5">5 Bintang</option>
@@ -3335,28 +3529,25 @@
                         <option value="1">1 Bintang</option>
                     </select>
                     <button id="bulkDeleteBtn" class="btn btn-danger btn-sm">Hapus</button>
-                    <span style="font-size:12px;color:var(--text3);margin-left:4px;">(aksi permanen)</span>
+                    <span style="font-size:10px;color:var(--text3);">(permanen)</span>
                 </div>
 
-                <!-- ===== AUTO DELETE ===== -->
                 <div class="admin-bulk-actions">
-                    <span style="font-weight:600;font-size:13px;">Auto Delete:</span>
+                    <span style="font-weight:600;font-size:12px;">Auto Delete:</span>
                     <select id="autoDeleteSelect">
                         <option value="0">Nonaktif</option>
                         <option value="30">30 hari</option>
                         <option value="60">60 hari</option>
                         <option value="90">90 hari</option>
-                        <option value="180">180 hari</option>
                     </select>
-                    <button id="autoDeleteBtn" class="btn btn-danger btn-sm">Jalankan Auto Delete</button>
+                    <button id="autoDeleteBtn" class="btn btn-danger btn-sm">Jalankan</button>
                 </div>
 
-                <!-- ===== BANNER ADMIN ===== -->
                 <div class="admin-bulk-actions">
-                    <span style="font-weight:600;font-size:13px;">📢 Banner Pengumuman:</span>
-                    <input type="text" id="bannerTitleInput" placeholder="Judul" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);flex:1;min-width:100px;" />
-                    <input type="text" id="bannerMsgInput" placeholder="Pesan" style="padding:6px 12px;border-radius:8px;border:1px solid var(--primary-border);background:var(--input);color:var(--text);flex:2;min-width:150px;" />
-                    <button id="bannerPublishBtn" class="btn btn-primary btn-sm">📢 Publish</button>
+                    <span style="font-weight:600;font-size:12px;">📢 Banner:</span>
+                    <input type="text" id="bannerTitleInput" placeholder="Judul" style="min-width:60px;flex:1;" />
+                    <input type="text" id="bannerMsgInput" placeholder="Pesan" style="min-width:80px;flex:2;" />
+                    <button id="bannerPublishBtn" class="btn btn-primary btn-sm">Publish</button>
                     <button id="bannerUnpublishBtn" class="btn btn-outline btn-sm">Sembunyikan</button>
                 </div>
 
@@ -3368,10 +3559,10 @@
                 goToHome();
             });
 
-            // ===== EXPORT CSV =====
+            // EXPORT CSV
             document.getElementById('exportCSV')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
-                    showToast('Tidak ada data untuk di-export', true);
+                    showToast('Tidak ada data', true);
                     return;
                 }
                 const headers = ['Nama', 'Anonim', 'Rating', 'Pesan', 'Versi', 'Tanggal', 'Likes', 'Dislikes'];
@@ -3393,13 +3584,13 @@
                 a.download = `reviews_${new Date().toISOString().slice(0,10)}.csv`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('✅ CSV berhasil di-export');
+                showToast('✅ CSV di-export');
             });
 
-            // ===== EXPORT JSON =====
+            // EXPORT JSON
             document.getElementById('exportJSON')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
-                    showToast('Tidak ada data untuk di-export', true);
+                    showToast('Tidak ada data', true);
                     return;
                 }
                 const data = JSON.stringify(allReviews, null, 2);
@@ -3410,10 +3601,10 @@
                 a.download = `reviews_${new Date().toISOString().slice(0,10)}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast('✅ JSON berhasil di-export');
+                showToast('✅ JSON di-export');
             });
 
-            // ===== BULK DELETE =====
+            // BULK DELETE
             document.getElementById('bulkDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select?.value || 'all';
@@ -3430,16 +3621,11 @@
                 }
 
                 if (toDelete.length === 0) {
-                    showToast('Tidak ada ulasan untuk dihapus', true);
+                    showToast('Tidak ada ulasan', true);
                     return;
                 }
 
-                const confirmed = await showConfirm(
-                    'Hapus Ulasan?',
-                    `Hapus ${label} secara permanen?`,
-                    '⚠️',
-                    'Ya, Hapus Semua'
-                );
+                const confirmed = await showConfirm('Hapus Ulasan?', `Hapus ${label} secara permanen?`, '⚠️', 'Ya, Hapus Semua');
                 if (!confirmed) return;
 
                 let deleted = 0;
@@ -3453,12 +3639,12 @@
                 showToast(`${deleted} ulasan dihapus`);
             });
 
-            // ===== AUTO DELETE =====
+            // AUTO DELETE
             document.getElementById('autoDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('autoDeleteSelect');
                 const days = parseInt(select?.value || '0');
                 if (days === 0) {
-                    showToast('Pilih jumlah hari dulu', true);
+                    showToast('Pilih jumlah hari', true);
                     return;
                 }
 
@@ -3467,16 +3653,11 @@
                 const toDelete = allReviews.filter(r => (r.timestamp || 0) < limit).map(r => r.id);
 
                 if (toDelete.length === 0) {
-                    showToast(`Tidak ada ulasan yang berusia > ${days} hari`, true);
+                    showToast(`Tidak ada ulasan > ${days} hari`, true);
                     return;
                 }
 
-                const confirmed = await showConfirm(
-                    'Auto Delete?',
-                    `Hapus ${toDelete.length} ulasan yang berusia > ${days} hari?`,
-                    '⚠️',
-                    'Ya, Hapus'
-                );
+                const confirmed = await showConfirm('Auto Delete?', `Hapus ${toDelete.length} ulasan > ${days} hari?`, '⚠️', 'Ya, Hapus');
                 if (!confirmed) return;
 
                 let deleted = 0;
@@ -3490,12 +3671,12 @@
                 showToast(`${deleted} ulasan auto-dihapus`);
             });
 
-            // ===== BANNER PUBLISH =====
+            // BANNER
             document.getElementById('bannerPublishBtn')?.addEventListener('click', async () => {
                 const title = document.getElementById('bannerTitleInput').value.trim() || 'Pengumuman';
                 const message = document.getElementById('bannerMsgInput').value.trim();
                 if (!message) {
-                    showToast('Masukkan pesan banner', true);
+                    showToast('Masukkan pesan', true);
                     return;
                 }
                 try {
@@ -3524,7 +3705,7 @@
                 }
             });
 
-            // ===== ADMIN REVIEW LIST =====
+            // ADMIN REVIEW LIST
             const adminList = document.getElementById('adminReviewsList');
             if (!adminList) return;
 
@@ -3538,14 +3719,14 @@
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 return `
-                    <div class="review-item" style="animation-delay:${Math.min(index * 20, 200)}ms;">
+                    <div class="review-item">
                         <div class="top">
                             <span class="name">${displayName} ${r.anonymous ? '<span class="badge-anon">anonim</span>' : ''}</span>
                             <span class="stars-display">${starsStr}</span>
                         </div>
                         <div class="msg">${r.message}</div>
                         <div class="meta">${date} • 👍 ${r.likes || 0} • 👎 ${r.dislikes || 0}</div>
-                        <button class="btn btn-danger btn-sm admin-delete" data-id="${r.id}" style="margin-top:6px;">Hapus</button>
+                        <button class="btn btn-danger btn-sm admin-delete" data-id="${r.id}" style="margin-top:4px;">Hapus</button>
                     </div>
                 `;
             }).join('');
@@ -3553,12 +3734,7 @@
             document.querySelectorAll('.admin-delete').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
-                    const confirmed = await showConfirm(
-                        'Hapus Ulasan?',
-                        'Ulasan ini akan dihapus secara permanen.',
-                        '🗑️',
-                        'Ya, Hapus'
-                    );
+                    const confirmed = await showConfirm('Hapus Ulasan?', 'Ulasan ini akan dihapus permanen.', '🗑️');
                     if (!confirmed) return;
 
                     const item = btn.closest('.review-item');
@@ -3602,7 +3778,6 @@
                     </div>
                 `;
 
-                // Klik user badge buka dashboard
                 document.getElementById('userBadgeClick')?.addEventListener('click', (e) => {
                     if (e.target.classList.contains('logout-btn')) return;
                     openDashboard();
@@ -3638,8 +3813,18 @@
             checkFeatureAuth();
         }
 
-        // ===== EXPOSE FUNCTIONS FOR INLINE =====
+        // ===== EXPOSE FUNCTIONS =====
         window.__addComment = addComment;
+
+        // ===== SEARCH =====
+        document.getElementById('searchBtn')?.addEventListener('click', () => renderReviews());
+        document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') renderReviews();
+        });
+        document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
+            document.getElementById('searchInput').value = '';
+            renderReviews();
+        });
 
         // ===== AUTH STATE =====
         onAuthStateChanged(auth, async (user) => {
@@ -3654,11 +3839,6 @@
                     spamNotifShown = true;
                     hideSpamNotification();
                 }
-
-                const activePage = document.querySelector('.page.active');
-                if (activePage && activePage.id !== 'page-home') {
-                    // tetap di halaman
-                }
             } else {
                 isAdmin = false;
                 spamNotifShown = false;
@@ -3672,25 +3852,17 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                goToHome();
+                // Jangan paksa ke home, biarkan user di halaman saat ini
             }
         });
-
-        // ===== SEARCH =====
-        document.getElementById('searchBtn')?.addEventListener('click', () => renderReviews());
-        document.getElementById('searchInput')?.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') renderReviews();
-        });
-        document.getElementById('clearSearchBtn')?.addEventListener('click', () => {
-            document.getElementById('searchInput').value = '';
-            renderReviews();
-        });
-        document.getElementById('sortSelect')?.addEventListener('change', () => renderReviews());
 
         // ===== INIT =====
         loadReviews();
         loadFeatureRequests();
         loadBanner();
+        renderSortReview();
+
+        // ===== TIDAK ADA CONSOLE.LOG =====
     </script>
 
 </body>
