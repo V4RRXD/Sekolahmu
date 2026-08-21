@@ -21,41 +21,78 @@
         }
 
         :root {
-            --bg: #0f0e1a;
-            --bg2: #1a1833;
-            --card: rgba(26, 24, 51, 0.85);
-            --input: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.06);
-            --text: #e8e4f0;
-            --text2: #a8a4b8;
-            --text3: #6a6678;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --bg: #0a0a0a;
+            --bg2: #1a0000;
+            --card: rgba(30, 10, 10, 0.85);
+            --input: rgba(255, 0, 0, 0.05);
+            --border: rgba(255, 0, 0, 0.15);
+            --text: #f0e0e0;
+            --text2: #c0a0a0;
+            --text3: #8a6060;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --primary: #cc0000;
+            --primary-hover: #ff1a1a;
+            --primary-dark: #990000;
         }
 
         [data-theme="light"] {
-            --bg: #f0edf5;
-            --bg2: #e8e4f0;
-            --card: rgba(255, 255, 255, 0.85);
-            --input: rgba(0, 0, 0, 0.04);
-            --border: rgba(0, 0, 0, 0.08);
-            --text: #1a1833;
-            --text2: #4a4660;
-            --text3: #8a86a0;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --bg: #fff5f5;
+            --bg2: #ffe8e8;
+            --card: rgba(255, 240, 240, 0.9);
+            --input: rgba(255, 0, 0, 0.04);
+            --border: rgba(200, 0, 0, 0.15);
+            --text: #1a0000;
+            --text2: #661a1a;
+            --text3: #994d4d;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            --primary: #cc0000;
+            --primary-hover: #b30000;
+            --primary-dark: #990000;
         }
 
         body {
-            font-family: system-ui, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
             padding: 12px;
             transition: background 0.3s, color 0.3s;
+            position: relative;
         }
 
         .container {
             max-width: 820px;
             margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        /* ===== WATERMARK ===== */
+        .watermark {
+            position: fixed;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text3);
+            opacity: 0.25;
+            letter-spacing: 1.5px;
+            font-weight: 400;
+            pointer-events: none;
+            z-index: 10;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            transition: color 0.3s, opacity 0.3s;
+        }
+
+        .watermark span {
+            display: inline-block;
+            background: var(--card);
+            padding: 4px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--border);
+            font-size: 11px;
+            opacity: 0.35;
         }
 
         .nav {
@@ -101,8 +138,8 @@
             color: var(--text);
         }
         .nav button.active {
-            color: #d0bcff;
-            background: rgba(208, 188, 255, 0.1);
+            color: var(--primary);
+            background: rgba(204, 0, 0, 0.1);
         }
         .nav button.hidden-nav {
             display: none;
@@ -123,8 +160,8 @@
         }
 
         .auth-btn {
-            background: #d0bcff;
-            color: #381e72;
+            background: var(--primary);
+            color: #fff;
             border: none;
             padding: 7px 16px;
             border-radius: 10px;
@@ -134,7 +171,7 @@
             transition: 0.2s;
         }
         .auth-btn:hover {
-            opacity: 0.85;
+            background: var(--primary-hover);
             transform: scale(0.97);
         }
 
@@ -162,12 +199,12 @@
             background: rgba(242, 184, 181, 0.15);
         }
         .user-badge .status-verified {
-            color: #a8e6cf;
+            color: #6fcf97;
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 12px;
-            background: rgba(168, 230, 207, 0.12);
-            border: 1px solid rgba(168, 230, 207, 0.15);
+            background: rgba(111, 207, 151, 0.12);
+            border: 1px solid rgba(111, 207, 151, 0.15);
         }
         .user-badge .status-unverified {
             color: #f2b8b5;
@@ -182,12 +219,12 @@
             background: rgba(242, 184, 181, 0.2);
         }
         .user-badge .admin-badge {
-            color: #d0bcff;
+            color: var(--primary);
             font-size: 11px;
             padding: 2px 8px;
             border-radius: 12px;
-            background: rgba(208, 188, 255, 0.12);
-            border: 1px solid rgba(208, 188, 255, 0.15);
+            background: rgba(204, 0, 0, 0.12);
+            border: 1px solid rgba(204, 0, 0, 0.15);
         }
 
         .page {
@@ -242,11 +279,11 @@
             transform: scale(0.95);
         }
         .btn-primary {
-            background: #d0bcff;
-            color: #381e72;
+            background: var(--primary);
+            color: #fff;
         }
         .btn-primary:hover {
-            opacity: 0.85;
+            background: var(--primary-hover);
             transform: translateY(-1px);
         }
         .btn-danger {
@@ -258,12 +295,12 @@
             background: rgba(242, 184, 181, 0.25);
         }
         .btn-success {
-            background: rgba(168, 230, 207, 0.15);
-            color: #a8e6cf;
-            border: 1px solid rgba(168, 230, 207, 0.15);
+            background: rgba(111, 207, 151, 0.15);
+            color: #6fcf97;
+            border: 1px solid rgba(111, 207, 151, 0.15);
         }
         .btn-success:hover {
-            background: rgba(168, 230, 207, 0.25);
+            background: rgba(111, 207, 151, 0.25);
         }
         .btn-outline {
             background: transparent;
@@ -381,7 +418,7 @@
         }
         .form-group input:focus,
         .form-group textarea:focus {
-            border-color: #d0bcff;
+            border-color: var(--primary);
         }
         .form-group textarea {
             min-height: 70px;
@@ -437,7 +474,7 @@
         .checkbox-wrap input {
             width: 18px;
             height: 18px;
-            accent-color: #d0bcff;
+            accent-color: var(--primary);
             cursor: pointer;
         }
 
@@ -451,14 +488,14 @@
             transition: 0.3s;
         }
         .review-item:hover {
-            border-color: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 0, 0, 0.2);
         }
         .review-item.removing {
             animation: slideOut 0.3s ease forwards;
         }
         .review-item.editing {
-            border-color: #d0bcff;
-            background: rgba(208, 188, 255, 0.05);
+            border-color: var(--primary);
+            background: rgba(204, 0, 0, 0.05);
         }
 
         @keyframes slideIn {
@@ -535,7 +572,7 @@
             outline: none;
         }
         .review-item .msg-edit textarea:focus {
-            border-color: #d0bcff;
+            border-color: var(--primary);
         }
         .review-item .msg-edit .edit-actions {
             display: flex;
@@ -571,7 +608,7 @@
         .admin-stats .stat .num {
             font-size: 24px;
             font-weight: 700;
-            color: #d0bcff;
+            color: var(--primary);
         }
         .admin-stats .stat .lbl {
             font-size: 11px;
@@ -628,8 +665,8 @@
             transition: 0.3s;
         }
         .auth-tabs button.active {
-            background: #d0bcff;
-            color: #381e72;
+            background: var(--primary);
+            color: #fff;
         }
         .auth-tabs button:hover:not(.active) {
             background: var(--border);
@@ -641,7 +678,6 @@
             display: block;
         }
 
-        /* ===== SPAM NOTIFICATION (BESAR) ===== */
         .spam-notification {
             position: fixed;
             top: 0;
@@ -649,7 +685,7 @@
             right: 0;
             bottom: 0;
             z-index: 9999;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
@@ -739,7 +775,6 @@
             margin-top: 4px;
         }
 
-        /* ===== GUIDE PAGE ===== */
         .guide-content {
             max-width: 720px;
             margin: 0 auto;
@@ -792,7 +827,7 @@
 
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: var(--card);
@@ -929,20 +964,31 @@
             .guide-content h1 {
                 font-size: 20px;
             }
+            .watermark {
+                font-size: 10px;
+                bottom: 8px;
+            }
+            .watermark span {
+                font-size: 9px;
+                padding: 2px 12px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- WATERMARK -->
+    <div class="watermark"><span>Made By V4RRXD</span></div>
 
     <div class="container">
 
         <!-- NAVBAR -->
         <nav class="nav" id="navbar">
             <div class="nav-left">
-                <button class="active" data-page="home">Home</button>
-                <button data-page="rating">Rating</button>
-                <button data-page="reviews">Reviews</button>
-                <button data-page="downloads">Downloads</button>
+                <button class="active" data-page="home">Beranda</button>
+                <button data-page="rating">Penilaian</button>
+                <button data-page="reviews">Ulasan</button>
+                <button data-page="downloads">Unduhan</button>
                 <button data-page="admin" id="adminNavBtn" class="hidden-nav">Admin</button>
             </div>
             <div class="nav-right">
@@ -954,15 +1000,15 @@
         <!-- PAGE HOME -->
         <div id="page-home" class="page active">
             <div class="card">
-                <h1 class="card-title">🏠 Home</h1>
+                <h1 class="card-title">Sekolahmu</h1>
                 <p style="color:var(--text2);font-size:15px;margin-bottom:14px;">Aplikasi SMM untuk Android</p>
                 <div style="background:var(--input);border:1px solid var(--border);border-radius:14px;padding:16px 18px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
                         <div>
                             <strong style="font-size:15px;">Versi</strong>
-                            <div style="color:var(--text2);font-size:14px;">Current: <span id="apkVersion">2.4.0</span></div>
+                            <div style="color:var(--text2);font-size:14px;">Terkini: <span id="apkVersion">2.4.0</span></div>
                         </div>
-                        <span style="background:rgba(208,188,255,0.1);color:#d0bcff;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
+                        <span style="background:rgba(204,0,0,0.1);color:var(--primary);padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;">Beta</span>
                     </div>
                 </div>
             </div>
@@ -973,7 +1019,7 @@
                 </p>
                 <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
                     <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Android</span>
-                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Windows (Soon)</span>
+                    <span style="background:var(--input);padding:4px 14px;border-radius:20px;font-size:12px;border:1px solid var(--border);">Windows (Segera)</span>
                 </div>
             </div>
         </div>
@@ -981,7 +1027,7 @@
         <!-- PAGE RATING -->
         <div id="page-rating" class="page">
             <div class="card">
-                <h2 class="card-title">⭐ Rating</h2>
+                <h2 class="card-title">Beri Penilaian</h2>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:14px;">Bagaimana pengalaman kamu?</p>
 
                 <div id="ratingAuthRequired" style="text-align:center;padding:20px 0;">
@@ -993,14 +1039,14 @@
                     <div id="alreadyReviewed" style="display:none;text-align:center;padding:20px;background:var(--input);border-radius:12px;border:1px solid var(--border);margin-bottom:14px;">
                         <div style="font-size:32px;">✅</div>
                         <p style="color:var(--text2);">Kamu sudah memberi penilaian!</p>
-                        <p style="color:var(--text3);font-size:13px;">Terima kasih atas feedback kamu 🙏</p>
-                        <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:8px;">Edit Review</button>
-                        <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:8px;">Hapus Review</button>
+                        <p style="color:var(--text3);font-size:13px;">Terima kasih atas tanggapan kamu 🙏</p>
+                        <button id="editMyReviewBtn" class="btn btn-outline btn-sm" style="margin-top:8px;">Sunting Ulasan</button>
+                        <button id="deleteMyReviewBtn" class="btn btn-danger btn-sm" style="margin-top:8px;">Hapus Ulasan</button>
                     </div>
 
                     <div id="reviewForm">
                         <div class="form-group">
-                            <label>Rating</label>
+                            <label>Penilaian</label>
                             <div class="stars" id="starSelector">
                                 <span data-value="1">☆</span>
                                 <span data-value="2">☆</span>
@@ -1029,7 +1075,7 @@
                             <textarea id="reviewMessage" placeholder="Tulis pengalaman kamu..." maxlength="500"></textarea>
                         </div>
 
-                        <button id="submitReview" class="btn btn-primary btn-block">Kirim Review</button>
+                        <button id="submitReview" class="btn btn-primary btn-block">Kirim Ulasan</button>
                         <div id="reviewStatus" style="margin-top:10px;font-size:14px;color:var(--text2);text-align:center;"></div>
                     </div>
                 </div>
@@ -1039,7 +1085,7 @@
         <!-- PAGE REVIEWS -->
         <div id="page-reviews" class="page">
             <div class="card">
-                <h2 class="card-title">📝 Reviews</h2>
+                <h2 class="card-title">Ulasan Pengguna</h2>
                 <div id="reviewsStats" style="margin-bottom:14px;"></div>
                 <div id="reviewsList"></div>
             </div>
@@ -1048,12 +1094,9 @@
         <!-- PAGE DOWNLOADS -->
         <div id="page-downloads" class="page">
             <div class="card">
-                <h2 class="card-title">⬇ Downloads</h2>
+                <h2 class="card-title">Unduhan</h2>
                 <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">Unduh aplikasi Sekolahmu</p>
-
-                <div id="downloadSection">
-                    <!-- Akan di-render oleh JS -->
-                </div>
+                <div id="downloadSection"></div>
             </div>
         </div>
 
@@ -1066,7 +1109,7 @@
 
     </div>
 
-    <!-- ===== SPAM NOTIFICATION (BESAR) ===== -->
+    <!-- SPAM NOTIFICATION -->
     <div class="spam-notification" id="spamNotification">
         <div class="box" id="spamBox">
             <div class="icon">📬</div>
@@ -1087,7 +1130,7 @@
         </div>
     </div>
 
-    <!-- ===== GUIDE PAGE ===== -->
+    <!-- GUIDE PAGE -->
     <div class="spam-notification" id="guideNotification">
         <div class="box" id="guideBox">
             <div class="guide-content">
@@ -1225,7 +1268,6 @@
         let resendTimer = null;
         let isCooldownActive = false;
 
-        // DOM HELPERS
         const $ = (s) => document.querySelector(s);
         const $$ = (s) => document.querySelectorAll(s);
 
@@ -1238,7 +1280,6 @@
             el._timer = setTimeout(() => el.classList.remove('show'), 4000);
         }
 
-        // ===== SPAM NOTIFICATION =====
         function showSpamNotification() {
             if (spamNotifShown) return;
             if (currentUser && currentUser.emailVerified) return;
@@ -1258,7 +1299,6 @@
             if (el) el.classList.remove('show');
         }
 
-        // ===== COOLDOWN =====
         function updateCooldownDisplay() {
             const el = document.getElementById('spamCooldown');
             const btn = document.getElementById('spamResendBtn');
@@ -1292,7 +1332,6 @@
             }, 1000);
         }
 
-        // ===== RESEND VERIFICATION =====
         async function resendVerification() {
             if (isCooldownActive) {
                 showToast('⏳ Tunggu cooldown selesai', true);
@@ -1317,7 +1356,6 @@
             }
         }
 
-        // ===== CHECK VERIFIED =====
         async function checkVerified() {
             if (!currentUser) {
                 showToast('❌ Login dulu', true);
@@ -1339,7 +1377,6 @@
             }
         }
 
-        // ===== GUIDE NOTIFICATION =====
         function showGuideNotification() {
             document.getElementById('spamNotification')?.classList.remove('show');
             const el = document.getElementById('guideNotification');
@@ -1356,7 +1393,6 @@
             }
         }
 
-        // ===== EVENT LISTENERS NOTIFIKASI =====
         document.getElementById('spamResendBtn')?.addEventListener('click', resendVerification);
         document.getElementById('spamVerifiedBtn')?.addEventListener('click', checkVerified);
         document.getElementById('spamUnderstandBtn')?.addEventListener('click', () => {
@@ -1365,7 +1401,6 @@
         document.getElementById('spamGuideBtn')?.addEventListener('click', showGuideNotification);
         document.getElementById('guideBackBtn')?.addEventListener('click', hideGuideNotification);
 
-        // ===== CONFIRM =====
         let confirmResolve = null;
 
         function showConfirm(title, message, icon = '⚠️', okText = 'Ya, Hapus') {
@@ -1398,7 +1433,6 @@
             }
         });
 
-        // ===== THEME =====
         const themeToggle = $('#themeToggle');
         themeToggle.addEventListener('click', () => {
             isDarkMode = !isDarkMode;
@@ -1412,7 +1446,6 @@
             themeToggle.textContent = '☀️';
         }
 
-        // ===== NAVIGASI =====
         function goToHome() {
             document.querySelectorAll('.nav-left button').forEach(b => b.classList.remove('active'));
             const homeBtn = document.querySelector('[data-page="home"]');
@@ -1462,7 +1495,6 @@
             }
         }
 
-        // ===== CHECK ADMIN =====
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
@@ -1473,7 +1505,6 @@
             }
         }
 
-        // ===== DOWNLOADS - WAJIB LOGIN + VERIFIKASI =====
         function renderDownloads() {
             const section = document.getElementById('downloadSection');
             if (!section) return;
@@ -1504,7 +1535,6 @@
                 return;
             }
 
-            // Sudah login + verified
             section.innerHTML = `
                 <div class="download-box">
                     <div class="row">
@@ -1513,25 +1543,23 @@
                             <div class="ver">Versi: <span id="apkVersion2">2.4.0</span></div>
                             <div class="sz">Ukuran: <span id="apkSize2">3.78 MB</span></div>
                         </div>
-                        <a id="downloadBtn" href="#" class="btn btn-primary">⬇ Download</a>
+                        <a id="downloadBtn" href="#" class="btn btn-primary">⬇ Unduh</a>
                     </div>
                 </div>
 
                 <div class="coming-soon">
                     <span class="icon">🖥</span>
                     <strong style="font-size:16px;">Windows EXE</strong>
-                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Sedang dalam proses pembuatan</div>
-                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">🚧 Coming Soon</div>
+                    <div style="color:var(--text3);font-size:14px;margin-top:4px;">Dalam tahap pengembangan</div>
+                    <div style="color:var(--text3);font-size:13px;margin-top:2px;">🚧 Segera hadir</div>
                 </div>
             `;
 
-            // Update link
             const url = updateData.apkUrl || 'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
             const btn = document.getElementById('downloadBtn');
             if (btn) btn.href = url;
         }
 
-        // ===== RATING AUTH =====
         function checkRatingAuth() {
             const form = $('#ratingForm');
             const req = $('#ratingAuthRequired');
@@ -1576,7 +1604,6 @@
 
             if (!alreadyDiv || !reviewForm) return;
 
-            // User bisa edit/hapus review hanya jika verified (kecuali admin)
             const canEdit = currentUser.emailVerified || isAdmin;
 
             if (reviewed && canEdit) {
@@ -1593,10 +1620,9 @@
                 reviewForm.style.display = 'none';
                 document.getElementById('editMyReviewBtn').style.display = 'none';
                 document.getElementById('deleteMyReviewBtn').style.display = 'none';
-                // Add info text
                 const info = document.createElement('p');
                 info.style.cssText = 'color:var(--text3);font-size:13px;margin-top:6px;';
-                info.textContent = '📧 Verifikasi email untuk edit/hapus review';
+                info.textContent = '📧 Verifikasi email untuk sunting/hapus ulasan';
                 alreadyDiv.appendChild(info);
             } else {
                 userHasReviewed = false;
@@ -1606,7 +1632,6 @@
             }
         }
 
-        // ===== DELETE MY REVIEW =====
         async function deleteMyReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -1615,8 +1640,8 @@
             }
 
             const confirmed = await showConfirm(
-                'Hapus Review?',
-                'Review kamu akan dihapus secara permanen.',
+                'Hapus Ulasan?',
+                'Ulasan kamu akan dihapus secara permanen.',
                 '🗑️',
                 'Ya, Hapus'
             );
@@ -1624,7 +1649,7 @@
 
             try {
                 await remove(ref(db, `reviews/${id}`));
-                showToast('Review kamu dihapus');
+                showToast('Ulasan kamu dihapus');
                 userHasReviewed = false;
                 userReviewId = null;
                 const alreadyDiv = document.getElementById('alreadyReviewed');
@@ -1632,11 +1657,10 @@
                 if (alreadyDiv) alreadyDiv.style.display = 'none';
                 if (reviewForm) reviewForm.style.display = 'block';
             } catch (err) {
-                showToast('Gagal hapus review', true);
+                showToast('Gagal hapus ulasan', true);
             }
         }
 
-        // ===== EDIT MY REVIEW =====
         function startEditingReview(id) {
             if (!currentUser || (!currentUser.emailVerified && !isAdmin)) {
                 showToast('⚠️ Verifikasi email dulu!', true);
@@ -1686,10 +1710,10 @@
                         message: newMsg,
                         timestamp: Date.now()
                     });
-                    showToast('Review diperbarui');
+                    showToast('Ulasan diperbarui');
                     cancelEdit(item);
                 } catch (err) {
-                    showToast('Gagal update review', true);
+                    showToast('Gagal perbarui ulasan', true);
                 }
             });
 
@@ -1710,12 +1734,11 @@
             if (actionsEl) actionsEl.style.display = '';
         }
 
-        // ===== STARS =====
         const starEls = $$('#starSelector span');
         starEls.forEach(el => {
             el.addEventListener('click', () => {
                 if (userHasReviewed) {
-                    showToast('Kamu sudah memberi rating', true);
+                    showToast('Kamu sudah memberi penilaian', true);
                     return;
                 }
                 const val = parseInt(el.dataset.value);
@@ -1737,7 +1760,6 @@
             });
         });
 
-        // ===== ANONYM =====
         const anonCheckbox = $('#reviewAnonymous');
         const nameFieldWrap = $('#nameFieldWrap');
         const nameInput = $('#reviewName');
@@ -1753,7 +1775,6 @@
             });
         }
 
-        // ===== LOAD UPDATE =====
         function loadUpdateData() {
             const updRef = ref(db, 'update');
             onValue(updRef, (snap) => {
@@ -1780,7 +1801,6 @@
         }
         loadUpdateData();
 
-        // ===== SUBMIT REVIEW =====
         const submitBtn = document.getElementById('submitReview');
         if (submitBtn) {
             submitBtn.addEventListener('click', async () => {
@@ -1794,7 +1814,7 @@
                     return;
                 }
                 if (userHasReviewed) {
-                    showToast('Kamu sudah memberi rating', true);
+                    showToast('Kamu sudah memberi penilaian', true);
                     return;
                 }
 
@@ -1804,7 +1824,7 @@
                 const rating = selectedRating;
 
                 if (rating === 0) {
-                    showToast('Pilih rating dulu', true);
+                    showToast('Pilih penilaian dulu', true);
                     return;
                 }
                 if (!message) {
@@ -1831,8 +1851,8 @@
                         email: currentUser.email
                     });
 
-                    if (statusEl) statusEl.textContent = '✅ Review berhasil dikirim!';
-                    showToast('Review berhasil dikirim!');
+                    if (statusEl) statusEl.textContent = '✅ Ulasan berhasil dikirim!';
+                    showToast('Ulasan berhasil dikirim!');
 
                     selectedRating = 0;
                     starEls.forEach(s => {
@@ -1852,7 +1872,7 @@
 
                 } catch (err) {
                     if (statusEl) statusEl.textContent = 'Gagal: ' + err.message;
-                    showToast('Gagal kirim review', true);
+                    showToast('Gagal kirim ulasan', true);
                 }
 
                 isSubmitting = false;
@@ -1861,7 +1881,6 @@
             });
         }
 
-        // ===== LOAD REVIEWS =====
         function loadReviews() {
             const reviewsRef = ref(db, 'reviews');
             onValue(reviewsRef, (snap) => {
@@ -1908,7 +1927,7 @@
             document.querySelectorAll('.review-item.editing').forEach(el => cancelEdit(el));
 
             if (allReviews.length === 0) {
-                list.innerHTML = '<div class="empty">Belum ada review. Jadilah yang pertama!</div>';
+                list.innerHTML = '<div class="empty">Belum ada ulasan. Jadilah yang pertama!</div>';
                 if (stats) stats.innerHTML = '';
                 return;
             }
@@ -1926,7 +1945,7 @@
                         <div style="display:flex;align-items:center;gap:6px;">
                             <span style="font-size:26px;font-weight:700;color:#ffd700;">${avg.toFixed(1)}</span>
                             <span style="color:#ffd700;font-size:18px;">★</span>
-                            <span style="color:var(--text2);font-size:13px;">(${total} review)</span>
+                            <span style="color:var(--text2);font-size:13px;">(${total} ulasan)</span>
                         </div>
                         <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:12px;align-items:center;">
                             ${[5,4,3,2,1].map(n => `
@@ -1941,7 +1960,7 @@
             }
 
             list.innerHTML = allReviews.map((r, index) => {
-                const displayName = r.anonymous ? 'Anonymous' : (r.name || 'Pengguna');
+                const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 const isOwner = currentUser && r.uid === currentUser.uid;
@@ -1951,7 +1970,7 @@
                 if (canEdit) {
                     actionsHtml = `
                         <div class="actions">
-                            <button class="btn btn-outline btn-sm edit-review" data-id="${r.id}">✏️ Edit</button>
+                            <button class="btn btn-outline btn-sm edit-review" data-id="${r.id}">✏️ Sunting</button>
                             <button class="btn btn-danger btn-sm delete-review" data-id="${r.id}">🗑 Hapus</button>
                         </div>
                     `;
@@ -1964,7 +1983,7 @@
                 } else if (isOwner && !currentUser?.emailVerified) {
                     actionsHtml = `
                         <div class="actions">
-                            <span style="font-size:12px;color:var(--text3);">📧 Verifikasi untuk edit/hapus</span>
+                            <span style="font-size:12px;color:var(--text3);">📧 Verifikasi untuk sunting/hapus</span>
                         </div>
                     `;
                 }
@@ -1986,16 +2005,15 @@
                 `;
             }).join('');
 
-            // ===== DELETE REVIEW =====
             document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
                     const review = allReviews.find(r => r.id === id);
                     const isOwner = currentUser && review && review.uid === currentUser.uid;
-                    const title = isOwner ? 'Hapus Review Kamu?' : 'Hapus Review?';
+                    const title = isOwner ? 'Hapus Ulasan Kamu?' : 'Hapus Ulasan?';
                     const message = isOwner ?
-                        'Review kamu akan dihapus secara permanen.' :
-                        'Review ini akan dihapus secara permanen.';
+                        'Ulasan kamu akan dihapus secara permanen.' :
+                        'Ulasan ini akan dihapus secara permanen.';
 
                     const confirmed = await showConfirm(title, message, '🗑️', 'Ya, Hapus');
                     if (!confirmed) return;
@@ -2005,7 +2023,7 @@
 
                     try {
                         await remove(ref(db, `reviews/${id}`));
-                        showToast(isOwner ? 'Review kamu dihapus' : 'Review dihapus');
+                        showToast(isOwner ? 'Ulasan kamu dihapus' : 'Ulasan dihapus');
                         if (isOwner) {
                             userHasReviewed = false;
                             userReviewId = null;
@@ -2021,7 +2039,6 @@
                 });
             });
 
-            // ===== EDIT REVIEW =====
             document.querySelectorAll('.edit-review').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -2033,7 +2050,6 @@
             });
         }
 
-        // ===== ADMIN =====
         function renderAdmin() {
             const container = document.getElementById('adminContent');
             if (!container) return;
@@ -2053,9 +2069,9 @@
                                 <input type="email" id="loginEmail" placeholder="Email" />
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label>Kata Sandi</label>
                                 <div class="password-wrap">
-                                    <input type="password" id="loginPassword" placeholder="Password" />
+                                    <input type="password" id="loginPassword" placeholder="Kata Sandi" />
                                     <button class="password-toggle" id="loginToggle">👁</button>
                                 </div>
                             </div>
@@ -2069,9 +2085,9 @@
                                 <input type="email" id="registerEmail" placeholder="Email" />
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
+                                <label>Kata Sandi</label>
                                 <div class="password-wrap">
-                                    <input type="password" id="registerPassword" placeholder="Password (min 6)" />
+                                    <input type="password" id="registerPassword" placeholder="Kata Sandi (min 6)" />
                                     <button class="password-toggle" id="registerToggle">👁</button>
                                 </div>
                             </div>
@@ -2081,7 +2097,6 @@
                     </div>
                 `;
 
-                // ===== TAB SWITCHING =====
                 document.querySelectorAll('.auth-tabs button').forEach(tab => {
                     tab.addEventListener('click', () => {
                         document.querySelectorAll('.auth-tabs button').forEach(t => t.classList.remove('active'));
@@ -2093,7 +2108,6 @@
                     });
                 });
 
-                // ===== PASSWORD TOGGLES =====
                 document.getElementById('loginToggle')?.addEventListener('click', function() {
                     const input = document.getElementById('loginPassword');
                     if (input) {
@@ -2109,7 +2123,6 @@
                     }
                 });
 
-                // ===== LOGIN =====
                 document.getElementById('loginBtn')?.addEventListener('click', async () => {
                     const email = document.getElementById('loginEmail')?.value.trim();
                     const pass = document.getElementById('loginPassword')?.value.trim();
@@ -2117,7 +2130,7 @@
 
                     if (!email || !pass) {
                         if (status) {
-                            status.textContent = 'Isi email dan password';
+                            status.textContent = 'Isi email dan kata sandi';
                             status.style.color = '#f2b8b5';
                         }
                         return;
@@ -2135,7 +2148,7 @@
                         if (isAdminUser) {
                             if (status) {
                                 status.textContent = '✅ Login berhasil! (Admin)';
-                                status.style.color = '#a8e6cf';
+                                status.style.color = '#6fcf97';
                             }
                             showToast('Login berhasil');
                             goToHome();
@@ -2147,7 +2160,6 @@
                                 status.textContent = '⚠️ Verifikasi email dulu! Cek inbox/spam';
                                 status.style.color = '#f2b8b5';
                             }
-                            // Jangan logout! Biarkan user tetap login
                             showToast('⚠️ Verifikasi email dulu!', true);
                             showSpamNotification();
                             goToHome();
@@ -2156,7 +2168,7 @@
 
                         if (status) {
                             status.textContent = '✅ Login berhasil!';
-                            status.style.color = '#a8e6cf';
+                            status.style.color = '#6fcf97';
                         }
                         showToast('Login berhasil');
                         goToHome();
@@ -2170,7 +2182,6 @@
                     }
                 });
 
-                // ===== REGISTER =====
                 document.getElementById('registerBtn')?.addEventListener('click', async () => {
                     const email = document.getElementById('registerEmail')?.value.trim();
                     const pass = document.getElementById('registerPassword')?.value.trim();
@@ -2178,14 +2189,14 @@
 
                     if (!email || !pass) {
                         if (status) {
-                            status.textContent = 'Isi email dan password';
+                            status.textContent = 'Isi email dan kata sandi';
                             status.style.color = '#f2b8b5';
                         }
                         return;
                     }
                     if (pass.length < 6) {
                         if (status) {
-                            status.textContent = 'Password minimal 6 karakter';
+                            status.textContent = 'Kata sandi minimal 6 karakter';
                             status.style.color = '#f2b8b5';
                         }
                         return;
@@ -2200,10 +2211,9 @@
                         await sendEmailVerification(userCred.user);
                         if (status) {
                             status.textContent = '✅ Verifikasi email dikirim! Cek inbox/spam';
-                            status.style.color = '#a8e6cf';
+                            status.style.color = '#6fcf97';
                         }
                         showToast('📧 Cek email untuk verifikasi');
-                        // Jangan logout! Biarkan user tetap login
                         showSpamNotification();
                         goToHome();
 
@@ -2226,7 +2236,6 @@
                 return;
             }
 
-            // ===== CHECK ADMIN =====
             checkIsAdmin(currentUser.uid).then(admin => {
                 isAdmin = admin;
                 updateNavVisibility();
@@ -2256,19 +2265,19 @@
 
             container.innerHTML = `
                 <div class="admin-header">
-                    <h2>🛡 Admin Panel</h2>
+                    <h2>🛡 Panel Admin</h2>
                     <button id="logoutBtn" class="btn btn-outline btn-sm">Logout</button>
                 </div>
                 <div class="admin-stats">
-                    <div class="stat"><div class="num">${total}</div><div class="lbl">Total Review</div></div>
-                    <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">⭐ Rating</div></div>
-                    <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">APK Version</div></div>
+                    <div class="stat"><div class="num">${total}</div><div class="lbl">Total Ulasan</div></div>
+                    <div class="stat"><div class="num">${avg.toFixed(1)}</div><div class="lbl">⭐ Penilaian</div></div>
+                    <div class="stat"><div class="num">${updateData.latestVersion || '2.4.0'}</div><div class="lbl">Versi APK</div></div>
                 </div>
 
                 <div class="admin-bulk-actions">
                     <span style="font-weight:600;font-size:13px;">Hapus Berdasarkan:</span>
                     <select id="bulkStarSelect">
-                        <option value="all">Semua Review</option>
+                        <option value="all">Semua Ulasan</option>
                         <option value="5">5 Bintang</option>
                         <option value="4">4 Bintang</option>
                         <option value="3">3 Bintang</option>
@@ -2287,7 +2296,6 @@
                 goToHome();
             });
 
-            // ===== BULK DELETE =====
             document.getElementById('bulkDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select?.value || 'all';
@@ -2296,20 +2304,20 @@
                 let label = '';
                 if (filter === 'all') {
                     toDelete = allReviews.map(r => r.id);
-                    label = `SEMUA review (${toDelete.length})`;
+                    label = `SEMUA ulasan (${toDelete.length})`;
                 } else {
                     const star = parseInt(filter);
                     toDelete = allReviews.filter(r => r.rating === star).map(r => r.id);
-                    label = `${filter} bintang (${toDelete.length} review)`;
+                    label = `${filter} bintang (${toDelete.length} ulasan)`;
                 }
 
                 if (toDelete.length === 0) {
-                    showToast('Tidak ada review untuk dihapus', true);
+                    showToast('Tidak ada ulasan untuk dihapus', true);
                     return;
                 }
 
                 const confirmed = await showConfirm(
-                    'Hapus Review?',
+                    'Hapus Ulasan?',
                     `Hapus ${label} secara permanen?`,
                     '⚠️',
                     'Ya, Hapus Semua'
@@ -2322,24 +2330,23 @@
                         await remove(ref(db, `reviews/${id}`));
                         deleted++;
                     } catch (e) {
-                        console.error('Gagal hapus:', id, e);
+                        // silent
                     }
                 }
 
-                showToast(`${deleted} review dihapus`);
+                showToast(`${deleted} ulasan dihapus`);
             });
 
-            // ===== ADMIN REVIEW LIST =====
             const adminList = document.getElementById('adminReviewsList');
             if (!adminList) return;
 
             if (allReviews.length === 0) {
-                adminList.innerHTML = '<div class="empty">Belum ada review</div>';
+                adminList.innerHTML = '<div class="empty">Belum ada ulasan</div>';
                 return;
             }
 
             adminList.innerHTML = allReviews.map((r, index) => {
-                const displayName = r.anonymous ? 'Anonymous' : (r.name || 'Pengguna');
+                const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
                 return `
@@ -2359,8 +2366,8 @@
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
                     const confirmed = await showConfirm(
-                        'Hapus Review?',
-                        'Review ini akan dihapus secara permanen.',
+                        'Hapus Ulasan?',
+                        'Ulasan ini akan dihapus secara permanen.',
                         '🗑️',
                         'Ya, Hapus'
                     );
@@ -2370,7 +2377,7 @@
                     if (item) item.classList.add('removing');
                     try {
                         await remove(ref(db, `reviews/${id}`));
-                        showToast('Review dihapus');
+                        showToast('Ulasan dihapus');
                     } catch (err) {
                         showToast('Gagal hapus', true);
                         if (item) item.classList.remove('removing');
@@ -2379,23 +2386,22 @@
             });
         }
 
-        // ===== AUTH STATE =====
         function updateAuthUI() {
             const section = document.getElementById('authSection');
             if (!section) return;
 
             if (currentUser) {
-                const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'User';
+                const displayName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Pengguna';
                 const verified = currentUser.emailVerified;
 
                 let statusHtml = '';
                 if (isAdmin) {
                     statusHtml = `<span class="admin-badge">Admin</span>`;
                 } else if (verified) {
-                    statusHtml = `<span class="status-verified">Verified</span>`;
+                    statusHtml = `<span class="status-verified">Terverifikasi</span>`;
                 } else {
                     statusHtml = `
-                        <span class="status-unverified" id="resendVerifyNav">Unverified</span>
+                        <span class="status-unverified" id="resendVerifyNav">Belum Verifikasi</span>
                     `;
                 }
 
@@ -2417,7 +2423,6 @@
                     resendBtn.addEventListener('click', resendVerification);
                 }
 
-                // Tampilkan spam notification jika belum verified
                 if (!verified && !isAdmin && !spamNotifShown) {
                     setTimeout(() => showSpamNotification(), 1500);
                 }
@@ -2470,9 +2475,10 @@
             }
         });
 
-        // ===== INIT =====
         loadReviews();
         renderDownloads();
+
+        // SEMUA CONSOLE LOG DIHAPUS - AMAN
     </script>
 
 </body>
