@@ -36,8 +36,6 @@
             --primary-border: rgba(214, 90, 98, 0.15);
             --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --radius: 16px;
-            --nav-height: 56px;
-            --banner-height: 0px;
         }
 
         [data-theme="light"] {
@@ -70,7 +68,6 @@
             padding: 12px;
             transition: background var(--transition), color var(--transition);
             position: relative;
-            padding-top: 0;
         }
 
         .container {
@@ -105,7 +102,6 @@
             border: 1px solid var(--primary-border);
             font-size: 11px;
             opacity: 0.35;
-            transition: all var(--transition);
         }
 
         /* ===== BANNER ===== */
@@ -261,7 +257,7 @@
             display: none;
         }
 
-        /* Dropdown untuk Ulasan */
+        /* Dropdown Ulasan */
         .nav-dropdown {
             position: relative;
             display: inline-block;
@@ -279,7 +275,7 @@
             background: var(--card);
             border: 1px solid var(--primary-border);
             border-radius: 10px;
-            min-width: 160px;
+            min-width: 150px;
             box-shadow: var(--shadow);
             z-index: 50;
             padding: 4px 0;
@@ -306,8 +302,8 @@
             display: block;
             width: 100%;
             text-align: left;
-            padding: 6px 14px;
-            font-size: 12px;
+            padding: 5px 12px;
+            font-size: 11px;
             border-radius: 0;
             white-space: nowrap;
         }
@@ -432,7 +428,6 @@
             animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* Animasi hanya saat pertama kali masuk */
         .page.animated {
             animation: pageFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
@@ -558,6 +553,60 @@
             transform: none !important;
         }
 
+        /* ===== DOWNLOAD ===== */
+        .download-box {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+        }
+
+        .download-box .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .download-box .info .ver,
+        .download-box .info .sz {
+            color: var(--text2);
+            font-size: 13px;
+        }
+
+        .coming-soon {
+            background: var(--input);
+            border: 1px dashed var(--primary-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: var(--text2);
+        }
+
+        .coming-soon .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .download-locked {
+            background: var(--input);
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+            color: var(--text2);
+            font-size: 13px;
+        }
+
+        .download-locked .icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
         /* ===== FORM ===== */
         .form-group {
             margin-bottom: 10px;
@@ -596,11 +645,6 @@
         .form-group textarea {
             min-height: 60px;
             resize: vertical;
-        }
-
-        .form-group select option {
-            background: var(--bg);
-            color: var(--text);
         }
 
         /* ===== REVIEW ITEMS ===== */
@@ -1485,11 +1529,11 @@
             }
 
             .nav-dropdown-content {
-                min-width: 130px;
+                min-width: 120px;
             }
             .nav-dropdown-content button {
                 font-size: 10px;
-                padding: 4px 10px;
+                padding: 4px 8px;
             }
 
             .nav-right {
@@ -1507,17 +1551,6 @@
             .banner {
                 padding: 10px 12px;
                 flex-wrap: wrap;
-            }
-            .banner .content .title {
-                font-size: 12px;
-            }
-            .banner .content .message {
-                font-size: 11px;
-            }
-            .banner .close-btn {
-                width: 22px;
-                height: 22px;
-                font-size: 12px;
             }
 
             .admin-stats {
@@ -1560,10 +1593,6 @@
                 flex-direction: column;
             }
 
-            .search-sort-container input {
-                min-width: unset;
-            }
-
             .comments-section .comment-form {
                 flex-direction: column;
             }
@@ -1583,6 +1612,14 @@
             .dashboard-modal .box {
                 padding: 18px 14px 14px;
             }
+
+            .download-box .row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .download-box .row .btn {
+                justify-content: center;
+            }
         }
 
         @media (max-width: 400px) {
@@ -1592,7 +1629,7 @@
             }
             .nav-dropdown-content button {
                 font-size: 9px;
-                padding: 3px 8px;
+                padding: 3px 6px;
             }
         }
     </style>
@@ -1631,6 +1668,7 @@
                     </div>
                 </div>
 
+                <button data-page="downloads">⬇ Downloads</button>
                 <button data-page="leaderboard">🏆 Papan Peringkat</button>
                 <button data-page="features">💡 Request Fitur</button>
                 <button data-page="admin" id="adminNavBtn" class="hidden-nav">🛡 Admin</button>
@@ -1768,6 +1806,15 @@
 
                 <div id="sortResultStats" style="margin-bottom:10px;"></div>
                 <div id="sortResultList"></div>
+            </div>
+        </div>
+
+        <!-- PAGE DOWNLOADS -->
+        <div id="page-downloads" class="page">
+            <div class="card">
+                <h2 class="card-title">⬇ Downloads</h2>
+                <p style="color:var(--text2);font-size:13px;margin-bottom:12px;">Unduh aplikasi Sekolahmu</p>
+                <div id="downloadSection"></div>
             </div>
         </div>
 
@@ -2164,14 +2211,10 @@
 
         // ===== NAVIGATION =====
         function goToPage(page) {
-            if (page === currentPage) {
-                // Sudah di halaman yang sama, jangan animasi ulang
-                return;
-            }
+            if (page === currentPage) return;
 
             currentPage = page;
 
-            // Update nav buttons
             document.querySelectorAll('.nav-left > button').forEach(b => {
                 if (b.dataset.page === page) {
                     b.classList.add('active');
@@ -2180,7 +2223,6 @@
                 }
             });
 
-            // Update dropdown items
             document.querySelectorAll('.nav-dropdown-content button').forEach(b => {
                 if (b.dataset.page === page) {
                     b.classList.add('active');
@@ -2189,14 +2231,11 @@
                 }
             });
 
-            // Update pages
             document.querySelectorAll('.page').forEach(p => {
                 if (p.id === `page-${page}`) {
                     p.classList.add('active');
-                    // Tambahkan animasi hanya jika belum pernah di-animasi
                     if (!pageAnimated[page]) {
                         p.classList.add('animated');
-                        // Hapus animasi setelah selesai agar tidak berulang
                         setTimeout(() => {
                             p.classList.remove('animated');
                         }, 500);
@@ -2207,10 +2246,8 @@
                 }
             });
 
-            // Close dropdown
             dropdownContent?.classList.remove('show');
 
-            // Render konten
             if (page === 'reviews') renderReviews();
             if (page === 'sortreview') renderSortReview();
             if (page === 'admin') renderAdmin();
@@ -2218,13 +2255,13 @@
             if (page === 'leaderboard') renderLeaderboard();
             if (page === 'features') checkFeatureAuth();
             if (page === 'home') renderHomeReviews();
+            if (page === 'downloads') renderDownloads();
         }
 
         function goToHome() {
             goToPage('home');
         }
 
-        // Nav buttons
         document.querySelectorAll('.nav-left > button[data-page]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const page = btn.dataset.page;
@@ -2232,7 +2269,6 @@
             });
         });
 
-        // Dropdown items
         document.querySelectorAll('.nav-dropdown-content button[data-page]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const page = btn.dataset.page;
@@ -2276,15 +2312,21 @@
             const totalReviews = userReviews.length;
             const avgRating = totalReviews > 0 ? (userReviews.reduce((s, r) => s + r.rating, 0) / totalReviews) : 0;
 
+            // Admin tidak perlu verifikasi
+            const isVerified = currentUser.emailVerified || isAdmin;
+            const verifiedText = isVerified ? 'Terverifikasi' : 'Belum Verifikasi';
+            const verifiedClass = isVerified ? 'status-verified' : 'status-unverified';
+
             content.innerHTML = `
                 <div style="text-align:center;padding:2px 0;">
                     <div style="font-size:40px;margin-bottom:2px;">👤</div>
                     <h3 style="font-size:16px;">${displayName}</h3>
                     <p style="color:var(--text2);font-size:12px;">${currentUser.email}</p>
                     <p style="margin-top:3px;">
-                        <span class="${currentUser.emailVerified ? 'status-verified' : 'status-unverified'}" style="font-size:11px;padding:2px 10px;border-radius:12px;">
-                            ${currentUser.emailVerified ? '✅ Terverifikasi' : '⚠️ Belum Verifikasi'}
+                        <span class="${verifiedClass}" style="font-size:11px;padding:2px 10px;border-radius:12px;">
+                            ${isVerified ? '✅ Terverifikasi' : '⚠️ Belum Verifikasi'}
                         </span>
+                        ${isAdmin ? ' <span class="admin-badge" style="font-size:10px;padding:1px 8px;border-radius:10px;background:var(--primary-bg);border:1px solid var(--primary-border);">Admin</span>' : ''}
                     </p>
                 </div>
                 <hr style="border-color:var(--primary-border);margin:10px 0;" />
@@ -2326,6 +2368,62 @@
             }
         });
 
+        // ===== DOWNLOADS =====
+        function renderDownloads() {
+            const section = document.getElementById('downloadSection');
+            if (!section) return;
+
+            if (!currentUser) {
+                section.innerHTML = `
+                    <div class="download-locked">
+                        <span class="icon">🔒</span>
+                        <p>Login untuk mengunduh APK</p>
+                        <button class="btn btn-primary btn-sm" id="downloadLoginBtn" style="margin-top:8px;">Login</button>
+                    </div>
+                `;
+                document.getElementById('downloadLoginBtn')?.addEventListener('click', () => {
+                    goToPage('admin');
+                });
+                return;
+            }
+
+            if (!currentUser.emailVerified && !isAdmin) {
+                section.innerHTML = `
+                    <div class="download-locked">
+                        <span class="icon">📧</span>
+                        <p>Verifikasi email dulu untuk mengunduh</p>
+                        <button class="btn btn-primary btn-sm" id="downloadVerifyBtn" style="margin-top:8px;">Kirim Ulang Verifikasi</button>
+                    </div>
+                `;
+                document.getElementById('downloadVerifyBtn')?.addEventListener('click', resendVerification);
+                return;
+            }
+
+            const url = updateData.apkUrl || 'https://github.com/V4RRXD/Sekolahmu/releases/download/v2.4.0/Sekolahmu.apk';
+            const version = updateData.latestVersion || '2.4.0';
+            const size = updateData.size || '3.78 MB';
+
+            section.innerHTML = `
+                <div class="download-box">
+                    <div class="row">
+                        <div class="info">
+                            <strong style="font-size:15px;">📱 Android APK</strong>
+                            <div class="ver">Versi: <span>${version}</span></div>
+                            <div class="sz">Ukuran: <span>${size}</span></div>
+                        </div>
+                        <a href="${url}" class="btn btn-primary" target="_blank">⬇ Unduh</a>
+                    </div>
+                </div>
+
+                <div class="coming-soon">
+                    <span class="icon">🖥</span>
+                    <strong style="font-size:15px;">Windows EXE</strong>
+                    <div style="color:var(--text3);font-size:13px;margin-top:4px;">Dalam tahap pengembangan</div>
+                    <div style="color:var(--text3);font-size:12px;margin-top:2px;">🚧 Segera hadir</div>
+                </div>
+            `;
+        }
+
         // ===== HOME REVIEWS =====
         function renderHomeReviews() {
             const list = document.getElementById('homeReviewsList');
@@ -2339,7 +2437,7 @@
                 return;
             }
 
-            list.innerHTML = recent.map((r, index) => {
+            list.innerHTML = recent.map((r) => {
                 const displayName = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
                 const starsStr = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('id-ID') : '';
@@ -2854,6 +2952,7 @@
                     const version = data.latestVersion || '2.4.0';
                     const apkVer = document.getElementById('apkVersion');
                     if (apkVer) apkVer.textContent = version;
+                    renderDownloads();
                 }
             });
         }
@@ -2983,6 +3082,7 @@
                 renderHomeReviews();
                 renderLeaderboard();
                 renderSortReview();
+                renderDownloads();
             });
         }
 
@@ -3003,7 +3103,6 @@
                 );
             }
 
-            // Default sort: newest
             filtered = [...filtered].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
             if (filtered.length === 0) {
@@ -3119,7 +3218,6 @@
                 `;
             }).join('');
 
-            // LIKE/DISLIKE
             document.querySelectorAll('.like-dislike button').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const reviewId = btn.dataset.review;
@@ -3128,7 +3226,6 @@
                 });
             });
 
-            // DELETE
             document.querySelectorAll('.delete-review').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const id = btn.dataset.id;
@@ -3161,7 +3258,6 @@
                 });
             });
 
-            // EDIT
             document.querySelectorAll('.edit-review').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
@@ -3559,7 +3655,6 @@
                 goToHome();
             });
 
-            // EXPORT CSV
             document.getElementById('exportCSV')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
                     showToast('Tidak ada data', true);
@@ -3587,7 +3682,6 @@
                 showToast('✅ CSV di-export');
             });
 
-            // EXPORT JSON
             document.getElementById('exportJSON')?.addEventListener('click', () => {
                 if (allReviews.length === 0) {
                     showToast('Tidak ada data', true);
@@ -3604,7 +3698,6 @@
                 showToast('✅ JSON di-export');
             });
 
-            // BULK DELETE
             document.getElementById('bulkDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('bulkStarSelect');
                 const filter = select?.value || 'all';
@@ -3639,7 +3732,6 @@
                 showToast(`${deleted} ulasan dihapus`);
             });
 
-            // AUTO DELETE
             document.getElementById('autoDeleteBtn')?.addEventListener('click', async () => {
                 const select = document.getElementById('autoDeleteSelect');
                 const days = parseInt(select?.value || '0');
@@ -3671,7 +3763,6 @@
                 showToast(`${deleted} ulasan auto-dihapus`);
             });
 
-            // BANNER
             document.getElementById('bannerPublishBtn')?.addEventListener('click', async () => {
                 const title = document.getElementById('bannerTitleInput').value.trim() || 'Pengumuman';
                 const message = document.getElementById('bannerMsgInput').value.trim();
@@ -3705,7 +3796,6 @@
                 }
             });
 
-            // ADMIN REVIEW LIST
             const adminList = document.getElementById('adminReviewsList');
             if (!adminList) return;
 
@@ -3852,7 +3942,6 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                // Jangan paksa ke home, biarkan user di halaman saat ini
             }
         });
 
@@ -3861,6 +3950,7 @@
         loadFeatureRequests();
         loadBanner();
         renderSortReview();
+        renderDownloads();
 
         // ===== TIDAK ADA CONSOLE.LOG =====
     </script>
