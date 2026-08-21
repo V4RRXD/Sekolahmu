@@ -67,6 +67,8 @@
         body.overlay-active *:not(.overlay-protected):not(.overlay-protected *) {
             pointer-events: none !important;
         }
+
+        /* ===== OVERLAY ===== */
         .overlay-protected {
             position: fixed !important;
             top: 0 !important;
@@ -199,14 +201,17 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* ===== OVERLAY AWAL DISEMBUNYIKAN (tapi bisa di-show oleh JS) ===== */
         #adblock-overlay,
         #ban-overlay {
-            display: none !important;
+            display: none;
         }
         #adblock-overlay.show,
         #ban-overlay.show {
             display: flex !important;
         }
+
         .ad-hidden {
             display: none !important;
         }
@@ -1795,12 +1800,16 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        #adblock-overlay .box,
+        #ban-overlay .box {
+            animation: none !important;
+        }
     </style>
 </head>
 <body>
 
     <!-- ===== ADBLOCK OVERLAY ===== -->
-    <div id="adblock-overlay" class="overlay-protected">
+    <div id="adblock-overlay" class="overlay-protected" style="display:none;">
         <div class="box">
             <div class="icon">🛡️</div>
             <h2>Pemblokir Iklan Terdeteksi</h2>
@@ -1819,7 +1828,7 @@
     </div>
 
     <!-- ===== BAN OVERLAY ===== -->
-    <div id="ban-overlay" class="overlay-protected">
+    <div id="ban-overlay" class="overlay-protected" style="display:none;">
         <div class="box">
             <div class="icon">⛔</div>
             <h2>Akun Anda Telah Diblokir</h2>
@@ -2105,7 +2114,7 @@
 
     <script type="module">
         // ============================================================
-        // ANTI-BYPASS SEDERHANA TAPI EFEKTIF
+        // ANTI-BYPASS SEDERHANA
         // ============================================================
         (function() {
             'use strict';
@@ -2116,7 +2125,6 @@
             const MAX_BYPASS = 5;
             let isAdmin = false;
 
-            // Fungsi show overlay
             function showOverlay(type) {
                 overlayType = type;
                 overlayActive = true;
@@ -2129,6 +2137,9 @@
                     document.body.classList.add('overlay-active');
                     document.body.style.overflow = 'hidden';
                     document.body.style.pointerEvents = 'none';
+                    console.log('✅ Overlay ditampilkan:', type);
+                } else {
+                    console.log('❌ Overlay tidak ditemukan:', type);
                 }
             }
 
@@ -2144,7 +2155,7 @@
                 document.body.style.pointerEvents = '';
             }
 
-            // Check setiap 100ms (lebih ringan dari rAF)
+            // Check setiap 100ms
             setInterval(function() {
                 if (!overlayActive) return;
 
@@ -2156,7 +2167,6 @@
                     console.log('⚠️ Bypass attempt #' + bypassCount);
 
                     if (bypassCount > MAX_BYPASS) {
-                        // Redirect ke halaman error
                         document.body.innerHTML = `
                             <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#f2b8b5;font-family:sans-serif;text-align:center;padding:20px;flex-direction:column;">
                                 <div style="font-size:72px;margin-bottom:20px;">🚫</div>
@@ -2170,22 +2180,11 @@
                         return;
                     }
 
-                    // Re-show overlay
                     if (el) {
                         el.style.display = 'flex';
                         el.style.visibility = 'visible';
                         el.style.opacity = '1';
                         el.classList.add('show');
-                    } else {
-                        // Re-create jika hilang
-                        const newEl = document.getElementById(overlayType === 'adblock' ? 'adblock-overlay' :
-                        'ban-overlay');
-                        if (newEl) {
-                            newEl.style.display = 'flex';
-                            newEl.style.visibility = 'visible';
-                            newEl.style.opacity = '1';
-                            newEl.classList.add('show');
-                        }
                     }
                     document.body.classList.add('overlay-active');
                     document.body.style.overflow = 'hidden';
@@ -2195,7 +2194,10 @@
 
             // Expose ke global
             window.showAdBlockOverlay = function() {
-                if (isAdmin) return;
+                if (isAdmin) {
+                    console.log('Admin bypass, tidak tampilkan overlay');
+                    return;
+                }
                 showOverlay('adblock');
             };
             window.hideAdBlockOverlay = function() {
@@ -2215,7 +2217,7 @@
                 }
             };
 
-            // Deteksi AdBlock sederhana
+            // Deteksi AdBlock
             setTimeout(function() {
                 const test = document.createElement('div');
                 test.className = 'pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad';
@@ -2226,13 +2228,17 @@
                 setTimeout(function() {
                     const hidden = test.offsetHeight === 0 || test.offsetWidth === 0;
                     document.body.removeChild(test);
+                    console.log('🔍 AdBlock detection result:', hidden);
                     if (hidden && !isAdmin) {
-                        console.log('⚠️ AdBlock terdeteksi!');
+                        console.log('⚠️ AdBlock terdeteksi! Menampilkan overlay...');
                         window.showAdBlockOverlay();
+                    } else {
+                        console.log('✅ Tidak ada AdBlock');
                     }
-                }, 200);
-            }, 300);
+                }, 300);
+            }, 500);
 
+            console.log('🛡️ Anti-bypass initialized');
         })();
 
         // ============================================================
@@ -2331,9 +2337,7 @@
                 status.className = 'check-status';
             }
 
-            // Simulasi cek ulang
             setTimeout(() => {
-                // Cek apakah AdBlock masih aktif dengan metode sederhana
                 const test = document.createElement('div');
                 test.className = 'pub_300x250 pub_300x250m pub_728x90 text-ad textAd text_ad';
                 test.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;';
@@ -2351,6 +2355,7 @@
                         }
                         btn.innerHTML = '🔄 Saya Sudah Mematikan Pemblokir Iklan';
                         btn.disabled = false;
+                        window.showAdBlockOverlay();
                     } else {
                         if (status) {
                             status.textContent = '✅ Berhasil! Memuat ulang...';
@@ -2358,7 +2363,6 @@
                         }
                         btn.innerHTML = '✅ Berhasil!';
                         btn.disabled = true;
-                        // Hide overlay
                         document.getElementById('adblock-overlay').style.display = 'none';
                         document.body.classList.remove('overlay-active');
                         document.body.style.overflow = '';
@@ -2447,7 +2451,6 @@
                 return;
             }
 
-            // TOP BANNER
             if (width <= 480) {
                 renderBannerAd('ad-top', '358c8ef569d7d193675caa770d15352a', 320, 50);
             } else if (width <= 1024) {
@@ -2456,7 +2459,6 @@
                 renderBannerAd('ad-top', '4ca0fb7649546b6432d8d3d6bd71c217', 728, 90);
             }
 
-            // BOTTOM BANNER
             if (width <= 480) {
                 renderBannerAd('ad-bottom', '358c8ef569d7d193675caa770d15352a', 320, 50);
             } else if (width <= 1024) {
@@ -2465,13 +2467,11 @@
                 renderBannerAd('ad-bottom', '4ca0fb7649546b6432d8d3d6bd71c217', 728, 90);
             }
 
-            // SIDEBAR
             if (width >= 1025) {
                 renderBannerAd('ad-sidebar-left', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
                 renderBannerAd('ad-sidebar-right', '76ed876a5caa4be1268c6771ef14289c', 160, 600);
             }
 
-            // STICKY
             if (width <= 768) {
                 renderBannerAd('sticky-banner', '358c8ef569d7d193675caa770d15352a', 320, 50);
             }
@@ -2535,12 +2535,10 @@
                     return;
                 }
 
-                // Popunder
                 const script = document.createElement('script');
                 script.src = "https://pl30951615.effectivecpmnetwork.com/99/62/2e/99622ee28aa86c307ea95cdc2ee72256.js";
                 document.head.appendChild(script);
 
-                // Smartlink
                 window.open('https://www.effectivecpmnetwork.com/y2s3eyrsw?key=8ef3120e1c9224948b8bc47836e4bc44', '_blank');
 
                 setTimeout(() => {
@@ -2641,7 +2639,7 @@
         }
 
         // ============================================================
-        // RENDER REVIEWS
+        // RENDER REVIEWS (sederhana)
         // ============================================================
         function renderReviews(loadMore = false) {
             const list = document.getElementById('reviewsList'),
@@ -2720,7 +2718,6 @@
                 </div>`;
             }).join('');
 
-            // Events
             document.querySelectorAll('.read-more-btn').forEach(b => b.addEventListener('click', function() {
                 const item = this.closest('.review-item');
                 const short = item.querySelector('.msg-short'),
@@ -4139,7 +4136,6 @@
             document.getElementById('logoutBtn')?.addEventListener('click', () => { signOut(auth);
                 goToPage('home'); });
 
-            // Appeal events
             document.querySelectorAll('.appeal-approve-admin').forEach(b => b.addEventListener('click', async function() {
                 const uid = this.dataset.uid;
                 try {
@@ -4197,7 +4193,6 @@
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
             }));
 
-            // Admin data view
             document.getElementById('adminDataViewBtn')?.addEventListener('click', () => {
                 const val = document.getElementById('adminDataSelect').value,
                     cont = document.getElementById('adminDataContainer');
@@ -4232,7 +4227,6 @@
             });
             document.getElementById('adminDataViewBtn')?.click();
 
-            // Export
             document.getElementById('exportCSV')?.addEventListener('click', () => {
                 if (allReviews.length === 0) { showToast('Tidak ada data untuk diekspor.', true); return; }
                 const headers = ['Nama', 'Anonim', 'Rating', 'Pesan', 'Versi', 'Tanggal', 'Likes', 'Dislikes'];
@@ -4263,7 +4257,6 @@
                 showToast('✅ JSON berhasil diekspor.');
             });
 
-            // Bulk delete
             document.getElementById('bulkDeleteBtn')?.addEventListener('click', async () => {
                 const filter = document.getElementById('bulkStarSelect').value;
                 let toDelete = [],
@@ -4283,7 +4276,6 @@
                 await logAdminActivity(`Menghapus ${deleted} ulasan (filter: ${filter})`);
             });
 
-            // Auto delete
             document.getElementById('autoDeleteBtn')?.addEventListener('click', async () => {
                 const days = parseInt(document.getElementById('autoDeleteSelect').value);
                 if (days === 0) { showToast('Pilih jumlah hari terlebih dahulu.', true); return; }
@@ -4303,7 +4295,6 @@
                 await logAdminActivity(`Hapus otomatis ${deleted} ulasan (>${days} hari)`);
             });
 
-            // Banner admin
             document.getElementById('bannerPublishBtn')?.addEventListener('click', async () => {
                 const title = document.getElementById('bannerTitleInput').value.trim() || 'Pengumuman';
                 const msg = document.getElementById('bannerMsgInput').value.trim();
@@ -4325,7 +4316,6 @@
                         .message, true); }
             });
 
-            // Ban
             document.getElementById('banUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
                 if (!uid) { showToast('Masukkan UID pengguna.', true); return; }
@@ -4344,7 +4334,6 @@
                         err.message, true); }
             });
 
-            // Admin review list
             const adminList = document.getElementById('adminReviewsList');
             if (!adminList) return;
             if (allReviews.length === 0) { adminList.innerHTML = '<div class="empty">Belum ada ulasan</div>'; return; }
@@ -4601,7 +4590,6 @@
         renderDownloads();
         loadDraft();
 
-        // Sembunyikan overlay awal
         document.getElementById('adblock-overlay').style.display = 'none';
         document.getElementById('ban-overlay').style.display = 'none';
 
@@ -4613,7 +4601,6 @@
             resizeTimer = setTimeout(loadAds, 300);
         });
 
-        // Meteor
         (function initMeteors() {
             const container = document.getElementById('meteor-container');
             for (let i = 0; i < 8; i++) {
