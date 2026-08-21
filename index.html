@@ -66,24 +66,58 @@
             position: relative;
             z-index: 1;
         }
-
-        /* ===== IKLAN TOP ===== */
-        #ad-top {
+        /* ===== IKLAN ===== */
+        .ad-wrapper {
             text-align: center;
-            padding: 4px 0;
+            padding: 6px 0;
             min-height: 60px;
             background: var(--input);
             border-radius: 8px;
-            margin: -4px -4px 8px -4px;
+            margin: 4px 0;
+            overflow: hidden;
             position: relative;
-            z-index: 50;
+            z-index: 5;
+        }
+        .ad-wrapper iframe {
+            max-width: 100%;
+            border: none;
+        }
+        #ad-top {
+            margin-top: -4px;
+            margin-bottom: 6px;
+            min-height: 60px;
+        }
+        #ad-bottom {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            min-height: 60px;
+        }
+        #sticky-banner {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 4px 0;
+            text-align: center;
+            border-top: 1px solid var(--primary-border);
+        }
+        .sidebar-ad {
+            background: var(--input);
+            border-radius: 8px;
+            padding: 4px;
+            min-height: 500px;
+            text-align: center;
+            border: 1px solid var(--primary-border);
             overflow: hidden;
         }
-        #ad-top iframe {
+        .sidebar-ad iframe {
             max-width: 100%;
+            border: none;
         }
-
-        /* ===== LAYOUT SIDEBAR ===== */
         .main-layout {
             display: flex;
             gap: 12px;
@@ -97,57 +131,14 @@
             top: 80px;
             display: none;
         }
-        .sidebar-left .ad-sidebar,
-        .sidebar-right .ad-sidebar {
-            background: var(--input);
-            border-radius: 8px;
-            padding: 4px;
-            min-height: 600px;
-            text-align: center;
-            border: 1px solid var(--primary-border);
-            overflow: hidden;
-        }
-        .sidebar-left .ad-sidebar iframe,
-        .sidebar-right .ad-sidebar iframe {
-            max-width: 100%;
-        }
         .content-center {
             flex: 1;
             min-width: 0;
         }
-
-        /* ===== IKLAN BAWAH ===== */
-        #ad-bottom {
-            text-align: center;
-            padding: 8px 0;
-            min-height: 60px;
-            background: var(--input);
-            border-radius: 8px;
-            margin: 8px 0;
-            overflow: hidden;
+        /* ===== HIDE ADS FOR ADMIN ===== */
+        .ad-hidden {
+            display: none !important;
         }
-        #ad-bottom iframe {
-            max-width: 100%;
-        }
-
-        /* ===== STICKY BANNER MOBILE ===== */
-        #sticky-banner {
-            display: none;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 999;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            padding: 4px 0;
-            text-align: center;
-            border-top: 1px solid var(--primary-border);
-        }
-        #sticky-banner iframe {
-            max-width: 100%;
-        }
-
         /* ===== WATERMARK ===== */
         .watermark {
             position: fixed;
@@ -171,7 +162,6 @@
             font-size: 11px;
             opacity: 0.35;
         }
-
         /* ===== BANNER NOTIFIKASI ===== */
         .banner-container {
             position: relative;
@@ -240,7 +230,6 @@
             background: rgba(255, 255, 255, 0.25);
             transform: scale(1.1) rotate(90deg);
         }
-
         /* ===== NAVIGASI ===== */
         .nav {
             display: flex;
@@ -360,7 +349,6 @@
             color: var(--primary);
             background: var(--primary-bg);
         }
-
         /* ===== CARDS ===== */
         .card {
             background: var(--card);
@@ -382,15 +370,11 @@
             font-weight: 700;
             margin-bottom: 8px;
         }
-
         /* ===== RESPONSIVE ===== */
         @media (min-width: 1025px) {
             .sidebar-left,
             .sidebar-right {
                 display: block !important;
-            }
-            #ad-top {
-                min-height: 100px;
             }
             #sticky-banner {
                 display: none !important;
@@ -404,14 +388,6 @@
             .main-layout {
                 display: block;
             }
-            #ad-top iframe {
-                max-width: 100%;
-                height: auto;
-            }
-            #ad-bottom iframe {
-                max-width: 100%;
-                height: auto;
-            }
         }
         @media (max-width: 768px) {
             #sticky-banner {
@@ -423,20 +399,6 @@
             .watermark {
                 bottom: 60px;
             }
-            #ad-top {
-                min-height: 50px;
-                padding: 2px 0;
-                margin: -4px -4px 4px -4px;
-            }
-            .banner {
-                padding: 8px 12px;
-            }
-            .banner .content .title {
-                font-size: 11px;
-            }
-            .banner .content .message {
-                font-size: 10px;
-            }
             .nav {
                 padding: 4px 6px;
                 gap: 2px;
@@ -444,10 +406,6 @@
             .nav button {
                 font-size: 10px;
                 padding: 3px 6px;
-            }
-            .nav-dropdown-content {
-                min-width: 120px;
-                left: -10px;
             }
             .nav-right {
                 margin-left: 0;
@@ -463,16 +421,11 @@
                 font-size: 8px;
                 padding: 2px 5px;
             }
-            .nav-dropdown-content button {
-                font-size: 9px;
-                padding: 3px 6px;
-            }
             .card {
                 padding: 10px 8px;
             }
         }
-
-        /* ===== CSS LAINNYA (dari kode sebelumnya) ===== */
+        /* ===== CSS LAINNYA ===== */
         .auth-btn {
             background: var(--primary);
             color: #fff;
@@ -1636,6 +1589,10 @@
                 opacity: 0;
             }
         }
+        /* ===== AD HIDDEN CLASS ===== */
+        .ad-hidden {
+            display: none !important;
+        }
         #ad-top.ad-hidden,
         #ad-bottom.ad-hidden,
         .sidebar-left.ad-hidden,
@@ -1669,10 +1626,8 @@
     </div>
 
     <!-- ===== IKLAN TOP (di atas notifikasi) ===== -->
-    <div id="ad-top">
-        <div id="ad-top-content">
-            <!-- akan diisi JavaScript -->
-        </div>
+    <div id="ad-top" class="ad-wrapper">
+        <!-- akan diisi JavaScript -->
     </div>
 
     <!-- ===== BANNER NOTIFIKASI ===== -->
@@ -1711,12 +1666,12 @@
         </div>
     </nav>
 
-    <!-- ===== MAIN LAYOUT (konten + sidebar) ===== -->
+    <!-- ===== MAIN LAYOUT ===== -->
     <div class="main-layout">
         <!-- SIDEBAR KIRI -->
         <div class="sidebar-left" id="sidebarLeft">
-            <div class="ad-sidebar" id="ad-sidebar-left">
-                <!-- akan diisi JavaScript -->
+            <div class="sidebar-ad" id="ad-sidebar-left">
+                <!-- akan diisi -->
             </div>
         </div>
 
@@ -1833,31 +1788,27 @@
             </div>
 
             <!-- ===== IKLAN BAWAH ===== -->
-            <div id="ad-bottom">
-                <div id="ad-bottom-content">
-                    <!-- akan diisi JavaScript -->
-                </div>
+            <div id="ad-bottom" class="ad-wrapper">
+                <!-- akan diisi -->
             </div>
         </div>
 
         <!-- SIDEBAR KANAN -->
         <div class="sidebar-right" id="sidebarRight">
-            <div class="ad-sidebar" id="ad-sidebar-right">
-                <!-- akan diisi JavaScript -->
+            <div class="sidebar-ad" id="ad-sidebar-right">
+                <!-- akan diisi -->
             </div>
         </div>
     </div>
 
-    <!-- ===== STICKY BANNER (mobile) ===== -->
+    <!-- ===== STICKY BANNER ===== -->
     <div id="sticky-banner">
-        <div id="sticky-ad-content">
-            <!-- akan diisi JavaScript -->
-        </div>
+        <!-- akan diisi -->
     </div>
 
     <!-- ===== SPAM NOTIFICATION ===== -->
     <div class="spam-notification" id="spamNotification">
-        <div class="box" id="spamBox">
+        <div class="box">
             <div class="icon">📬</div>
             <h3>Periksa Folder Spam!</h3>
             <p>Email verifikasi mungkin masuk ke folder <span class="highlight">Spam</span> atau <span class="highlight">Promosi</span>.</p>
@@ -1872,14 +1823,14 @@
         </div>
     </div>
 
-    <!-- ===== GUIDE NOTIFICATION ===== -->
+    <!-- ===== GUIDE ===== -->
     <div class="guide-notification" id="guideNotification">
-        <div class="box" id="guideBox">
+        <div class="box">
             <div class="guide-content">
                 <h1>📖 Panduan Verifikasi Alamat Email</h1>
                 <p>Kami telah mengirimkan tautan verifikasi ke alamat email yang Anda daftarkan.</p>
                 <h2>Langkah 1: Periksa Kotak Masuk</h2>
-                <p>Cari email dari <strong>noreply@sekolahmu-status.firebaseapp.com</strong> dengan subjek "Verify your email".</p>
+                <p>Cari email dari <strong>noreply@sekolahmu-status.firebaseapp.com</strong></p>
                 <h2>Langkah 2: Periksa Folder Spam</h2>
                 <p>Jika tidak ditemukan, periksa folder <strong>Spam</strong> atau <strong>Promosi</strong>.</p>
                 <h2>Langkah 3: Buka Tautan</h2>
@@ -1890,7 +1841,7 @@
         </div>
     </div>
 
-    <!-- ===== CONFIRM OVERLAY ===== -->
+    <!-- ===== CONFIRM ===== -->
     <div class="confirm-overlay" id="confirmOverlay">
         <div class="confirm-dialog">
             <div class="icon" id="confirmIcon">⚠️</div>
@@ -1903,9 +1854,9 @@
         </div>
     </div>
 
-    <!-- ===== DASHBOARD MODAL ===== -->
+    <!-- ===== DASHBOARD ===== -->
     <div class="dashboard-modal" id="dashboardModal">
-        <div class="box" id="dashboardBox">
+        <div class="box">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
                 <h2 style="font-size:18px;">👤 Dasbor</h2>
                 <button class="btn btn-outline btn-sm" id="dashboardClose">✕ Tutup</button>
@@ -1976,12 +1927,17 @@
             el._timer = setTimeout(() => el.classList.remove('show'), 3500);
         }
 
-        // ===== CEK ADMIN =====
+        // ===== CHECK ADMIN =====
         async function checkIsAdmin(uid) {
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
-                return !!(snap.val() && snap.val().role === 'admin');
-            } catch { return false; }
+                const val = snap.val();
+                console.log('Admin check for', uid, ':', val);
+                return !!(val && val.role === 'admin');
+            } catch (e) {
+                console.error('Admin check error:', e);
+                return false;
+            }
         }
 
         async function checkBanStatus(uid) {
@@ -1992,20 +1948,21 @@
         }
 
         // ===== IKLAN FUNCTIONS =====
-        function isUserAdmin() {
-            return isAdmin === true;
-        }
-
         function shouldShowAds() {
-            // Admin tidak kena iklan
-            if (isUserAdmin()) return false;
-            // User yang login admin juga tidak kena
-            if (currentUser && isAdmin) return false;
+            // Admin TIDAK kena iklan
+            if (isAdmin === true) {
+                console.log('Admin detected, ads hidden');
+                return false;
+            }
+            // User biasa kena iklan
+            console.log('User not admin, ads shown');
             return true;
         }
 
         function loadAds() {
             const showAds = shouldShowAds();
+
+            console.log('Loading ads, showAds:', showAds, 'isAdmin:', isAdmin);
 
             // Toggle visibility semua iklan
             const adElements = [
@@ -2026,21 +1983,23 @@
                 }
             });
 
+            // Kosongkan konten iklan jika admin
             if (!showAds) {
-                // Kosongkan konten iklan
-                document.getElementById('ad-top-content').innerHTML = '';
-                document.getElementById('ad-bottom-content').innerHTML = '';
+                document.getElementById('ad-top').innerHTML = '';
+                document.getElementById('ad-bottom').innerHTML = '';
                 document.getElementById('ad-sidebar-left').innerHTML = '';
                 document.getElementById('ad-sidebar-right').innerHTML = '';
-                document.getElementById('sticky-ad-content').innerHTML = '';
+                document.getElementById('sticky-banner').innerHTML = '';
                 return;
             }
 
-            // ===== BANNER TOP (di atas notifikasi) =====
+            // ===== LOAD BANNER ADS =====
             const width = window.innerWidth;
-            let topBanner = '';
+
+            // --- TOP BANNER ---
+            let topHtml = '';
             if (width <= 480) {
-                topBanner = `
+                topHtml = `
                     <script>
                         atOptions = {
                             'key' : '358c8ef569d7d193675caa770d15352a',
@@ -2053,7 +2012,7 @@
                     <script src="https://www.highperformanceformat.com/358c8ef569d7d193675caa770d15352a/invoke.js"><\/script>
                 `;
             } else if (width <= 1024) {
-                topBanner = `
+                topHtml = `
                     <script>
                         atOptions = {
                             'key' : 'cc073e689089d6340798ff955a50cfb8',
@@ -2066,7 +2025,7 @@
                     <script src="https://www.highperformanceformat.com/cc073e689089d6340798ff955a50cfb8/invoke.js"><\/script>
                 `;
             } else {
-                topBanner = `
+                topHtml = `
                     <script>
                         atOptions = {
                             'key' : '4ca0fb7649546b6432d8d3d6bd71c217',
@@ -2079,11 +2038,55 @@
                     <script src="https://www.highperformanceformat.com/4ca0fb7649546b6432d8d3d6bd71c217/invoke.js"><\/script>
                 `;
             }
-            document.getElementById('ad-top-content').innerHTML = topBanner;
+            document.getElementById('ad-top').innerHTML = topHtml;
 
-            // ===== SIDEBAR KIRI (160x600) =====
+            // --- BOTTOM BANNER ---
+            let bottomHtml = '';
+            if (width <= 480) {
+                bottomHtml = `
+                    <script>
+                        atOptions = {
+                            'key' : '358c8ef569d7d193675caa770d15352a',
+                            'format' : 'iframe',
+                            'height' : 50,
+                            'width' : 320,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://www.highperformanceformat.com/358c8ef569d7d193675caa770d15352a/invoke.js"><\/script>
+                `;
+            } else if (width <= 1024) {
+                bottomHtml = `
+                    <script>
+                        atOptions = {
+                            'key' : 'cc073e689089d6340798ff955a50cfb8',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://www.highperformanceformat.com/cc073e689089d6340798ff955a50cfb8/invoke.js"><\/script>
+                `;
+            } else {
+                bottomHtml = `
+                    <script>
+                        atOptions = {
+                            'key' : '4ca0fb7649546b6432d8d3d6bd71c217',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    <\/script>
+                    <script src="https://www.highperformanceformat.com/4ca0fb7649546b6432d8d3d6bd71c217/invoke.js"><\/script>
+                `;
+            }
+            document.getElementById('ad-bottom').innerHTML = bottomHtml;
+
+            // --- SIDEBAR ADS (160x600) - Desktop only ---
             if (width >= 1025) {
-                const sidebarAd = `
+                const sidebarHtml = `
                     <script>
                         atOptions = {
                             'key' : '76ed876a5caa4be1268c6771ef14289c',
@@ -2095,57 +2098,13 @@
                     <\/script>
                     <script src="https://www.highperformanceformat.com/76ed876a5caa4be1268c6771ef14289c/invoke.js"><\/script>
                 `;
-                document.getElementById('ad-sidebar-left').innerHTML = sidebarAd;
-                document.getElementById('ad-sidebar-right').innerHTML = sidebarAd;
+                document.getElementById('ad-sidebar-left').innerHTML = sidebarHtml;
+                document.getElementById('ad-sidebar-right').innerHTML = sidebarHtml;
             }
 
-            // ===== BANNER BAWAH =====
-            let bottomBanner = '';
-            if (width <= 480) {
-                bottomBanner = `
-                    <script>
-                        atOptions = {
-                            'key' : '358c8ef569d7d193675caa770d15352a',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <script src="https://www.highperformanceformat.com/358c8ef569d7d193675caa770d15352a/invoke.js"><\/script>
-                `;
-            } else if (width <= 1024) {
-                bottomBanner = `
-                    <script>
-                        atOptions = {
-                            'key' : 'cc073e689089d6340798ff955a50cfb8',
-                            'format' : 'iframe',
-                            'height' : 250,
-                            'width' : 300,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <script src="https://www.highperformanceformat.com/cc073e689089d6340798ff955a50cfb8/invoke.js"><\/script>
-                `;
-            } else {
-                bottomBanner = `
-                    <script>
-                        atOptions = {
-                            'key' : '4ca0fb7649546b6432d8d3d6bd71c217',
-                            'format' : 'iframe',
-                            'height' : 90,
-                            'width' : 728,
-                            'params' : {}
-                        };
-                    <\/script>
-                    <script src="https://www.highperformanceformat.com/4ca0fb7649546b6432d8d3d6bd71c217/invoke.js"><\/script>
-                `;
-            }
-            document.getElementById('ad-bottom-content').innerHTML = bottomBanner;
-
-            // ===== STICKY BANNER (mobile) =====
+            // --- STICKY BANNER (mobile only) ---
             if (width <= 768) {
-                const stickyAd = `
+                const stickyHtml = `
                     <script>
                         atOptions = {
                             'key' : '358c8ef569d7d193675caa770d15352a',
@@ -2157,24 +2116,24 @@
                     <\/script>
                     <script src="https://www.highperformanceformat.com/358c8ef569d7d193675caa770d15352a/invoke.js"><\/script>
                 `;
-                document.getElementById('sticky-ad-content').innerHTML = stickyAd;
+                document.getElementById('sticky-banner').innerHTML = stickyHtml;
             }
         }
 
         // ===== NAVIGASI DENGAN POPUNDER =====
         function handleNavClick(page) {
-            // Admin tidak kena popunder
-            if (isUserAdmin() || isBanned) {
+            // Admin atau banned tidak kena popunder
+            if (isAdmin === true || isBanned) {
                 goToPage(page);
                 return;
             }
 
             // Buka popunder
-            const popunderScript = document.createElement('script');
-            popunderScript.src = "https://pl30951615.effectivecpmnetwork.com/99/62/2e/99622ee28aa86c307ea95cdc2ee72256.js";
-            document.head.appendChild(popunderScript);
+            const script = document.createElement('script');
+            script.src = "https://pl30951615.effectivecpmnetwork.com/99/62/2e/99622ee28aa86c307ea95cdc2ee72256.js";
+            document.head.appendChild(script);
 
-            // Juga buka smartlink
+            // Buka smartlink
             window.open('https://www.effectivecpmnetwork.com/y2s3eyrsw?key=8ef3120e1c9224948b8bc47836e4bc44', '_blank');
 
             // Tunggu sebentar lalu pindah halaman
@@ -2182,6 +2141,9 @@
                 goToPage(page);
             }, 400);
         }
+
+        // Expose ke global
+        window.handleNavClick = handleNavClick;
 
         // ===== NAVIGASI =====
         function goToPage(page) {
@@ -2221,12 +2183,9 @@
             if (page === 'downloads') renderDownloads();
             if (page === 'bugreport') checkBugAuth();
 
-            // Reload ads setelah ganti halaman
-            setTimeout(loadAds, 100);
+            setTimeout(loadAds, 200);
         }
 
-        // Expose ke global
-        window.handleNavClick = handleNavClick;
         window.goToPage = goToPage;
 
         // ===== BANNER NOTIFIKASI =====
@@ -2297,7 +2256,7 @@
             });
         }
 
-        // ===== RENDER REVIEWS (sederhana) =====
+        // ===== RENDER REVIEWS =====
         function renderReviews() {
             const list = document.getElementById('reviewsList');
             if (!list) return;
@@ -2366,11 +2325,9 @@
                         <button class="load-more-btn" id="loadMoreBtn">📥 Muat Lebih Banyak (${filtered.length - REVIEWS_PER_PAGE} tersisa)</button>
                     `;
                     document.getElementById('loadMoreBtn')?.addEventListener('click', () => {
-                        // Load more logic
                         const currentCount = document.querySelectorAll('.review-item').length;
                         const newItems = filtered.slice(currentCount, currentCount + REVIEWS_PER_PAGE);
                         if (newItems.length > 0) {
-                            // Re-render dengan lebih banyak item
                             const allItems = filtered.slice(0, currentCount + REVIEWS_PER_PAGE);
                             list.innerHTML = allItems.map((r) => {
                                 const name = r.anonymous ? 'Anonim' : (r.name || 'Pengguna');
@@ -2392,10 +2349,7 @@
                                 loadMore.innerHTML = `
                                     <button class="load-more-btn" id="loadMoreBtn">📥 Muat Lebih Banyak (${filtered.length - allItems.length} tersisa)</button>
                                 `;
-                                document.getElementById('loadMoreBtn')?.addEventListener('click', () => {
-                                    // Re-run
-                                    renderReviews();
-                                });
+                                document.getElementById('loadMoreBtn')?.addEventListener('click', renderReviews);
                             } else {
                                 loadMore.innerHTML = '';
                             }
@@ -3419,10 +3373,11 @@
 
             checkIsAdmin(currentUser.uid).then(admin => {
                 isAdmin = admin;
+                console.log('isAdmin set to:', isAdmin);
                 updateNavVisibility();
                 renderAdminDashboard(container);
                 // Reload ads setelah admin status diketahui
-                setTimeout(loadAds, 200);
+                setTimeout(loadAds, 300);
             });
         }
 
@@ -3688,6 +3643,30 @@
         document.getElementById('filterRating')?.addEventListener('change', () => { displayedReviews = 0;
             renderReviews(); });
 
+        // ===== PULL TO REFRESH =====
+        let pullStart = 0,
+            isPulling = false;
+        document.addEventListener('touchstart', (e) => {
+            if (window.scrollY === 0) { pullStart = e.touches[0].clientY;
+                isPulling = true; }
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (isPulling && window.scrollY === 0) {
+                const diff = e.touches[0].clientY - pullStart;
+                if (diff > 60) {
+                    isPulling = false;
+                    showToast('🔄 Memuat ulang...');
+                    loadReviews();
+                    loadFeatureRequests();
+                    loadBugReports();
+                    loadBanner();
+                    loadAppeals();
+                    setTimeout(() => { showToast('✅ Berhasil dimuat ulang!'); }, 500);
+                }
+            }
+        });
+        document.addEventListener('touchend', () => { isPulling = false; });
+
         // ===== AUTH STATE =====
         onAuthStateChanged(auth, async (user) => {
             currentUser = user;
@@ -3704,13 +3683,14 @@
                     document.getElementById('banOverlay').classList.remove('show');
                 }
                 isAdmin = await checkIsAdmin(user.uid);
+                console.log('Auth state - isAdmin:', isAdmin);
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
                 if (user.emailVerified) { spamNotifShown = true;
                     hideSpamNotification(); }
-                // Load ads after admin check
-                setTimeout(loadAds, 300);
+                // Load ads setelah admin check
+                setTimeout(loadAds, 400);
             } else {
                 isAdmin = false;
                 isBanned = false;
@@ -3724,8 +3704,8 @@
                 updateNavVisibility();
                 updateAuthUI();
                 renderAdmin();
-                // Load ads for non-logged in users
-                setTimeout(loadAds, 300);
+                // Load ads untuk non-login
+                setTimeout(loadAds, 400);
             }
         });
 
@@ -3741,7 +3721,7 @@
         // Initial ads load
         setTimeout(loadAds, 500);
 
-        // Handle window resize for ads
+        // Handle window resize
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
