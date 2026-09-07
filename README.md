@@ -3,7 +3,7 @@
 A simple Android WebView application for accessing **SMM (Sekolah Murid Merdeka)** with a cleaner, faster, and more app-like experience than using a regular browser.
 
 > **Status:** Beta  
-> **Current Version:** v2.1.0-beta
+> **Current Version:** v2.2.0-beta
 
 ## Features
 
