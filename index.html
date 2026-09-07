@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>Sekolahmu</title>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
     <script type="importmap">
         {
             "imports": {
@@ -2155,42 +2157,19 @@
                 document.body.style.pointerEvents = '';
             }
 
-            // Check setiap 100ms
-            setInterval(function() {
-                if (!overlayActive) return;
-
+            // Overlay guard: hanya menjaga state overlay yang memang sedang aktif.
+            // Tidak lagi mengganti seluruh document.body ketika DOM berubah; itu dulu bisa
+            // menyebabkan halaman rusak/blank dan bukan mekanisme keamanan yang valid.
+            function syncOverlayState() {
                 const el = document.getElementById(overlayType === 'adblock' ? 'adblock-overlay' : 'ban-overlay');
-
-                if (!el || el.style.display === 'none' || el.style.visibility === 'hidden' ||
-                    el.style.opacity === '0' || el.classList.contains('hidden')) {
-                    bypassCount++;
-                    console.log('⚠️ Bypass attempt #' + bypassCount);
-
-                    if (bypassCount > MAX_BYPASS) {
-                        document.body.innerHTML = `
-                            <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#f2b8b5;font-family:sans-serif;text-align:center;padding:20px;flex-direction:column;">
-                                <div style="font-size:72px;margin-bottom:20px;">🚫</div>
-                                <h1 style="font-size:24px;">Akses Ditolak</h1>
-                                <p style="color:#c0a0a0;max-width:400px;line-height:1.8;">
-                                    Terdeteksi upaya bypass keamanan. Harap <strong style="color:#ffd700;">nonaktifkan pemblokir iklan</strong> dan refresh halaman.
-                                </p>
-                                <button onclick="location.reload()" style="margin-top:20px;padding:12px 24px;border:none;border-radius:10px;background:#d65a62;color:#fff;font-size:16px;cursor:pointer;font-weight:700;">🔄 Refresh</button>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    if (el) {
-                        el.style.display = 'flex';
-                        el.style.visibility = 'visible';
-                        el.style.opacity = '1';
-                        el.classList.add('show');
-                    }
-                    document.body.classList.add('overlay-active');
-                    document.body.style.overflow = 'hidden';
-                    document.body.style.pointerEvents = 'none';
-                }
-            }, 100);
+                if (!overlayActive || !el) return;
+                el.style.display = 'flex';
+                el.style.visibility = 'visible';
+                el.style.opacity = '1';
+                el.classList.add('show');
+                document.body.classList.add('overlay-active');
+                document.body.style.overflow = 'hidden';
+            }
 
             // Expose ke global
             window.showAdBlockOverlay = function() {
@@ -2204,6 +2183,7 @@
                 hideOverlay('adblock');
             };
             window.showBanOverlay = function() {
+                if (isAdmin) return;
                 showOverlay('ban');
             };
             window.hideBanOverlay = function() {
@@ -2238,7 +2218,7 @@
                 }, 300);
             }, 500);
 
-            console.log('🛡️ Anti-bypass initialized');
+            console.log('🛡️ Overlay protection initialized');
         })();
 
         // ============================================================
@@ -2260,6 +2240,33 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
+
+        // ============================================================
+        // OUTPUT SANITIZATION
+        // ============================================================
+        // Banyak data Firebase dirender ke innerHTML. Sanitasi terpusat mencegah
+        // XSS jika ada data/database yang berisi HTML atau javascript berbahaya.
+        const nativeInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+        if (nativeInnerHTML && typeof nativeInnerHTML.set === 'function' && window.DOMPurify) {
+            Object.defineProperty(Element.prototype, 'innerHTML', {
+                configurable: nativeInnerHTML.configurable,
+                enumerable: nativeInnerHTML.enumerable,
+                get: nativeInnerHTML.get,
+                set(value) {
+                    const clean = DOMPurify.sanitize(String(value ?? ''), {
+                        USE_PROFILES: { html: true },
+                        ALLOW_DATA_ATTR: true
+                    });
+                    nativeInnerHTML.set.call(this, clean);
+                }
+            });
+        }
+
+        const escapeHTML = (value) => {
+            const div = document.createElement('div');
+            div.textContent = String(value ?? '');
+            return div.innerHTML;
+        };
 
         // ============================================================
         // VARIABLES
@@ -2310,17 +2317,39 @@
         // CHECK ADMIN & BAN
         // ============================================================
         async function checkIsAdmin(uid) {
+            if (!uid || typeof uid !== 'string') return false;
             try {
                 const snap = await get(ref(db, `admins/${uid}`));
-                return !!(snap.val() && snap.val().role === 'admin');
-            } catch { return false; }
+                const value = snap.val();
+                return !!(value && typeof value === 'object' && value.role === 'admin');
+            } catch (err) {
+                console.warn('Gagal memeriksa status admin:', err);
+                return false;
+            }
         }
 
         async function checkBanStatus(uid) {
+            if (!uid || typeof uid !== 'string') return false;
             try {
                 const snap = await get(ref(db, `banned/${uid}`));
-                return !!snap.val();
-            } catch { return false; }
+                if (!snap.exists()) return false;
+                const value = snap.val();
+                // Hanya node ban yang berbentuk object valid yang dianggap sebagai ban.
+                return !!(value && typeof value === 'object' && !Array.isArray(value));
+            } catch (err) {
+                // Error jaringan/permission TIDAK boleh dianggap sebagai banned.
+                console.warn('Gagal memeriksa status ban:', err);
+                return false;
+            }
+        }
+
+        async function getAccessState(user) {
+            if (!user?.uid) return { admin: false, banned: false };
+            // Admin dicek lebih dahulu agar status ban stale tidak mengunci akun admin.
+            const admin = await checkIsAdmin(user.uid);
+            if (admin) return { admin: true, banned: false };
+            const banned = await checkBanStatus(user.uid);
+            return { admin: false, banned };
         }
 
         // ============================================================
@@ -2400,6 +2429,8 @@
             iframe.style.border = 'none';
             iframe.style.overflow = 'hidden';
             iframe.scrolling = 'no';
+            iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-popups-to-escape-sandbox');
+            iframe.referrerPolicy = 'no-referrer';
             iframe.style.minHeight = height + 'px';
 
             container.appendChild(iframe);
@@ -2481,7 +2512,7 @@
         // NAVIGASI
         // ============================================================
         function goToPage(page) {
-            if (isBanned && page !== 'admin') return;
+            if (isBanned && !isAdmin && page !== 'admin') return;
             if (page === currentPage) return;
             currentPage = page;
 
@@ -3525,7 +3556,7 @@
             if (!section) return;
             if (!currentUser) {
                 section.innerHTML =
-                    `<div class="download-locked"><span class="icon">🔒</span><p>Login untuk mengunduh APK</p><button class="btn btn-primary btn-sm" onclick="goToPage('admin')" style="margin-top:8px;">Login</button></div>`;
+                    `<div class="download-locked"><span class="icon">🔒</span><p>Login untuk mengunduh APK</p><button class="btn btn-primary btn-sm" data-action="goto-admin" style="margin-top:8px;">Login</button></div>`;
                 return;
             }
             if (!currentUser.emailVerified && !isAdmin) {
@@ -3791,12 +3822,17 @@
                     if (data.status === 'approved') {
                         statusText = '✅ Banding disetujui! Anda dapat login kembali.';
                         statusColor = '#6fcf97';
-                        remove(ref(db, `banned/${currentUser.uid}`)).then(() => {
-                            document.getElementById('ban-overlay').style.display = 'none';
-                            isBanned = false;
-                            showToast('✅ Banding disetujui! Anda dapat mengakses kembali.');
-                            goToPage('home');
-                            updateAuthUI();
+                        // Jangan menghapus node banned dari sisi client pengguna.
+                        // Penghapusan ban harus dilakukan oleh admin/backend.
+                        checkBanStatus(currentUser.uid).then(stillBanned => {
+                            if (!stillBanned) {
+                                document.getElementById('ban-overlay').style.display = 'none';
+                                document.getElementById('ban-overlay').classList.remove('show');
+                                isBanned = false;
+                                showToast('✅ Banding disetujui! Anda dapat mengakses kembali.');
+                                goToPage('home');
+                                updateAuthUI();
+                            }
                         });
                     } else if (data.status === 'rejected') {
                         statusText = '❌ Banding ditolak. Silakan hubungi administrator.';
@@ -3877,12 +3913,15 @@
                     let statusText = '⏳ Menunggu tanggapan admin';
                     if (data.status === 'approved') {
                         statusText = '✅ Banding disetujui! Anda dapat login kembali.';
-                        await remove(ref(db, `banned/${currentUser.uid}`));
-                        document.getElementById('ban-overlay').style.display = 'none';
-                        isBanned = false;
-                        showToast('✅ Banding disetujui! Anda dapat mengakses kembali.');
-                        goToPage('home');
-                        updateAuthUI();
+                        const stillBanned = await checkBanStatus(currentUser.uid);
+                        if (!stillBanned) {
+                            document.getElementById('ban-overlay').style.display = 'none';
+                            document.getElementById('ban-overlay').classList.remove('show');
+                            isBanned = false;
+                            showToast('✅ Banding disetujui! Anda dapat mengakses kembali.');
+                            goToPage('home');
+                            updateAuthUI();
+                        }
                     } else if (data.status === 'rejected') {
                         statusText = '❌ Banding ditolak. Silakan hubungi administrator.';
                         document.getElementById('banAppealBtn').style.display = 'none';
@@ -3954,20 +3993,25 @@
                         status.style.color = 'var(--text2)'; }
                     try {
                         const userCred = await signInWithEmailAndPassword(auth, email, pass);
-                        const banned = await checkBanStatus(userCred.user.uid);
-                        if (banned) {
-                            status.textContent = '⛔ Akun Anda telah diblokir!';
-                            status.style.color = '#f2b8b5';
-                            document.getElementById('ban-overlay').style.display = 'flex';
-                            isBanned = true;
-                            return;
-                        }
-                        const admin = await checkIsAdmin(userCred.user.uid);
-                        if (admin) {
+                        const access = await getAccessState(userCred.user);
+                        if (access.admin) {
+                            isAdmin = true;
+                            isBanned = false;
+                            window.setAdminStatus(true);
                             if (status) { status.textContent = '✅ Login berhasil! (Admin)';
                                 status.style.color = '#6fcf97'; }
                             showToast('Login berhasil');
                             goToPage('home');
+                            return;
+                        }
+                        if (access.banned) {
+                            isBanned = true;
+                            document.getElementById('ban-overlay').style.display = 'flex';
+                            document.getElementById('ban-overlay').classList.add('show');
+                            if (status) {
+                                status.textContent = '⛔ Akun Anda telah diblokir!';
+                                status.style.color = '#f2b8b5';
+                            }
                             return;
                         }
                         if (!userCred.user.emailVerified) {
@@ -4319,8 +4363,17 @@
             document.getElementById('banUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
                 if (!uid) { showToast('Masukkan UID pengguna.', true); return; }
+                if (uid.length > 128 || /[.#$\[\]\/]/.test(uid)) {
+                    showToast('UID tidak valid.', true);
+                    return;
+                }
+                if (currentUser?.uid === uid) {
+                    showToast('Anda tidak dapat memblokir akun sendiri.', true);
+                    return;
+                }
+                if (!isAdmin) { showToast('Akses admin diperlukan.', true); return; }
                 try {
-                    await set(ref(db, `banned/${uid}`), { reason: 'Diblokir oleh admin', timestamp: Date.now() });
+                    await set(ref(db, `banned/${uid}`), { reason: 'Diblokir oleh admin', timestamp: Date.now(), bannedBy: currentUser.uid });
                     showToast(`✅ Pengguna ${uid} berhasil diblokir.`);
                     await logAdminActivity(`Memblokir pengguna: ${uid}`);
                 } catch (err) { showToast('❌ Gagal: ' + err.message, true); }
@@ -4328,6 +4381,11 @@
             document.getElementById('unbanUserBtn')?.addEventListener('click', async () => {
                 const uid = document.getElementById('banUserInput').value.trim();
                 if (!uid) { showToast('Masukkan UID pengguna.', true); return; }
+                if (uid.length > 128 || /[.#$\[\]\/]/.test(uid)) {
+                    showToast('UID tidak valid.', true);
+                    return;
+                }
+                if (!isAdmin) { showToast('Akses admin diperlukan.', true); return; }
                 try { await remove(ref(db, `banned/${uid}`));
                     showToast(`✅ Pengguna ${uid} berhasil dibuka blokirnya.`);
                     await logAdminActivity(`Membuka blokir pengguna: ${uid}`); } catch (err) { showToast('❌ Gagal: ' +
@@ -4412,7 +4470,7 @@
                 if (!verified && !isAdmin && !spamNotifShown) setTimeout(() => showSpamNotification(), 1500);
             } else {
                 section.innerHTML =
-                    `<button class="auth-btn" id="loginNavBtn" onclick="goToPage('admin')">Login</button>`;
+                    `<button class="auth-btn" id="loginNavBtn" data-action="goto-admin">Login</button>`;
             }
             checkRatingAuth();
             checkFeatureAuth();
@@ -4532,42 +4590,37 @@
         document.addEventListener('touchend', () => { isPulling = false; });
 
         // ============================================================
+        // SAFE ACTION DELEGATION
+        // ============================================================
+        document.addEventListener('click', (event) => {
+            const actionEl = event.target.closest?.('[data-action]');
+            if (!actionEl) return;
+            const action = actionEl.dataset.action;
+            if (action === 'goto-admin') {
+                event.preventDefault();
+                goToPage('admin');
+            } else if (action === 'reload') {
+                event.preventDefault();
+                location.reload();
+            }
+        });
+
+        // ============================================================
         // AUTH STATE
         // ============================================================
+        let authGeneration = 0;
         onAuthStateChanged(auth, async (user) => {
+            const generation = ++authGeneration;
             currentUser = user;
-            if (user) {
-                const banned = await checkBanStatus(user.uid);
-                if (banned) {
-                    isBanned = true;
-                    document.getElementById('ban-overlay').style.display = 'flex';
-                    updateAuthUI();
-                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    return;
-                } else {
-                    isBanned = false;
-                    document.getElementById('ban-overlay').style.display = 'none';
-                }
-                isAdmin = await checkIsAdmin(user.uid);
-                window.setAdminStatus(isAdmin);
-                if (isAdmin) {
-                    document.getElementById('adblock-overlay').style.display = 'none';
-                }
-                updateNavVisibility();
-                updateAuthUI();
-                renderAdmin();
-                if (user.emailVerified) { spamNotifShown = true;
-                    hideSpamNotification(); }
-                listenAppealStatus();
-                setTimeout(loadAds, 400);
-            } else {
+
+            if (!user) {
                 isAdmin = false;
-                window.setAdminStatus(false);
                 isBanned = false;
                 spamNotifShown = false;
+                window.setAdminStatus(false);
                 document.getElementById('ban-overlay').style.display = 'none';
-                if (resendTimer) { clearInterval(resendTimer);
-                    resendTimer = null; }
+                document.getElementById('ban-overlay').classList.remove('show');
+                if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
                 resendCooldown = 0;
                 isCooldownActive = false;
                 updateCooldownDisplay();
@@ -4575,6 +4628,43 @@
                 updateAuthUI();
                 renderAdmin();
                 setTimeout(loadAds, 400);
+                return;
+            }
+
+            try {
+                const access = await getAccessState(user);
+                // Abaikan hasil lama jika user berubah ketika request masih berjalan.
+                if (generation !== authGeneration || currentUser?.uid !== user.uid) return;
+
+                isAdmin = access.admin;
+                isBanned = access.banned;
+                window.setAdminStatus(isAdmin);
+
+                const banOverlay = document.getElementById('ban-overlay');
+                if (isBanned && !isAdmin) {
+                    banOverlay.style.display = 'flex';
+                    banOverlay.classList.add('show');
+                    updateAuthUI();
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    return;
+                }
+
+                banOverlay.style.display = 'none';
+                banOverlay.classList.remove('show');
+                updateNavVisibility();
+                updateAuthUI();
+                renderAdmin();
+                if (user.emailVerified) { spamNotifShown = true; hideSpamNotification(); }
+                listenAppealStatus();
+                setTimeout(loadAds, 400);
+            } catch (err) {
+                // Jangan pernah mengunci user hanya karena pengecekan akses gagal.
+                console.error('Auth state error:', err);
+                isAdmin = false;
+                isBanned = false;
+                document.getElementById('ban-overlay').style.display = 'none';
+                updateNavVisibility();
+                updateAuthUI();
             }
         });
 
@@ -4591,7 +4681,9 @@
         loadDraft();
 
         document.getElementById('adblock-overlay').style.display = 'none';
+        document.getElementById('adblock-overlay').classList.remove('show');
         document.getElementById('ban-overlay').style.display = 'none';
+        document.getElementById('ban-overlay').classList.remove('show');
 
         setTimeout(loadAds, 1000);
 
@@ -4619,8 +4711,6 @@
                 container.appendChild(m);
             }
         })();
-
-        console.log('✅ App loaded - isAdmin:', isAdmin);
     </script>
 </body>
 </html>
